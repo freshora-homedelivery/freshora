@@ -1,0 +1,183 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Freshora – fresh vegetables at your door</title><style>:root{--bg:#f2f5ef;--surface:#fff;--ink:#17261b;--mute:#5d6b60;--line:#dbe3d6;--leaf:#1f6a3a;--leaf-ink:#fff;--hot:#d6432a;--chip:#e3ecdf}
+@media (prefers-color-scheme:dark){:root{--bg:#101a13;--surface:#18241b;--ink:#e8f0e6;--mute:#93a496;--line:#2a3a2d;--leaf:#5fc283;--leaf-ink:#0b1a10;--hot:#ff7a5f;--chip:#22332a;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:env(safe-area-inset-top,0) 0 96px}
+h1,h2{font-family:"Trebuchet MS",system-ui,sans-serif;letter-spacing:-.02em;margin:0}
+.wrap{max-width:680px;margin:0 auto;padding:0 16px}
+header{padding:26px 0 14px}h1{font-size:clamp(34px,10vw,50px);line-height:1;font-weight:800;color:var(--leaf)}
+header p{color:var(--mute);margin:8px 0 0}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 6px}
+.rule,.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.rule b{display:block;color:var(--leaf)}.rule span,.mute{font-size:14px;color:var(--mute)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 6px;position:sticky;top:0;background:var(--bg);z-index:5}
+.chip{border:0;background:var(--chip);color:var(--ink);padding:9px 16px;border-radius:99px;font:600 15px inherit;white-space:nowrap;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--leaf);color:var(--leaf-ink)}
+.item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.emo{font-size:32px;width:54px;height:54px;border-radius:14px;background:var(--chip);display:grid;place-items:center;flex:none}
+.info{flex:1;min-width:0}.info strong{display:block}
+.step{display:flex;align-items:center;gap:6px}
+.step button,.sm{min-width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:18px;cursor:pointer;padding:0 10px}
+.add,.btn{background:var(--leaf)!important;color:var(--leaf-ink)!important;border:0;font-weight:700}
+.btn{width:100%;border-radius:12px;font-size:18px;padding:14px;cursor:pointer}.btn[disabled]{opacity:.45}
+.danger{color:var(--hot)}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 4px}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+.zones{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.zones label{margin:0;border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;gap:8px;cursor:pointer}.zones input{width:auto}
+.row{display:flex;justify-content:space-between;gap:10px;padding:3px 0}.tot{font-weight:800;font-size:20px;border-top:1px solid var(--line);margin-top:6px;padding-top:8px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0));display:none;z-index:9}.bar.show{display:block}
+.bar .in{max-width:680px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.bar a{background:var(--leaf);color:var(--leaf-ink);text-decoration:none;padding:11px 18px;border-radius:10px;font-weight:700}
+.tabs{display:flex;gap:8px;margin:14px 0}.msg{color:var(--hot);min-height:22px}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;background:var(--chip);font-size:13px;font-weight:700}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.card{margin:10px 0}
+.hero{background:linear-gradient(135deg,#1f6a3a,#134526);color:#fff;border-radius:18px;padding:20px;margin:12px 0}
+.hero h2{font-size:24px;margin-bottom:6px}.hero p{margin:0 0 14px;opacity:.9}
+.hero button{background:#b6e34a;color:#14301b;border:0;border-radius:99px;padding:10px 20px;font-weight:800;cursor:pointer}
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:8px 0 16px}
+.cat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 4px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink)}
+.cat span{display:block;font-size:30px}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:6px 0 calc(6px + env(safe-area-inset-bottom,0));z-index:20}
+.nav a{flex:1;text-align:center;text-decoration:none;color:var(--mute);font-size:12px;font-weight:600;padding:4px}
+.nav a span{display:block;font-size:22px}.nav a.on{color:var(--leaf)}
+.nav i{font-style:normal;background:var(--hot);color:#fff;border-radius:99px;font-size:11px;padding:0 6px;margin-left:2px}
+.pay{display:flex;gap:12px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:14px;margin:10px 0;cursor:pointer;font-weight:600}
+.pay input{width:auto}.pay:has(input:checked){border-color:var(--leaf);background:var(--chip)}
+.pay small{display:block;font-weight:400;color:var(--mute)}
+.ghost{width:100%;border:2px solid var(--ink);background:transparent;color:var(--ink);border-radius:12px;font-size:17px;font-weight:700;padding:12px;margin-top:10px;cursor:pointer}
+.track{list-style:none;padding:0;margin:14px 0}.track li{padding:10px 0 10px 34px;position:relative;color:var(--mute)}
+.track li:before{content:"";position:absolute;left:6px;top:14px;width:16px;height:16px;border-radius:50%;border:2px solid var(--line);background:var(--surface)}
+.track li.on{color:var(--ink);font-weight:700}.track li.on:before{background:var(--leaf);border-color:var(--leaf)}
+.big{font-size:56px;text-align:center}.center{text-align:center}
+body{padding-bottom:84px}.bar{display:none!important}
+
+:root{--leaf:#2e7d32}
+section[data-v=welcome]{position:fixed;inset:0;z-index:50;flex-direction:column;background:linear-gradient(160deg,#3f9a3f,#1b5e20)}
+section[data-v=welcome]:not([hidden]){display:flex}
+.sp-top{flex:1;text-align:center;color:#fff;padding:calc(36px + env(safe-area-inset-top,0)) 20px 0;position:relative;overflow:hidden}
+.sp-top h1{color:#fff;font-size:46px}.sp-top p{margin:2px 0 0;opacity:.9;letter-spacing:.04em}
+.sp-art{font-size:92px;line-height:1.1;margin-top:18px}.sp-art small{display:block;font-size:46px;letter-spacing:10px}
+.sp-bot{background:var(--surface);border-radius:36px 36px 0 0;padding:26px 22px calc(24px + env(safe-area-inset-bottom,0));text-align:center}
+.sp-bot h2{font-size:28px}.sp-bot p{color:var(--mute);margin:8px 0 18px}
+.top{display:flex;align-items:center;gap:10px;padding:18px 0 8px}.top b{display:block;font-size:17px}
+.pin{font-size:26px}.sbox{display:block;width:100%;background:var(--chip);border:0;border-radius:99px;padding:13px 18px;text-align:left;color:var(--mute);font-size:16px;cursor:pointer;margin:6px 0 4px}
+.hero{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(120deg,#2e7d32,#1b5e20);border-radius:20px;padding:18px}
+.hero .tag{display:inline-block;background:#b6e34a;color:#14301b;border-radius:99px;font-size:12px;font-weight:800;padding:4px 12px;margin-bottom:8px}
+.hero h2{font-size:26px;line-height:1.1;margin-bottom:12px}.hero .art{font-size:62px;line-height:1}
+.hero button{background:#fff;color:#1b5e20}
+.cats{grid-template-columns:repeat(4,1fr)}.cat{border-radius:16px}
+.fast{display:flex;align-items:center;gap:12px;background:#dff2c4;color:#14301b;border-radius:16px;padding:12px 14px;margin:14px 0}
+.fast span{font-size:34px}.fast div{flex:1;line-height:1.3}.fast small{display:block;opacity:.75}
+.fast button{background:#2e7d32;color:#fff;border:0;border-radius:99px;padding:9px 18px;font-weight:700;cursor:pointer}
+.back{border:0;background:var(--chip);color:var(--ink);width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer}
+.ctop{display:flex;align-items:center;gap:14px;padding:18px 0 8px}.ctop h1{font-size:24px;color:var(--ink);flex:1;text-align:center;margin-right:40px}
+.nav a.on span{background:var(--leaf);border-radius:12px;width:44px;margin:0 auto 2px;padding:2px 0;filter:none}
+.emo img{width:100%;height:100%;object-fit:cover;border-radius:14px}.cat img{width:46px;height:46px;object-fit:cover;border-radius:12px}
+.ann{background:#fff3cd;color:#5c4400;text-align:center;padding:8px 12px;font-weight:600;font-size:14px;position:sticky;top:0;z-index:15}
+.bn{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:12px 0}.bnr{min-width:100%;scroll-snap-align:start;color:#fff;min-height:150px;margin:0}.bnr p{margin:0 0 12px}
+</style></head><body>
+<div class="wrap"><div id="ann" class="ann" hidden></div>
+<section data-v="welcome" hidden><div class="sp-top"><h1>Freshora</h1><p>Fresh • Local • Fast</p><div class="sp-art" aria-hidden="true">🧺<small>🍅🥬🫑</small></div></div>
+<div class="sp-bot"><h2>Fresh Groceries,<br>Delivered Every Day</h2><p>Fruits • Vegetables • Essentials from local shops in Kalladka</p><button class="btn" id="start">Get Started →</button></div></section>
+<section data-v="home"><div class="top"><span class="pin" aria-hidden="true">📍</span><div><span class="mute">Deliver to</span><b>Kalladka ⌄</b></div></div>
+<button class="sbox" data-go="cats">🔍 Search fresh products…</button>
+<div id="banners" class="bn"></div>
+<p class="mute" id="fr" style="margin:0 0 8px">Free delivery within 3 km</p>
+<h2 style="font-size:20px">Shop by category</h2><div class="cats" id="catGrid"></div>
+<div class="fast"><span aria-hidden="true">🛵</span><div><b>Fast Delivery</b><small>Order by 7 PM · delivered 7–9 AM</small></div><button data-go="track">Track</button></div>
+<h2 style="font-size:20px">Fresh today</h2><div id="hList"></div></section>
+
+<section data-v="cats" hidden><div class="ctop"><button class="back" data-go="home" aria-label="Back">←</button><h1>Categories</h1></div>
+<input id="q" placeholder="Search fresh products" aria-label="Search"><nav class="chips" id="chips"></nav><div id="cList"></div></section>
+
+<section data-v="cart" hidden><header><h1 style="font-size:30px">Your cart</h1></header><div id="cartL"></div><div id="cartS"></div>
+<button class="btn" data-go="checkout" id="toCheck">Checkout</button></section>
+
+<section data-v="checkout" hidden><header><h1 style="font-size:30px">Checkout</h1></header>
+<div class="card"><h2 style="font-size:18px">Delivery info</h2>
+<label for="nm">Name</label><input id="nm" autocomplete="name"><label for="ph">Phone</label><input id="ph" type="tel" autocomplete="tel">
+<label for="ad">Address and landmark</label><textarea id="ad" rows="2"></textarea>
+<label>Where are you?</label><div class="zones"><label><input type="radio" name="z" value="near" checked><span>Within 3 km</span></label><label><input type="radio" name="z" value="far"><span>3 to 5 km</span></label></div></div>
+<div class="card"><h2 style="font-size:18px">Order review</h2><div id="revL"></div><div id="revS"></div></div>
+<div class="msg" id="ckM"></div><button class="btn" id="toPay">Continue to payment</button></section>
+
+<section data-v="pay" hidden><header><h1 style="font-size:30px">Payment</h1></header>
+<label class="pay"><input type="radio" name="pm" value="UPI" checked><span>Pay with UPI<small>GPay, PhonePe, Paytm or any UPI app</small></span></label>
+<label class="pay"><input type="radio" name="pm" value="Cash on delivery"><span>Cash on delivery<small>Pay when your order arrives</small></span></label>
+<div class="card" id="upiBox"><p style="margin:0 0 10px">Pay <b id="upiAmt"></b> to <b id="upiId"></b>, then place your order.</p><a class="btn" id="upiBtn" style="display:block;text-align:center;text-decoration:none">Open UPI app</a></div>
+<div id="paS" class="card"></div><div class="msg" id="pyM"></div><button class="btn" id="place">Place order</button></section>
+
+<section data-v="done" hidden class="center"><div class="big">🎉</div><h1 style="font-size:30px">Order placed!</h1><p class="mute">We will call you to confirm.</p>
+<div class="card" style="text-align:left"><h2 style="font-size:18px">Order summary</h2><div id="dS"></div></div>
+<button class="btn" data-go="track">Track my order</button><button class="ghost" data-go="home">Continue shopping</button></section>
+
+<section data-v="profile" hidden><header><h1 style="font-size:30px">Profile</h1></header><div class="card"><p class="mute" style="margin-top:0">Saved on this phone to speed up checkout.</p>
+<label for="pn">Name</label><input id="pn"><label for="pp">Phone</label><input id="pp" type="tel"><label for="pa">Address and landmark</label><textarea id="pa" rows="2"></textarea>
+<div class="msg" id="pm"></div><button class="btn" id="psave">Save details</button></div>
+<p class="mute center">Freshora · Fresh • Local • Fast</p></section>
+<section data-v="track" hidden><header><h1 style="font-size:30px">Track order</h1></header><div class="card"><label for="tid">Have a tracking ID?</label><input id="tid" placeholder="e.g. FR7K3M9QX"><div class="msg" id="tm"></div><button class="btn" id="tgo">Track</button></div><div id="trk" class="card"><p class="mute">No recent order on this phone.</p></div></section>
+</div>
+<nav class="nav" id="nav"><a href="#home" data-n="home"><span>🏠</span>Home</a><a href="#cats" data-n="cats"><span>🥬</span>Categories</a><a href="#cart" data-n="cart"><span>🛒</span>Cart<i id="cn" hidden></i></a><a href="#track" data-n="track"><span>📦</span>Orders</a><a href="#profile" data-n="profile"><span>👤</span>Profile</a></nav>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+if(typeof esc==="undefined"){window.esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};window.DEFAULTS={freeAbove:200,nearFee:20,farFee:40};window.UPI_ID="yourname@upi"}
+var DEMO=(typeof db==="undefined")||FIREBASE_CONFIG.apiKey==="PASTE_HERE";
+var DEMO_ITEMS=[["Tomato","🍅",40,"kg","Vegetables"],["Onion","🧅",35,"kg","Vegetables"],["Potato","🥔",30,"kg","Vegetables"],["Cucumber","🥒",30,"kg","Vegetables"],["Coriander","🌿",10,"bunch","Vegetables"],["Banana","🍌",60,"kg","Fruits"],["Papaya","🧡",40,"kg","Fruits"],["Lemon","🍋",5,"piece","Fruits"],["Coconut","🥥",30,"piece","Others"]].map(function(a,i){return{id:"d"+i,name:a[0],emoji:a[1],price:a[2],unit:a[3],category:a[4]}});
+var $=function(i){return document.getElementById(i)},items=[],qty={},cat="All",S=DEFAULTS,view="home",last=null,unsub=null,STEPS=["New","Packed","Out for delivery","Delivered"];
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}return null}
+if(!DEMO)db.doc("settings/main").onSnapshot(function(d){S=Object.assign({},DEFAULTS,d.data()||{});$("fr").textContent="Free delivery above ₹"+S.freeAbove;theme();all()});
+if(!DEMO)db.collection("items").orderBy("name").onSnapshot(function(q){items=q.docs.map(function(d){return Object.assign({id:d.id},d.data())}).filter(function(i){return i.inStock!==false});all()});
+var catDocs=[],banners=[],DEFAULT_HERO='<div class="hero bnr"><div><span class="tag">Fresh, local shops</span><h2>Farm Fresh<br>at Your Home</h2><button data-go="cats">Shop Now →</button></div><div class="art" aria-hidden="true">🧺</div></div>';
+if(!DEMO){db.collection("categories").orderBy("order").onSnapshot(function(q){catDocs=q.docs.map(function(d){return d.data()});all()});
+db.collection("banners").orderBy("order","desc").onSnapshot(function(q){banners=q.docs.map(function(d){return d.data()});all()})}
+function theme(){if(S.color)document.documentElement.style.setProperty("--leaf",S.color);var a=$("ann"),t=S.storeOpen===false?(S.closedMsg||"We are closed right now. Orders reopen soon."):(S.announce||"");a.hidden=!t;a.textContent=t}
+function newId(){var a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",b=new Uint8Array(8),s="FR";crypto.getRandomValues(b);for(var i=0;i<8;i++)s+=a[b[i]%a.length];return s}
+function thumb(it){return '<div class="emo" aria-hidden="true">'+(it.image?'<img src="'+esc(it.image)+'" alt="" loading="lazy">':esc(it.emoji||"🥬"))+'</div>'}
+function catTile(k){var c=catDocs.filter(function(x){return x.name===k})[0]||{},f=items.filter(function(i){return i.category===k})[0]||{};return '<button class="cat" data-c="'+esc(k)+'"><span>'+(c.image?'<img src="'+esc(c.image)+'" alt="">':esc(c.emoji||f.emoji||"🥬"))+'</span>'+esc(k)+'</button>'}
+function renderBanners(){var b=banners.filter(function(x){return x.active!==false});$("banners").innerHTML=b.length?b.map(function(x){var bg=x.image?'linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.05)),url('+x.image+')':(x.bg||"");return '<div class="hero bnr" style="background:'+esc(bg)+';background-size:cover;background-position:center"><div><h2>'+esc(x.title)+'</h2><p>'+esc(x.subtitle||"")+'</p><button data-go="cats">'+esc(x.button||"Shop Now")+' →</button></div><div class="art" aria-hidden="true">'+esc(x.emoji||"")+'</div></div>'}).join(""):DEFAULT_HERO}
+function row(it){var q=qty[it.id]||0,s=q?'<button data-m="'+it.id+'" aria-label="Remove one">−</button><output>'+q+'</output><button data-a="'+it.id+'" aria-label="Add one">+</button>':'<button class="add" data-a="'+it.id+'">Add</button>';
+return '<div class="item">'+thumb(it)+'<div class="info"><strong>'+esc(it.name)+'</strong><span class="mute">₹'+esc(it.price)+' per '+esc(it.unit)+'</span></div><div class="step">'+s+'</div></div>'}
+function cats(){var d=catDocs.map(function(c){return c.name});return d.concat(items.map(function(i){return i.category}).filter(function(v,i,a){return v&&a.indexOf(v)===i&&d.indexOf(v)<0}))}
+function calc(){var sub=0,n=0,l=[];items.forEach(function(it){var q=qty[it.id]||0;if(q){sub+=q*it.price;n+=q;l.push({name:it.name,unit:it.unit,qty:q,price:it.price})}});
+var far=document.querySelector("input[name=z]:checked").value==="far",d=!n?0:far?S.farFee:(sub>=S.freeAbove?0:S.nearFee);return{sub:sub,n:n,l:l,d:d,t:sub+d,far:far}}
+function lines(c){return c.l.map(function(x){return '<div class="row"><span>'+esc(x.name)+' × '+x.qty+' '+esc(x.unit)+'</span><span>₹'+x.qty*x.price+'</span></div>'}).join("")}
+function sums(c){return '<div class="row"><span>Items</span><span>₹'+c.sub+'</span></div><div class="row"><span>Delivery</span><span>'+(c.d?"₹"+c.d:"Free")+'</span></div><div class="row tot"><span>Total</span><span>₹'+c.t+'</span></div>'+(!c.far&&c.n&&c.sub<S.freeAbove?'<p class="msg">Add ₹'+(S.freeAbove-c.sub)+' more for free delivery.</p>':'')}
+function all(){var c=calc(),cs=cats(),qq=$("q").value.trim().toLowerCase();
+$("catGrid").innerHTML=cs.map(catTile).join("");renderBanners();
+$("hList").innerHTML=items.slice(0,6).map(row).join("")||'<p class="mute">Items are being added. Please check back soon.</p>';
+if(cs.indexOf(cat)<0)cat="All";
+$("chips").innerHTML=["All"].concat(cs).map(function(k){return '<button class="chip" aria-pressed="'+(k===cat)+'" data-c="'+esc(k)+'">'+esc(k)+'</button>'}).join("");
+$("cList").innerHTML=items.filter(function(i){return(cat==="All"||i.category===cat)&&i.name.toLowerCase().indexOf(qq)>-1}).map(row).join("")||'<p class="mute">Nothing found.</p>';
+$("cartL").innerHTML=c.n?lines(c):'<p class="mute">Your cart is empty. Add something fresh.</p>';$("cartS").innerHTML=c.n?sums(c):"";$("toCheck").hidden=!c.n;
+$("revL").innerHTML=lines(c);$("revS").innerHTML=sums(c);$("paS").innerHTML=sums(c);$("cn").hidden=!c.n;$("cn").textContent=c.n}
+function go(v){location.hash=v}
+function show(){var v=location.hash.slice(1);if(!v)v=ls("seen")?"home":"welcome";if(!document.querySelector('[data-v="'+v+'"]'))v="home";
+if((v==="checkout"||v==="pay")&&!calc().n)v="cart";view=v;$("nav").hidden=v==="welcome";
+document.querySelectorAll("[data-v]").forEach(function(s){s.hidden=s.dataset.v!==v});
+document.querySelectorAll("[data-n]").forEach(function(a){a.classList.toggle("on",a.dataset.n===(v==="done"?"track":v==="checkout"||v==="pay"?"cart":v))});
+if(v==="checkout"){$("nm").value=$("nm").value||ls("nm")||"";$("ph").value=$("ph").value||ls("ph")||"";$("ad").value=$("ad").value||ls("ad")||""}
+if(v==="pay")upi();if(v==="profile"){$("pn").value=ls("nm")||"";$("pp").value=ls("ph")||"";$("pa").value=ls("ad")||""}if(v==="track")track();window.scrollTo(0,0)}
+function upi(){var c=calc(),u=document.querySelector("input[name=pm]:checked").value==="UPI";$("upiBox").hidden=!u;$("upiAmt").textContent="₹"+c.t;$("upiId").textContent=S.upi||UPI_ID;
+$("upiBtn").href="upi://pay?pa="+encodeURIComponent(S.upi||UPI_ID)+"&pn=Freshora&cu=INR&am="+c.t;$("place").textContent=(u?"I have paid · Place order":"Place order")+" · ₹"+c.t}
+function track(){last=ls("last");if(unsub)unsub();if(!last||DEMO)return;
+unsub=db.doc("orders/"+last).onSnapshot(function(d){var o=d.data();if(!o){$("trk").innerHTML='<p class="msg">No order found with this ID.</p>';return}var i=STEPS.indexOf(o.status);
+$("trk").innerHTML='<div class="row"><b>'+esc(last)+'</b><span class="badge">'+esc(o.status)+'</span></div>'+(o.status==="Cancelled"?'<p class="msg">This order was cancelled.</p>':'<ul class="track">'+STEPS.map(function(s,k){return '<li class="'+(k<=i?"on":"")+'">'+s+'</li>'}).join("")+'</ul>')+lines({l:o.items})+'<div class="row tot"><span>Total</span><span>₹'+o.total+'</span></div>'})}
+document.addEventListener("click",function(e){var t=e.target.closest("button,a");if(!t)return;var d=t.dataset;
+if(d.go)go(d.go);if(d.c){cat=d.c;go("cats");all()}
+if(d.a){qty[d.a]=(qty[d.a]||0)+1;all()}if(d.m){qty[d.m]=Math.max(0,(qty[d.m]||0)-1);all()}});
+$("q").oninput=all;
+document.querySelectorAll("input[name=z]").forEach(function(r){r.onchange=all});document.querySelectorAll("input[name=pm]").forEach(function(r){r.onchange=upi});
+$("toPay").onclick=function(){if(S.storeOpen===false){$("ckM").textContent=S.closedMsg||"We are closed right now. Please try later.";return}if(!$("nm").value.trim()||$("ph").value.trim().length<10||!$("ad").value.trim()){$("ckM").textContent="Enter your name, a 10-digit phone and your address.";return}
+$("ckM").textContent="";ls("nm",$("nm").value.trim());ls("ph",$("ph").value.trim());ls("ad",$("ad").value.trim());go("pay")};
+$("place").onclick=function(){var c=calc(),pm=document.querySelector("input[name=pm]:checked").value;$("place").disabled=true;var tid=newId();
+(DEMO?Promise.resolve({id:"DEMO01ABCD"}):db.collection("orders").doc(tid).set({trackId:tid,items:c.l,subtotal:c.sub,delivery:c.d,total:c.t,zone:c.far?"3-5 km":"Within 3 km",payment:pm==="UPI"?"UPI (customer says paid)":pm,name:$("nm").value.trim().slice(0,80),phone:$("ph").value.trim().slice(0,20),address:$("ad").value.trim().slice(0,300),status:"New",createdAt:firebase.firestore.FieldValue.serverTimestamp()})).then(function(){var r={id:tid};ls("last",tid);$("dS").innerHTML='<div class="row"><span>Tracking ID</span><b>'+r.id+'</b></div><div class="row"><span>Payment</span><span>'+esc(pm)+'</span></div><div class="row"><span>Total</span><b>₹'+c.t+'</b></div><div class="row"><span>Deliver to</span><span>'+esc($("ad").value.trim())+'</span></div>';
+qty={};all();$("place").disabled=false;go("done")}).catch(function(){$("pyM").textContent="Could not place the order. Check your internet and try again.";$("place").disabled=false})};
+$("start").onclick=function(){ls("seen","1");go("home")};$("psave").onclick=function(){ls("nm",$("pn").value.trim());ls("ph",$("pp").value.trim());ls("ad",$("pa").value.trim());$("pm").textContent="Saved."};
+$("tgo").onclick=function(){var v=$("tid").value.trim().toUpperCase();if(!/^[A-Z0-9]{6,20}$/.test(v)){$("tm").textContent="Enter a valid tracking ID.";return}$("tm").textContent="";ls("last",v);track()};
+window.onhashchange=show;if(DEMO){items=DEMO_ITEMS;$("fr").textContent="Free delivery above ₹200 · demo preview"}all();show();
+</script></body></html>
