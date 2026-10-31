@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Freshora Rider</title>
+<style>body{font:16px system-ui;margin:0;padding:14px;background:#fff8d6;color:#1c1b17}.c{background:#fff;border-radius:14px;padding:12px;margin:10px 0;line-height:1.6}button,input{font:inherit;padding:10px 14px;border-radius:10px;border:1px solid #ccc;margin:3px 0}button{background:#ffc800;font-weight:800;border:0}</style></head><body>
+<h2>Freshora Rider</h2><div id="lg"><input id="em" type="email" placeholder="Email"><br><input id="pw" type="password" placeholder="Password"><br><button id="in">Login</button> <span id="er"></span></div>
+<div id="ap" hidden><button id="out">Logout</button><div id="ls"></div></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="firebase-config.js"></script>
+<script>
+var $=function(i){return document.getElementById(i)},E=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return "&#"+c.charCodeAt(0)+";"})},W=null,u=null;
+$("in").onclick=function(){firebase.auth().signInWithEmailAndPassword($("em").value,$("pw").value).catch(function(){$("er").textContent="Wrong email or password"})};
+$("out").onclick=function(){firebase.auth().signOut()};
+firebase.auth().onAuthStateChanged(function(x){$("lg").hidden=!!x;$("ap").hidden=!x;if(u){u();u=null}if(!x)return;
+u=db.collection("orders").where("status","in",["New","Packed","Out for delivery"]).onSnapshot(function(q){$("ls").innerHTML=q.docs.map(function(d){var o=d.data(),id=d.id;return '<div class="c"><b>'+id+'</b> · '+E(o.status)+'<br>'+E(o.name)+' · <a href="tel:'+E(o.phone)+'">'+E(o.phone)+'</a><br>'+E(o.address)+'<br>'+(o.lat?'<a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+o.lat+','+o.lng+'">Open in Google Maps</a><br>':'')+E(o.payment)+' · ₹'+E(o.total)+(o.paid?' · PAID':'')+'<br>'+["Packed","Out for delivery","Delivered"].map(function(s){return '<button data-i="'+id+'" data-s="'+s+'">'+s+'</button> '}).join("")+(o.paid?'':'<button data-i="'+id+'" data-p="1">Mark paid</button>')+'</div>'}).join("")||"No active orders"},function(){})});
+document.addEventListener("click",function(e){var t=e.target,i=t.dataset.i;if(!i)return;
+if(t.dataset.p){db.doc("orders/"+i).update({paid:true});return}
+var s=t.dataset.s;db.doc("orders/"+i).update({status:s});
+if(s==="Out for delivery"){if(W!==null)navigator.geolocation.clearWatch(W);W=navigator.geolocation.watchPosition(function(p){db.doc("live/"+i).set({lat:p.coords.latitude,lng:p.coords.longitude,t:firebase.firestore.FieldValue.serverTimestamp()})},function(){alert("Please allow location access")},{enableHighAccuracy:true})}
+if(s==="Delivered"&&W!==null){navigator.geolocation.clearWatch(W);W=null;db.doc("live/"+i).delete()}});
+</script></body></html>
