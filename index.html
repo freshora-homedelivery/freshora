@@ -47,7 +47,7 @@ main,.top{max-width:640px;margin:0 auto;padding:0 16px}.top{position:sticky;top:
 .hs{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}.hs::-webkit-scrollbar{display:none}.hs .pc{min-width:164px;max-width:164px;scroll-snap-align:start}.hs .pi{height:130px}
 
 :root{--bg:#fff8d6;--ink:#1c1b17;--ln:#f0e3a6;--pri:#ffc800;--acc:#ffc800;--tint:#fff3b8;--mu:#6b6757}
-body{font-family:"Nunito","Segoe UI",system-ui,sans-serif;padding-top:0}#top,#dr{display:none!important}section.hm0{margin:0 -16px}
+body{font-family:"Nunito","Segoe UI",system-ui,sans-serif;padding-top:0}#top,#dr{display:none!important}section.hm0{margin:0 -16px}.cbk{padding:20px;margin:14px 0;border-radius:20px}#hp{display:flex;flex-direction:column}#hp>div{max-width:100%}#hlx{margin:6px 0 10px}
 .add,.cpn button,.cta button{color:#1c1b17!important;background:#ffc800}.add{border-radius:8px;padding:8px;font-size:14px;font-weight:800}
 .yh{background:#ffc800;padding:calc(18px + env(safe-area-inset-top,0)) 16px 26px}.hr1{display:flex;align-items:center;gap:10px;margin-bottom:18px}.hr1 b{flex:1;font-size:22px}
 .circ{width:42px;height:42px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:20px}.tt2{font-size:22px;font-weight:800;margin:0 0 12px}
@@ -101,7 +101,7 @@ section.hm0{margin:0}.pn{background:var(--bg);border-radius:0;margin:0;padding:1
 <div class="ann" id="ann" hidden></div>
 <main>
 <section data-v="home" class="hm0"><button id="hq" hidden></button>
-<div class="pn"><div id="banners" class="bn"></div><h2 class="tt2">Top offers for you</h2><div class="of" id="offc"></div><div id="shopc"></div><div id="pop" style="margin-top:20px"></div><div class="nf"><h2>Couldn't find what you are looking for?</h2><button class="add ex" data-c="All">Explore now</button></div></div></section>
+<div class="pn" id="hp"><div id="b_banners"><div id="banners" class="bn"></div></div><div id="b_offers"><h2 class="tt2" id="offt">Top offers for you</h2><div class="of" id="offc"></div></div><div id="b_cats"><div id="shopc"></div></div><div id="b_pop"><div id="pop" style="margin-top:20px"></div></div><div id="b_help" class="nf"><h2 id="hlt">Couldn't find what you are looking for?</h2><p id="hlx" class="mu" hidden></p><button class="add ex" id="hlb" data-c="All">Explore now</button></div></div></section>
 <section data-v="cats" hidden><div class="ph"><button class="bk" data-back>←</button><h1>Categories</h1><a class="bk" href="#all" data-c="All" data-s="1" aria-label="Search">🔍</a></div><div id="catp"></div></section>
 <section data-v="all" hidden><div class="ph"><button class="bk" data-back>←</button><h1>All Products</h1></div>
 <div class="ctl"><input class="in" id="aq" placeholder="Search products" style="margin:0"><select class="in" id="so" style="margin:0"><option value="pop">Popular</option><option value="lo">Price: low to high</option><option value="hi">Price: high to low</option><option value="off">Biggest discount</option></select></div><div class="chips" id="chips"></div><div class="grid" id="al"></div></section>
@@ -204,6 +204,17 @@ var c=$("lc").value.replace(/\D/g,"");if(c.length!==6){m.textContent="Enter the 
 b.disabled=true;fn2.httpsCallable("verifyCode")({email:em,code:c}).then(function(r){return auth.signInWithCustomToken(r.data.token)}).catch(function(e){m.textContent=e.message||"Wrong code."}).then(function(){b.disabled=false})};
 document.addEventListener("click",function(e){if(e.target.id==="lo"&&auth){auth.signOut();ui()}});
 ui();$("loc").textContent=ls("area")||"Detecting location…";
+var HOME={order:[],b:{},theme:{}};
+db.doc("settings/home").onSnapshot(function(d){HOME=Object.assign({order:[],b:{},theme:{}},d.data()||{});applyHome()},function(){});
+function applyHome(){var hp=$("hp");if(!hp)return;var th=HOME.theme||{},r=document.documentElement.style,cl=function(c){return/^#[0-9a-f]{3,8}$/i.test(c||"")?c:""},im=function(u){return/^data:image\/[a-z+]+;base64,[A-Za-z0-9+\/=]+$/.test(u||"")?u:""};
+[["bg","--bg"],["ink","--ink"],["pri","--pri"],["pri","--acc"]].forEach(function(p){cl(th[p[0]])?r.setProperty(p[1],th[p[0]]):r.removeProperty(p[1])});
+hp.querySelectorAll(".cbk").forEach(function(x){x.remove()});
+var o=(HOME.order||[]).slice(),B=HOME.b||{};["banners","offers","cats","pop","help"].forEach(function(k){if(o.indexOf(k)<0)o.push(k)});Object.keys(B).forEach(function(k){if(k.indexOf("c_")===0&&o.indexOf(k)<0)o.push(k)});
+o.forEach(function(k,i){var b=B[k]||{},el;if(k.indexOf("c_")===0){if(!B[k])return;el=document.createElement("div");el.className="cbk";el.innerHTML='<h2 class="tt2" style="margin-top:0">'+esc(b.title||"")+'</h2>'+(b.text?'<p>'+esc(b.text)+'</p>':'')+(b.button?'<button class="add ex" data-c="All">'+esc(b.button)+'</button>':'');hp.appendChild(el)}else el=$("b_"+k);if(!el)return;
+el.style.order=i;el.hidden=b.show===false;var u=im(b.image),bg=cl(b.bg),fg=cl(b.fg);
+if(u){el.style.background="linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),url("+u+") center/cover";el.style.color="#fff"}else{bg?el.style.background=bg:el.style.removeProperty("background");fg?el.style.color=fg:el.style.removeProperty("color");if(k.indexOf("c_")===0&&!bg)el.style.background="#ffec99"}
+if(k==="offers")$("offt").textContent=b.title||"Top offers for you";
+if(k==="help"){$("hlt").textContent=b.title||"Couldn’t find what you are looking for?";$("hlx").hidden=!b.text;$("hlx").textContent=b.text||"";$("hlb").textContent=b.button||"Explore now"}})}
 function go(v){location.hash=v}
 function show(){var v=location.hash.slice(1)||"home";if(!document.querySelector('[data-v="'+v+'"]'))v="home";if((v==="checkout")&&!calc().n)v="cart";if(v!==view&&v==="checkout")step=1;view=v;document.body.dataset.v=v;
 document.querySelectorAll("[data-v]").forEach(function(s){s.hidden=s.dataset.v!==v});document.querySelectorAll("[data-n]").forEach(function(a){a.classList.toggle("on",a.dataset.n===v)});

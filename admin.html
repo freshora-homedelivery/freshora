@@ -44,11 +44,12 @@ em{font-style:normal;font-size:12px;font-weight:700;display:block}.up{color:#16a
 .lg{max-width:400px;margin:10vh auto;padding:30px;background:var(--s);border:1px solid var(--l);border-radius:24px;box-shadow:var(--sh)}.lg h1{color:var(--g);font-size:34px;margin:0 0 4px}.msg{color:var(--r);min-height:22px}
 @media(min-width:861px){#lst>.card{max-width:none}}
 @media(max-width:860px){#app{display:block}.sd{position:fixed;left:0;right:0;bottom:0;top:auto;width:auto;height:auto;flex-direction:row;padding:6px 4px calc(6px + env(safe-area-inset-bottom,0));background:var(--s);color:var(--m);border-top:1px solid var(--l);z-index:9}.brand,.sdf{display:none}.tb{flex-direction:row;overflow-x:auto;width:100%;gap:0}.tb button{flex:1 0 74px;flex-direction:column;gap:0;padding:6px 4px;font-size:11.5px;text-align:center;align-items:center}.tb button:hover{background:none}.tb button.on{background:none;color:var(--g)}.top{padding:calc(12px + env(safe-area-inset-top,0)) 14px 10px}.top h1{font-size:20px}main{padding:4px 14px 100px}#toast{bottom:92px}.kg{grid-template-columns:1fr 1fr;gap:10px}.kp{flex-direction:column;align-items:flex-start;gap:8px}.kp b{font-size:22px}.two{grid-template-columns:1fr}}
+.dg{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}#pvf{width:100%;height:760px;border:1px solid var(--l);border-radius:26px;background:#fff;position:sticky;top:76px}.blk{display:flex;gap:12px;align-items:center;border:1px solid var(--l);border-radius:14px;padding:10px 12px;margin:8px 0;background:var(--s)}.blk.dr{opacity:.6;box-shadow:0 8px 24px #0004}.hdl{cursor:grab;font-size:22px;padding:6px 8px;touch-action:none;user-select:none}input[type=color]{height:44px;padding:3px}@media(max-width:1100px){.dg{grid-template-columns:1fr}#pvf{display:none}}
 </style></head><body>
 <div class="lg" id="login"><h1>Freshora</h1><p class="mu">Admin panel. Sign in to manage your store.</p>
 <label for="em">Email</label><input id="em" type="email" autocomplete="username"><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password">
 <div class="msg" id="lm"></div><button class="b big" id="lb">Sign in</button></div>
-<div id="app" hidden><aside class="sd"><div class="brand"><i>🥬</i>Freshora</div><nav class="tb"><button data-t="dash" class="on"><span>📊</span>Dashboard</button><button data-t="orders"><span>📦</span>Orders</button><button data-t="prods"><span>🛍️</span>Products</button><button data-t="cust"><span>👥</span>Customers</button><button data-t="cps"><span>🏷️</span>Coupons</button><button data-t="posters"><span>🖼️</span>Posters</button><button data-t="set"><span>⚙️</span>Settings</button></nav><div class="sdf">Freshora Admin</div></aside>
+<div id="app" hidden><aside class="sd"><div class="brand"><i>🥬</i>Freshora</div><nav class="tb"><button data-t="dash" class="on"><span>📊</span>Dashboard</button><button data-t="orders"><span>📦</span>Orders</button><button data-t="prods"><span>🛍️</span>Products</button><button data-t="cust"><span>👥</span>Customers</button><button data-t="cps"><span>🏷️</span>Coupons</button><button data-t="posters"><span>🖼️</span>Posters</button><button data-t="design"><span>🎨</span>Design</button><button data-t="set"><span>⚙️</span>Settings</button></nav><div class="sdf">Freshora Admin</div></aside>
 <div class="mn"><header class="top"><h1 id="pt">Dashboard</h1><button class="so" id="so2" data-act="qopen">Store</button><button class="ib" data-act="go" data-v="orders" aria-label="New orders">🔔<i id="nb" hidden>0</i></button><button class="b2" id="out">Sign out</button></header><main id="main"></main></div></div>
 <div class="md" id="md" hidden data-act="close"><div class="sheet" id="sheet"></div></div><div id="toast"></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -73,7 +74,7 @@ function oc(o){var n=NEXT[o.status];return '<div class="card"><div class="rw"><b
 '<p style="margin:8px 0">👤 '+esc(o.name)+' · <a href="tel:'+esc(o.phone)+'">📞 '+esc(o.phone)+'</a><br>📍 '+esc(o.address)+'</p>'+(o.items||[]).map(function(x){return '<div class="rw"><span>'+esc(x.name)+' × '+esc(x.qty)+' '+esc(x.unit)+'</span><span>₹'+esc(x.qty*x.price)+'</span></div>'}).join("")+
 '<div class="rw" style="border-top:1px solid var(--l);margin-top:6px;padding-top:6px"><b>Total (delivery ₹'+esc(o.delivery)+')</b><b>₹'+esc(o.total)+'</b></div><div class="acts">'+(n?'<button class="b" data-act="st" data-id="'+esc(o.id)+'" data-v="'+n+'">Mark '+n+'</button>':'')+
 (o.status!=="Cancelled"&&o.status!=="Delivered"?'<button class="b2" data-act="st" data-id="'+esc(o.id)+'" data-v="Cancelled">Cancel</button>':'')+'<button class="b2" data-act="paid" data-id="'+esc(o.id)+'" data-v="'+(!o.paid)+'">'+(o.paid?'Unmark paid':'Payment received')+'</button></div></div>'}
-var cps=[],TT={dash:"Dashboard",orders:"Orders",prods:"Products",cust:"Customers",cps:"Coupons",posters:"Posters",set:"Settings"};
+var cps=[],TT={dash:"Dashboard",orders:"Orders",prods:"Products",cust:"Customers",cps:"Coupons",posters:"Posters",design:"Design",set:"Settings"};
 var money=function(n){return "₹"+Math.round(n||0).toLocaleString("en-IN")};
 function live(){return orders.filter(function(o){return o.status!=="Cancelled"})}
 function dayTotal(d){var l=live().filter(function(o){return o.createdAt&&o.createdAt.toDate().toDateString()===d.toDateString()});return{n:l.length,r:l.reduce(function(a,o){return a+(o.total||0)},0)}}
@@ -103,6 +104,7 @@ return '<p class="hi">'+(h<12?"Good morning":h<17?"Good afternoon":"Good evening
 function head(){
  if(tab==="orders")return '<div class="bar2"><input id="q" placeholder="🔍 Search tracking ID, name or phone" value="'+esc(q)+'"><button class="b2" data-act="csv">⬇ Export</button></div><div class="chips" id="fc"></div><div id="lst"></div>';
  if(tab==="prods")return '<div class="card"><b>Categories</b><div id="cl"></div><div class="bar2"><input id="cn" placeholder="New category name"><input id="ce" placeholder="Emoji" style="max-width:90px"><input id="cg" placeholder="Group (e.g. Fresh)"><button class="b" data-act="addcat">Add</button></div></div><div class="bar2"><input id="q" placeholder="🔍 Search products" value="'+esc(q)+'"><button class="b" data-act="newprod">+ Product</button><button class="b2" data-act="impl">📥 Import list</button><label class="b2" style="margin:0">🖼️ Photos<input type="file" id="bph" accept="image/*" multiple hidden></label></div><div id="lst"></div>';
+ if(tab==="design")return '<div class="dg"><div id="lst"></div><iframe id="pvf" src="index.html" title="Store preview"></iframe></div>';
  if(tab==="cust")return '<input id="q" placeholder="🔍 Search name or phone" value="'+esc(q)+'"><div id="lst"></div>';
  if(tab==="cps")return '<div class="bar2"><b>Discount coupons</b><button class="b" data-act="newcp">+ New coupon</button></div><div id="lst"></div>';
  if(tab==="posters")return '<div class="bar2"><b>Posters on your home page</b><button class="b" data-act="newpost">+ New poster</button></div><div id="lst"></div>';
@@ -111,6 +113,7 @@ function lst(){chrome();var L=$("lst");if(!L)return;
  if(tab==="dash")L.innerHTML=dash();
  if(tab==="cust")L.innerHTML=custs();
  if(tab==="cps")L.innerHTML=cpl();
+ if(tab==="design"&&!drg)L.innerHTML=dsg();
  if(tab==="orders"){$("fc").innerHTML=["All"].concat(STAT).map(function(s){var n=s==="All"?orders.length:orders.filter(function(o){return o.status===s}).length;return '<button class="ch'+(s===filter?' on':'')+'" data-act="flt" data-v="'+s+'">'+s+' ('+n+')</button>'}).join("");
   var k=q.toLowerCase();L.innerHTML=orders.filter(function(o){return(filter==="All"||o.status===filter)&&(o.id+o.name+o.phone).toLowerCase().indexOf(k)>-1}).map(oc).join("")||'<p class="mu">No orders here.</p>'}
  if(tab==="prods"){$("cl").innerHTML=cats.map(function(c){return '<span class="chip2">'+esc(c.emoji||"")+' '+esc(c.name)+(c.group?' <span class="mu">· '+esc(c.group)+'</span>':'')+'<button data-act="delcat" data-id="'+c.id+'" aria-label="Delete">×</button></span>'}).join("")||'<p class="mu">No categories yet.</p>';
@@ -137,6 +140,25 @@ function implist(){if(!confirm("Add or update "+PL.length+" products from the sh
 PL.forEach(function(p){var sell=p[2]+(p[2]<60?20:25),mrp=Math.ceil(sell*1.18/5)*5;b.set(db.doc("items/pl-"+slug(p[0])),{name:p[0],emoji:p[1],price:sell,mrp:mrp,unit:p[3],category:p[4],inStock:true},{merge:true})});
 b.commit().then(function(){toast(PL.length+" products added")}).catch(function(){toast("Could not import")})}
 function bulkph(fs){var n=0,miss=[];Promise.all([].slice.call(fs).map(function(f){var k=slug(f.name.replace(/\.[^.]+$/,"")),it=items.filter(function(i){return slug(i.name)===k})[0];if(!it){miss.push(f.name);return}return shrink(f,480,.72).then(function(u){return db.doc("items/"+it.id).update({image:u})}).then(function(){n++})})).then(function(){toast(n+" photos added"+(miss.length?", "+miss.length+" not matched":""));if(miss.length)alert("No product matched these file names:\n"+miss.join("\n"))}).catch(function(){toast("Some photos failed")})}
+var BK=[["banners","🖼️","Posters / banners",0],["offers","🏷️","Top offers",1],["cats","🧺","Category tiles",0],["pop","🛒","Product rows",0],["help","💬","“Can’t find?” box",1]],DT={offers:"Top offers for you",help:"Couldn’t find what you are looking for?"},HOME={order:[],b:{},theme:{}},bd={},bid="",drg=null;
+function hget(){var o=HOME.order.filter(function(k){return k.indexOf("c_")===0?HOME.b[k]:true});BK.forEach(function(x){if(o.indexOf(x[0])<0)o.push(x[0])});return o}
+function BD(id){var f=BK.filter(function(x){return x[0]===id})[0];return f||[id,"✨",(HOME.b[id]||{}).title||"Custom block",1]}
+function blk(id){var d=BD(id),b=HOME.b[id]||{};return '<div class="blk" data-id="'+esc(id)+'"><span class="hdl" title="Drag to move">☰</span><div style="flex:1;cursor:pointer" data-act="edblk" data-id="'+esc(id)+'"><b>'+d[1]+' '+esc(d[2])+'</b><div class="mu">'+(b.show===false?'Hidden':'Showing')+(d[3]?' · tap to edit text &amp; colours':' · drag to move')+'</div></div><button class="b2" data-act="tgblk" data-id="'+esc(id)+'">'+(b.show===false?'Show':'Hide')+'</button></div>'}
+function dsg(){var th=HOME.theme||{};return '<div class="card"><div class="rw"><h3>Home page layout</h3><a class="b2" href="index.html" target="_blank" rel="noopener">👁 Preview</a></div><p class="mu">Drag ☰ to reorder. Tap a block to change its text, image and colours. Changes appear on your store instantly.</p><div id="blks">'+hget().map(blk).join("")+'</div><button class="b big" data-act="addblk">+ Add text / image block</button></div>'+
+'<div class="card"><h3>Store colours</h3><div class="g4"><div><label>Page background</label><input type="color" id="tbg" value="'+(th.bg||"#fff8d6")+'"></div><div><label>Text colour</label><input type="color" id="tink" value="'+(th.ink||"#1c1b17")+'"></div><div><label>Button colour</label><input type="color" id="tpri" value="'+(th.pri||"#ffc800")+'"></div></div><div class="acts"><button class="b2" data-act="rsth">Reset colours</button><button class="b" data-act="svth">Save colours</button></div></div>'}
+function hsave(f){HOME.order=hget();db.doc("settings/home").set(HOME).then(function(){toast("Saved ✓");if(f)f();lst()}).catch(function(){toast("Could not save (photo too big?)")})}
+function blkForm(id){var d=BD(id),b=HOME.b[id]||{},cu=id.indexOf("c_")===0,hp=id==="help",tx=cu||hp||id==="offers";bd=Object.assign({},b);bid=id;
+show('<h3>'+d[1]+' '+esc(d[2])+'</h3>'+(tx?'<label for="ft">Heading</label><input id="ft" value="'+esc(b.title||DT[id]||"")+'">':'')+((cu||hp)?'<label for="fx">Text</label><textarea id="fx" rows="3">'+esc(b.text||"")+'</textarea><label for="fb">Button text</label><input id="fb" value="'+esc(b.button||(hp?"Explore now":""))+'">':'')+'<div class="g4"><div><label>Background</label><input type="color" id="fbg" value="'+(bd.bg||"#ffffff")+'"></div><div><label>Text colour</label><input type="color" id="ffg" value="'+(bd.fg||"#1c1b17")+'"></div></div><div class="acts"><button class="b2" data-act="clr" data-v="bg">No background</button><button class="b2" data-act="clr" data-v="fg">Default text</button></div>'+((cu||hp)?'<label class="b2">🖼️ Background photo<input type="file" id="fimg" accept="image/*" hidden></label> <button class="b2" data-act="clr" data-v="image">Remove photo</button>':'')+'<div class="acts"><button class="b2" data-act="close">Cancel</button><button class="b" data-act="svblk">Save</button>'+(cu?'<button class="b dn" data-act="delblk">Delete</button>':'')+'</div>')}
+function svblk(){var id=bid,x=Object.assign({},HOME.b[id]||{},bd);if($("ft"))x.title=$("ft").value.trim();if($("fx"))x.text=$("fx").value.trim();if($("fb"))x.button=$("fb").value.trim();HOME.b[id]=x;hsave(close)}
+function addblk(){var id="c_"+Date.now();HOME.b[id]={title:"New block",text:"Write something here",button:"Shop now",bg:"#ffec99"};HOME.order=hget().concat(id);hsave(function(){blkForm(id)})}
+function delblk(){delete HOME.b[bid];HOME.order=HOME.order.filter(function(k){return k!==bid});hsave(close)}
+function tgblk(id){var b=HOME.b[id]||(HOME.b[id]={});b.show=b.show===false;hsave()}
+function svth(){HOME.theme={bg:$("tbg").value,ink:$("tink").value,pri:$("tpri").value};hsave()}
+document.addEventListener("input",function(e){if(e.target.id==="fbg")bd.bg=e.target.value;if(e.target.id==="ffg")bd.fg=e.target.value});
+document.addEventListener("pointerdown",function(e){var h=e.target.closest(".hdl");if(!h)return;drg=h.closest(".blk");drg.classList.add("dr");e.preventDefault()});
+document.addEventListener("pointermove",function(e){if(!drg)return;var o=document.elementFromPoint(e.clientX,e.clientY),t=o&&o.closest(".blk");if(t&&t!==drg&&t.parentNode===drg.parentNode){var r=t.getBoundingClientRect();t.parentNode.insertBefore(drg,e.clientY<r.top+r.height/2?t:t.nextSibling)}});
+function dend(){if(!drg)return;drg.classList.remove("dr");HOME.order=[].map.call($("blks").children,function(x){return x.dataset.id});drg=null;hsave()}
+document.addEventListener("pointerup",dend);document.addEventListener("pointercancel",dend);
 function find(a,id){return a.filter(function(x){return x.id===id})[0]}
 document.addEventListener("click",function(e){var t=e.target.closest("[data-act]");if(!t||(t.id==="md"&&e.target!==t))return;var a=t.dataset.act,d=t.dataset,id=d.id,v=d.v;
  if(a==="close")close();
@@ -162,7 +184,7 @@ document.addEventListener("click",function(e){var t=e.target.closest("[data-act]
  if(a==="savepost"){if(!$("bt").value.trim()){$("bm").textContent="Enter a title.";return}
   var bb={title:$("bt").value.trim(),subtitle:$("bs").value.trim(),button:$("bb").value.trim()||"Shop Now",emoji:$("be").value.trim(),bg:bbg,image:bimg,active:$("ba").checked};if(!bedit)bb.order=Date.now();
   (bedit?db.doc("banners/"+bedit).update(bb):db.collection("banners").add(bb)).then(function(){close();toast("Poster saved")}).catch(function(){$("bm").textContent="Could not save. Try a smaller photo."})}
- if(a==="impl")implist();if(a==="newcp")cpForm();if(a==="edcp")cpForm(find(cps,id));if(a==="savecp")savecp();if(a==="csv")csv();
+ if(a==="impl")implist();if(a==="addblk")addblk();if(a==="edblk")blkForm(id);if(a==="tgblk")tgblk(id);if(a==="clr"){bd[v]="";toast("Cleared – tap Save")}if(a==="svblk")svblk();if(a==="delblk"&&confirm("Delete this block?"))delblk();if(a==="svth")svth();if(a==="rsth"){HOME.theme={};hsave()}if(a==="newcp")cpForm();if(a==="edcp")cpForm(find(cps,id));if(a==="savecp")savecp();if(a==="csv")csv();
  if(a==="cpact")db.doc("coupons/"+id).update({active:v==="true"});
  if(a==="delcp"&&confirm("Delete this coupon?"))db.doc("coupons/"+id).delete();
  if(a==="qopen"){var op=S.storeOpen===false;db.doc("settings/main").set({storeOpen:op},{merge:true}).then(function(){toast(op?"Store is open":"Store is closed")})}
@@ -171,6 +193,7 @@ document.addEventListener("click",function(e){var t=e.target.closest("[data-act]
 document.addEventListener("change",function(e){var t=e.target;
  if(t.dataset.price)db.doc("items/"+t.dataset.price).update({price:Number(t.value)}).then(function(){toast("Price updated")});
  if(t.id==="bph"&&t.files.length)bulkph(t.files);
+ if(t.id==="fimg"&&t.files[0])shrink(t.files[0],900,.7).then(function(u){bd.image=u;toast("Photo added – tap Save")}).catch(function(){toast("Could not read photo")});
  if(t.id==="pfile"&&t.files[0])shrink(t.files[0],480,.72).then(function(u){pimg=u;$("pv").innerHTML='<img src="'+u+'" alt="">'}).catch(function(){toast("Could not read photo")});
  if(t.id==="bfile"&&t.files[0])shrink(t.files[0],900,.7).then(function(u){bimg=u;bprev()}).catch(function(){toast("Could not read photo")})});
 document.addEventListener("input",function(e){var t=e.target;if(t.id==="q"){q=t.value;lst()}if(/^b[tse]$/.test(t.id))bprev()});
@@ -184,6 +207,7 @@ function start(){render();
  db.collection("items").orderBy("name").onSnapshot(function(s){items=s.docs.map(function(d){return Object.assign({id:d.id},d.data())});lst()});
  db.collection("categories").orderBy("order").onSnapshot(function(s){cats=s.docs.map(function(d){return Object.assign({id:d.id},d.data())});lst()});
  db.collection("banners").orderBy("order","desc").onSnapshot(function(s){banners=s.docs.map(function(d){return Object.assign({id:d.id},d.data())});lst()});
+ db.doc("settings/home").onSnapshot(function(d){HOME=Object.assign({order:[],b:{},theme:{}},d.data()||{});lst()});
  db.collection("coupons").onSnapshot(function(s){cps=s.docs.map(function(d){return Object.assign({id:d.id},d.data())});lst()});
  db.doc("settings/main").onSnapshot(function(d){S=d.data()||{};if(tab==="set")render();else lst()})}
 </script></body></html>
