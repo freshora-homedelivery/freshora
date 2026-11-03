@@ -80,7 +80,7 @@ function oc(o){var n=NEXT[o.status];return '<div class="card"><div class="rw"><b
 '<p style="margin:8px 0">👤 '+esc(o.name)+' · <a href="tel:'+esc(o.phone)+'">📞 '+esc(o.phone)+'</a><br>📍 '+esc(o.address)+(o.lat?' · <a href="https://www.google.com/maps?q='+esc(o.lat)+','+esc(o.lng)+'" target="_blank" rel="noopener">🗺️ Map</a>':'')+'</p>'+(o.items||[]).map(function(x){return '<div class="rw"><span>'+esc(x.name)+' × '+(x.label?esc(x.label):esc(x.qty)+' '+esc(x.unit))+'</span><span>₹'+esc(x.amt!=null?x.amt:Math.round(x.qty*x.price))+'</span></div>'}).join("")+
 '<div class="rw" style="border-top:1px solid var(--l);margin-top:6px;padding-top:6px"><b>Total (delivery ₹'+esc(o.delivery)+')</b><b>₹'+esc(o.total)+'</b></div><div class="acts">'+(n?'<button class="b" data-act="st" data-id="'+esc(o.id)+'" data-v="'+n+'">Mark '+n+'</button>':'')+
 (o.status!=="Cancelled"&&o.status!=="Delivered"?'<button class="b2" data-act="st" data-id="'+esc(o.id)+'" data-v="Cancelled">Cancel</button>':'')+'<button class="b2" data-act="paid" data-id="'+esc(o.id)+'" data-v="'+(!o.paid)+'">'+(o.paid?'Unmark paid':'Payment received')+'</button></div></div>'}
-var offs=[],ofI="",ofBg="",ofE=null,cimg="",cedit=null,catT=null,cps=[],TT={dash:"Dashboard",orders:"Orders",prods:"Products",cust:"Customers",cps:"Coupons",posters:"Posters",design:"Design",set:"Settings"};
+var sqr="";var offs=[],ofI="",ofBg="",ofE=null,cimg="",cedit=null,catT=null,cps=[],TT={dash:"Dashboard",orders:"Orders",prods:"Products",cust:"Customers",cps:"Coupons",posters:"Posters",design:"Design",set:"Settings"};
 var money=function(n){return "₹"+Math.round(n||0).toLocaleString("en-IN")};
 function live(){return orders.filter(function(o){return o.status!=="Cancelled"})}
 function dayTotal(d){var l=live().filter(function(o){return o.createdAt&&o.createdAt.toDate().toDateString()===d.toDateString()});return{n:l.length,r:l.reduce(function(a,o){return a+(o.total||0)},0)}}
@@ -109,7 +109,7 @@ return '<p class="hi">'+(h<12?"Good morning":h<17?"Good afternoon":"Good evening
 '<h3>Recent orders</h3>'+(orders.slice(0,5).map(oc).join("")||'<p class="mu">No orders yet. Add products, then share your store link.</p>')+(items.length?'':'<div class="card"><b>Get started</b><p class="mu">Your store has no products yet.</p><button class="b" data-act="seed">Add sample products</button></div>')}
 function head(){
  if(tab==="orders")return '<div class="bar2"><input id="q" placeholder="🔍 Search tracking ID, name or phone" value="'+esc(q)+'"><button class="b2" data-act="csv">⬇ Export</button></div><div class="chips" id="fc"></div><div id="lst"></div>';
- if(tab==="prods")return '<div class="card"><b>Categories</b> <span class="mu">Tap Edit to change a photo</span><div id="cl"></div><div class="bar2"><input id="cn" placeholder="New category name"><input id="ce" placeholder="Emoji" style="max-width:90px"><input id="cg" placeholder="Group (e.g. Fresh)"><button class="b" data-act="addcat">Add</button></div></div><div class="bar2"><input id="q" placeholder="🔍 Search products" value="'+esc(q)+'"><button class="b" data-act="newprod">+ Product</button><button class="b2" data-act="impl">📥 Import list</button><label class="b2" style="margin:0">🖼️ Photos<input type="file" id="bph" accept="image/*" multiple hidden></label></div><div id="lst"></div>';
+ if(tab==="prods")return '<div class="card"><b>Categories</b> <span class="mu">Tap Edit to change a photo</span><div id="cl"></div><div class="bar2"><input id="cn" placeholder="New category name"><input id="ce" placeholder="Emoji" style="max-width:90px"><input id="cg" placeholder="Group (e.g. Fresh)"><button class="b" data-act="addcat">Add</button></div></div><div class="bar2"><input id="q" placeholder="🔍 Search products" value="'+esc(q)+'"><button class="b" data-act="newprod">+ Product</button><button class="b2" data-act="aiopen">✨ AI Import</button><button class="b2" data-act="impl">📥 Import list</button><label class="b2" style="margin:0">🖼️ Photos<input type="file" id="bph" accept="image/*" multiple hidden></label></div><div id="lst"></div>';
  if(tab==="design")return '<div class="dg"><div id="lst"></div><iframe id="pvf" src="index.html" title="Store preview"></iframe></div>';
  if(tab==="cust")return '<input id="q" placeholder="🔍 Search name or phone" value="'+esc(q)+'"><div id="lst"></div>';
  if(tab==="cps")return '<div class="bar2"><b>Discount coupons</b><button class="b" data-act="newcp">+ New coupon</button></div><div id="lst"></div>';
@@ -126,10 +126,10 @@ function lst(){chrome();var L=$("lst");if(!L)return;
   var k=q.toLowerCase();L.innerHTML=items.filter(function(i){return i.name.toLowerCase().indexOf(k)>-1}).map(function(i){return '<div class="card it">'+thumb(i)+'<div style="flex:1;min-width:0"><b>'+esc(i.name)+'</b> <span class="mu">'+esc(i.category)+'</span><div class="rw" style="justify-content:flex-start">₹<input type="number" style="width:84px" value="'+esc(i.price)+'" data-price="'+i.id+'" aria-label="Price"> <span class="mu">/ '+esc(i.unit)+'</span></div>'+
   '<div class="acts"><button class="b2" data-act="stock" data-id="'+i.id+'" data-v="'+(i.inStock===false)+'">'+(i.inStock===false?'Hidden · show':'In stock · hide')+'</button><button class="b2" data-act="edprod" data-id="'+i.id+'">Edit</button><button class="b2 dn" style="color:#fff" data-act="delprod" data-id="'+i.id+'">Delete</button></div></div></div>'}).join("")||'<p class="mu">No products yet.</p><button class="b" data-act="seed">Add sample products</button>'}
  if(tab==="posters")L.innerHTML=(banners.map(function(b){return '<div class="card">'+(b.image?'<img src="'+esc(b.image)+'" style="width:100%;height:auto;border-radius:14px;display:block" alt="">':'<div class="pv" style="background:'+esc(bpv(b))+';background-size:cover;background-position:center"><div><b style="font-size:20px">'+esc(b.emoji||"")+' '+esc(b.title)+'</b><br>'+esc(b.subtitle||"")+'</div></div>')+'<div class="acts"><button class="b2" data-act="bact" data-id="'+b.id+'" data-v="'+(b.active===false)+'">'+(b.active===false?'Hidden · show':'Showing · hide')+'</button><button class="b2" data-act="edpost" data-id="'+b.id+'">Edit</button><button class="b2 dn" style="color:#fff" data-act="delpost" data-id="'+b.id+'">Delete</button></div></div>'}).join("")||'<p class="mu">No posters yet. Tap "+ New poster" to make an offer banner for your home page.</p>')+offsec();
- if(tab==="set"&&!$("sf")){var s=Object.assign({},DEFAULTS,S);L.innerHTML='<div class="card"><label><input type="checkbox" id="so" style="width:auto" '+(s.storeOpen===false?'':'checked')+'> Store is open for orders</label><label for="sc">Message when closed</label><input id="sc" value="'+esc(s.closedMsg||"")+'" placeholder="Closed today. Back tomorrow!"><label for="sa">Announcement bar (top of store)</label><input id="sa" value="'+esc(s.announce||"")+'" placeholder="Free delivery this weekend!"></div>'+
+ if(tab==="set"&&!$("sf")){var s=Object.assign({},DEFAULTS,S);sqr=s.upiQr||"";L.innerHTML='<div class="card"><label><input type="checkbox" id="so" style="width:auto" '+(s.storeOpen===false?'':'checked')+'> Store is open for orders</label><label for="sc">Message when closed</label><input id="sc" value="'+esc(s.closedMsg||"")+'" placeholder="Closed today. Back tomorrow!"><label for="sa">Announcement bar (top of store)</label><input id="sa" value="'+esc(s.announce||"")+'" placeholder="Free delivery this weekend!"></div>'+
   '<div class="card"><b>Shop location</b><p class="mu">Open this page on your phone at the shop and tap the button. Or paste the numbers from Google Maps.</p><button class="b2" data-act="myloc">📍 Use my current location</button><div class="g4"><div><label for="la">Latitude</label><input id="la" type="number" step="any" value="'+esc(s.lat||"")+'"></div><div><label for="lo">Longitude</label><input id="lo" type="number" step="any" value="'+esc(s.lng||"")+'"></div><div><label for="fk">Free delivery radius (km)</label><input id="fk" type="number" step="any" value="'+esc(s.freeKm||3)+'"></div><div><label for="mk">Maximum delivery radius (km)</label><input id="mk" type="number" step="any" value="'+esc(s.maxKm||5)+'"></div></div></div>'+
   '<div class="card"><b>Delivery rules</b><label for="sf">Free delivery above (₹, within 3 km)</label><input id="sf" type="number" value="'+esc(s.freeAbove)+'"><label for="sn">Fee within 3 km below that (₹)</label><input id="sn" type="number" value="'+esc(s.nearFee)+'"><label for="sr">Fee for 3 to 5 km (₹)</label><input id="sr" type="number" value="'+esc(s.farFee)+'"></div>'+
-  '<div class="card"><p class="mu" style="margin:0 0 8px">Online payments go through Razorpay. Add your Razorpay Key ID below.</p><label for="sw">Support WhatsApp number (with country code)</label><input id="sw" value="'+esc(s.wa||"918884469933")+'"><label for="sph">Customer support phone</label><input id="sph" value="'+esc(s.phone||"918884479933")+'"><label for="sem">Support email</label><input id="sem" value="'+esc(s.email||"freshorasupport@gmail.com")+'"><label for="sln">Business legal name (shown in policies)</label><input id="sln" value="'+esc(s.legalName||"")+'" placeholder="Your registered business name"><label for="sad">Business address (shown in policies)</label><input id="sad" value="'+esc(s.address||"")+'" placeholder="Kalladka, Dakshina Kannada, Karnataka 574222"><label for="sk">Razorpay Key ID (starts with rzp_)</label><input id="sk" value="'+esc(s.razorpayKey||"")+'" placeholder="rzp_live_xxxxx"><p class="mu">Only the Key ID goes here. Never share your Key Secret.</p></div><button class="b big" data-act="saveset">Save settings</button>'}}
+  '<div class="card"><p class="mu" style="margin:0 0 8px">Online payments go through Razorpay. Add your Razorpay Key ID below.</p><label for="sw">Support WhatsApp number (with country code)</label><input id="sw" value="'+esc(s.wa||"918884469933")+'"><label for="sph">Customer support phone</label><input id="sph" value="'+esc(s.phone||"918884479933")+'"><label for="sem">Support email</label><input id="sem" value="'+esc(s.email||"freshorasupport@gmail.com")+'"><label for="sln">Business legal name (shown in policies)</label><input id="sln" value="'+esc(s.legalName||"")+'" placeholder="Your registered business name"><label for="sad">Business address (shown in policies)</label><input id="sad" value="'+esc(s.address||"")+'" placeholder="Kalladka, Dakshina Kannada, Karnataka 574222"><label for="sk">Razorpay Key ID (starts with rzp_)</label><input id="sk" value="'+esc(s.razorpayKey||"")+'" placeholder="rzp_live_xxxxx"><p class="mu">Only the Key ID goes here. Never share your Key Secret.</p><label for="sup">UPI ID (for UPI payments, e.g. name@okaxis)</label><input id="sup" value='+'"'+esc(s.upiId||"")+'"'+' placeholder="yourname@upi"><label for="sunm">Name shown in the UPI app</label><input id="sunm" value="'+esc(s.upiName||"")+'" placeholder="Freshora"><label>Your UPI QR image (optional)</label><div id="sqp" style="margin:6px 0">'+(sqr?'<img src="'+esc(sqr)+'" alt="QR" style="width:140px;border-radius:8px">':"No QR uploaded")+'</div><label class="b2">Choose QR image<input type="file" id="sqf" accept="image/*" hidden></label> <button class="b2" data-act="rmsq">Remove QR</button><p class="mu">Add your UPI ID, or a QR image, or both. If both are empty, the UPI option is hidden from customers. Razorpay stays as it is.</p></div><button class="b big" data-act="saveset">Save settings</button>'}}
 function render(){$("main").innerHTML=head();lst()}
 function bpv(b){return b.image?'linear-gradient(90deg,#0009,#0001),url('+b.image+')':(b.bg||GR[0])}
 function prodForm(p){p=p||{};pimg=p.image||"";editId=p.id||null;show('<h3>'+(p.id?'Edit':'Add')+' product</h3><div class="th" id="pv" style="width:100px;height:100px">'+(pimg?'<img src="'+esc(pimg)+'" alt="">':esc(p.emoji||"🥬"))+'</div><label class="b2">📷 Take / choose photo<input type="file" id="pfile" accept="image/*" hidden></label> <button class="b2" data-act="rmimg">Remove photo</button>'+
@@ -213,7 +213,7 @@ document.addEventListener("click",function(e){var t=e.target.closest("[data-act]
  if(a==="qopen"){var op=S.storeOpen===false;db.doc("settings/main").set({storeOpen:op},{merge:true}).then(function(){toast(op?"Store is open":"Store is closed")})}
  if(a==="col"){document.querySelectorAll("#sw .sw").forEach(function(s){s.classList.toggle("on",s===t)})}
  if(a==="myloc"){if(!navigator.geolocation){toast("Location is not available on this phone");return}navigator.geolocation.getCurrentPosition(function(p){$("la").value=p.coords.latitude.toFixed(6);$("lo").value=p.coords.longitude.toFixed(6);toast("Location filled. Tap Save settings.")},function(){toast("Allow location access, or type the numbers from Google Maps")},{enableHighAccuracy:true,timeout:15000})}
- if(a==="saveset"){db.doc("settings/main").set({storeOpen:$("so").checked,closedMsg:$("sc").value.trim(),announce:$("sa").value.trim(),freeAbove:Number($("sf").value),nearFee:Number($("sn").value),farFee:Number($("sr").value),lat:Number($("la").value)||0,lng:Number($("lo").value)||0,freeKm:Number($("fk").value)||3,maxKm:Number($("mk").value)||5,wa:$("sw").value.replace(/\D/g,""),phone:$("sph").value.replace(/\D/g,""),email:$("sem").value.trim(),legalName:$("sln").value.trim(),address:$("sad").value.trim(),razorpayKey:$("sk").value.trim()},{merge:true}).then(function(){toast("Settings saved ✓")})}});
+ if(a==="saveset"){db.doc("settings/main").set({storeOpen:$("so").checked,closedMsg:$("sc").value.trim(),announce:$("sa").value.trim(),freeAbove:Number($("sf").value),nearFee:Number($("sn").value),farFee:Number($("sr").value),lat:Number($("la").value)||0,lng:Number($("lo").value)||0,freeKm:Number($("fk").value)||3,maxKm:Number($("mk").value)||5,wa:$("sw").value.replace(/\D/g,""),phone:$("sph").value.replace(/\D/g,""),email:$("sem").value.trim(),legalName:$("sln").value.trim(),address:$("sad").value.trim(),razorpayKey:$("sk").value.trim(),upiId:$("sup").value.trim(),upiName:$("sunm").value.trim(),upiQr:sqr||""},{merge:true}).then(function(){toast("Settings saved ✓")})}});
 document.addEventListener("change",function(e){var t=e.target;
  if(t.dataset.price)db.doc("items/"+t.dataset.price).update({price:Number(t.value)}).then(function(){toast("Price updated")});
  if(t.id==="bph"&&t.files.length)bulkph(t.files);
@@ -237,4 +237,103 @@ function start(){render();
  db.doc("settings/home").onSnapshot(function(d){HOME=Object.assign({order:[],b:{},theme:{}},d.data()||{});lst()});
  db.collection("coupons").onSnapshot(function(s){cps=s.docs.map(function(d){return Object.assign({id:d.id},d.data())});lst()});
  db.doc("settings/main").onSnapshot(function(d){S=d.data()||{};if(tab==="set")render();else lst()})}
-</script></body></html>
+</script><script>
+/* Freshora AI product import (Gemini free tier). Key is kept only in this browser. */
+(function(){
+var GK="fr_gkey",GM="fr_gmodels",UN=["kg","g","piece","bunch","dozen","litre","pack"],pend=[],files=[];
+function gk(){try{return localStorage.getItem(GK)||""}catch(e){return""}}
+function sv(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function say(t,ok){var m=document.getElementById("aim");if(m){m.textContent=t;m.style.color=ok?"var(--g)":""}}
+function key(){var k=(document.getElementById("aik")||{}).value;k=(k||"").trim();if(k)sv(GK,k);return k||gk()}
+
+function openAI(){
+ show('<h3>\u2728 AI product import</h3><p class="mu">Upload a price-list photo or PDF, or just type what to add. AI reads it, then you check and edit the list before anything is saved.</p>'
+ +'<label for="aik">Free Gemini API key (kept only in this browser)</label><input id="aik" type="password" value="'+esc(gk())+'" placeholder="Paste your key here">'
+ +'<p class="mu"><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener"><u>Get a free key</u></a> (sign in with Google, tap Create API key). On the free plan Google may use what you send to improve its products, so upload only price lists, never customer details.</p>'
+ +'<label class="b2">\uD83D\uDCF7 Choose photo(s) or PDF<input type="file" id="aif" accept="image/*,application/pdf" multiple hidden></label> <span class="mu" id="aifn">No file chosen</span>'
+ +'<label for="ait">Or tell AI what to add</label><textarea id="ait" rows="4" placeholder="Add tomato 40 per kg, onion 35 per kg, coriander 10 per bunch, eggs 6 per piece"></textarea>'
+ +'<div class="msg" id="aim"></div><div class="acts"><button class="b2" data-act="close">Cancel</button><button class="b" data-act="airun">Read with AI</button></div>'
+ +'<div class="acts"><button class="b2" data-act="aidesc">Write missing descriptions for my products</button></div><div id="aiout"></div>');
+ pend=[];files=[]}
+
+function b64(f){return new Promise(function(ok,no){var r=new FileReader();r.onload=function(){ok(String(r.result).split(",")[1])};r.onerror=no;r.readAsDataURL(f)})}
+function parts(){return Promise.all(files.map(function(f){
+ if(f.type==="application/pdf"){if(f.size>12e6)return Promise.reject({msg:"This PDF is too big (max 12 MB). Split it or use photos."});return b64(f).then(function(d){return{inline_data:{mime_type:"application/pdf",data:d}}})}
+ return fit(f,1800,1200000).then(function(u){return{inline_data:{mime_type:"image/jpeg",data:u.split(",")[1]}}})}))}
+
+function H(k){return{"Content-Type":"application/json","x-goog-api-key":k}}
+function cands(k){var c=[];try{c=JSON.parse(localStorage.getItem(GM)||"[]")}catch(e){}
+ if(c.length)return Promise.resolve(c);
+ return fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200",{headers:H(k)}).then(function(r){
+  if(r.status===400||r.status===401||r.status===403)throw{msg:"Your API key was not accepted. Copy it again from aistudio.google.com/apikey."};
+  if(!r.ok)throw{msg:"Could not reach Google AI. Check internet and try again."};return r.json()}).then(function(j){
+  var l=(j.models||[]).filter(function(m){return(m.supportedGenerationMethods||[]).indexOf("generateContent")>-1}).map(function(m){return m.name.replace("models/","")}).filter(function(n){return/^gemini-[\d.]+-flash$/.test(n)});
+  l.sort(function(a,b){return parseFloat(b.split("-")[1])-parseFloat(a.split("-")[1])});
+  if(!l.length)l=["gemini-2.5-flash"];l=l.slice(0,3);sv(GM,JSON.stringify(l));return l})}
+function gen(k,ps){return cands(k).then(function(c){var i=0;
+ function next(){var m=c[i++];if(!m){try{localStorage.removeItem(GM)}catch(e){}return Promise.reject({msg:"AI is busy or today's free limit is used. Wait a minute and try again."})}
+  return fetch("https://generativelanguage.googleapis.com/v1beta/models/"+m+":generateContent",{method:"POST",headers:H(k),body:JSON.stringify({contents:[{parts:ps}],generationConfig:{temperature:.2,responseMimeType:"application/json"}})}).then(function(r){
+   if([403,404,429,500,503].indexOf(r.status)>-1)return next();
+   if(!r.ok)return r.json().catch(function(){return{}}).then(function(j){throw{msg:"AI could not process this: "+((j.error&&j.error.message)||r.status)}});
+   return r.json().then(function(j){var t=((((j.candidates||[])[0]||{}).content||{}).parts||[]).map(function(p){return p.text||""}).join("");
+    t=t.replace(/^```json|^```|```$/gm,"").trim();var o;try{o=JSON.parse(t)}catch(e){throw{msg:"AI reply could not be read. Try again or use a clearer photo."}}
+    if(!Array.isArray(o))o=o.products||o.items||[];return o})})}
+ return next()})}
+
+var RULES='You help the owner of a small grocery shop in Kalladka, Karnataka, India add products to his online store. '
++'Return ONLY a JSON array. Each element: {"name": short customer-friendly English title such as "Tomato" (keep a local name in brackets if the list shows one), '
++'"price": selling price in rupees as a number for ONE of the returned unit, or null if no price is shown, "mrp": higher printed MRP as a number or 0, '
++'"unit": exactly one of kg, g, piece, bunch, dozen, litre, pack (use kg for loose fruit, vegetables and meat if unclear, pack for packaged goods), '
++'"category": one of the existing categories if it fits, otherwise a short new category name, "emoji": one fitting emoji, '
++'"desc": one or two friendly sentences for customers, "hl": array of 3 short selling points}. '
++'Rules: never invent or guess prices, copy them exactly as shown; skip rows that are not products; desc and hl must be generic and truthful, with no health or medical claims and no made-up brand, origin or certification.';
+
+function catNames(){return(window.cats||cats||[]).map(function(c){return c.name})}
+function run(){var k=key();if(!k){say("Paste your free Gemini API key first.");return}
+ var txt=(document.getElementById("ait").value||"").trim();if(!files.length&&!txt){say("Choose a photo or PDF, or type what to add.");return}
+ say("Reading with AI\u2026 this can take 10 to 30 seconds.",true);document.getElementById("aiout").innerHTML="";
+ parts().then(function(ps){ps.push({text:RULES+"\nExisting categories: "+JSON.stringify(catNames())+"\nOwner's typed instructions: "+(txt||"(none, read the attached file)")});return gen(k,ps)}).then(function(o){
+  pend=o.filter(function(p){return p&&p.name}).slice(0,150).map(function(p){var pr=(p.price===null||p.price===""||p.price===undefined)?"":Number(p.price);
+   return{inc:pr!==""&&pr>=0,name:String(p.name).trim(),price:isNaN(pr)?"":pr,mrp:Number(p.mrp)||0,unit:UN.indexOf(p.unit)>-1?p.unit:"kg",category:String(p.category||"Others").trim(),emoji:String(p.emoji||"").trim(),desc:String(p.desc||"").trim(),hl:Array.isArray(p.hl)?p.hl.map(String).slice(0,5):[]}});
+  if(!pend.length){say("AI found no products. Try a clearer photo or type them.");return}
+  say("Found "+pend.length+" products. Check them, fix anything wrong, then tap Add.",true);draw()}).catch(function(e){say(e&&e.msg?e.msg:"Could not read this file. Try a clearer photo.")})}
+
+function ex(n){var s=slug(n);return items.filter(function(i){return slug(i.name)===s})[0]}
+function draw(){var o=document.getElementById("aiout");
+ o.innerHTML='<datalist id="aicl">'+catNames().map(function(c){return'<option value="'+esc(c)+'">'}).join("")+'</datalist>'
+ +pend.map(function(p,i){var e=ex(p.name);return'<div class="card" style="margin:8px 0"><label><input type="checkbox" data-ai="inc" data-i="'+i+'" style="width:auto" '+(p.inc?'checked':'')+'> <b>Add</b>'+(e?' <span class="mu">\u00B7 already exists, will update</span>':'')+'</label>'
+ +'<input data-ai="name" data-i="'+i+'" value="'+esc(p.name)+'" placeholder="Name">'
+ +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><input data-ai="price" data-i="'+i+'" type="number" inputmode="decimal" value="'+esc(p.price)+'" placeholder="Price \u20B9 (required)" '+(p.price===""?'style="border-color:var(--r)"':'')+'><input data-ai="mrp" data-i="'+i+'" type="number" inputmode="decimal" value="'+(p.mrp||"")+'" placeholder="MRP \u20B9 (optional)"></div>'
+ +'<div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px"><select data-ai="unit" data-i="'+i+'">'+UN.map(function(u){return'<option'+(u===p.unit?' selected':'')+'>'+u+'</option>'}).join("")+'</select><input data-ai="category" data-i="'+i+'" list="aicl" value="'+esc(p.category)+'" placeholder="Category"><input data-ai="emoji" data-i="'+i+'" value="'+esc(p.emoji)+'"></div>'
+ +'<textarea data-ai="desc" data-i="'+i+'" rows="2" placeholder="Description">'+esc(p.desc)+'</textarea></div>'}).join("")
+ +'<div class="acts"><button class="b big" data-act="aiadd">Add selected products</button></div>'}
+
+function add(){var sel=pend.filter(function(p){return p.inc});if(!sel.length){say("Tick at least one product.");return}
+ var bad=sel.filter(function(p){return!p.name.trim()||p.price===""||!(Number(p.price)>=0)});if(bad.length){say("Enter a price for every ticked product ("+bad.length+" missing).");return}
+ var b=db.batch(),have={};(cats||[]).forEach(function(c){have[c.name.toLowerCase()]=c.name});var newc={};
+ sel.forEach(function(p){var cn=have[p.category.toLowerCase()]||p.category||"Others";if(!have[cn.toLowerCase()]&&!newc[cn])newc[cn]=p.emoji||"\uD83D\uDED2";
+  var d={name:p.name.trim(),price:Number(p.price),mrp:Number(p.mrp)>Number(p.price)?Number(p.mrp):0,unit:p.unit,category:cn,emoji:p.emoji,desc:p.desc,hl:p.hl,inStock:true},e=ex(p.name);
+  if(e)b.set(db.doc("items/"+e.id),d,{merge:true});else{d.step=250;b.set(db.collection("items").doc(),d)}});
+ Object.keys(newc).forEach(function(n,i){b.set(db.doc("categories/"+slug(n)),{name:n,emoji:newc[n],order:Date.now()+i},{merge:true})});
+ b.commit().then(function(){close();toast(sel.length+" products saved \u2713")}).catch(function(){say("Could not save. Check your internet and that you are logged in as admin.")})}
+
+function descs(){var k=key();if(!k){say("Paste your free Gemini API key first.");return}
+ var l=items.filter(function(i){return!i.desc}).slice(0,40);if(!l.length){say("All your products already have descriptions.",true);return}
+ say("Writing descriptions for "+l.length+" products\u2026",true);
+ gen(k,[{text:'Write customer-facing text for these grocery products of a small shop in Kalladka, Karnataka. Return ONLY a JSON array: [{"name": exactly as given, "desc": one or two friendly sentences, "hl": array of 3 short selling points}]. Be generic and truthful: no health or medical claims, no made-up brand, origin or certification.\nProducts: '+JSON.stringify(l.map(function(i){return i.name}))}]).then(function(o){
+  var b=db.batch(),n=0;o.forEach(function(r){var it=items.filter(function(i){return r&&String(r.name).toLowerCase()===i.name.toLowerCase()})[0];if(it&&r.desc){b.update(db.doc("items/"+it.id),{desc:String(r.desc),hl:Array.isArray(r.hl)?r.hl.map(String).slice(0,5):[]});n++}});
+  if(!n){say("AI did not return usable text. Try again.");return}
+  return b.commit().then(function(){close();toast(n+" descriptions added \u2713")})}).catch(function(e){say(e&&e.msg?e.msg:"Could not write descriptions. Try again.")})}
+
+document.addEventListener("click",function(e){var t=e.target.closest("[data-act]");if(!t)return;var a=t.dataset.act;
+ if(a==="aiopen")openAI();if(a==="airun")run();if(a==="aiadd")add();if(a==="aidesc")descs();
+ if(a==="rmsq"){window.sqr="";var p=document.getElementById("sqp");if(p)p.textContent="No QR uploaded"}});
+function sync(e){var t=e.target,f=t.dataset&&t.dataset.ai;if(!f)return;var p=pend[Number(t.dataset.i)];if(!p)return;
+ if(f==="inc")p.inc=t.checked;else if(f==="price"||f==="mrp")p[f]=t.value===""?"":Number(t.value);else p[f]=t.value}
+document.addEventListener("input",sync);
+document.addEventListener("change",function(e){sync(e);var t=e.target;
+ if(t.id==="aif"){files=[].slice.call(t.files);document.getElementById("aifn").textContent=files.length?files.length+" file(s) chosen":"No file chosen"}
+ if(t.id==="sqf"&&t.files[0])fit(t.files[0],480,70000).then(function(u){window.sqr=u;var p=document.getElementById("sqp");if(p)p.innerHTML='<img src="'+u+'" alt="QR" style="width:140px;border-radius:8px">'})});
+})();
+</script>
+</body></html>
