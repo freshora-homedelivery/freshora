@@ -142,6 +142,7 @@ if(typeof esc==="undefined"||typeof DEFAULTS==="undefined"||!DEFAULTS){window.es
 var DEMO=(typeof db==="undefined")||FIREBASE_CONFIG.apiKey==="PASTE_HERE";
 var $=function(i){return document.getElementById(i)},ls=function(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}return null};
 var items=[],catDocs=[],banners=[],cps=[],qty={},cat="All",sort="pop",S=DEFAULTS,view="home",step=1,coupon=null,pm="Cash on delivery",zone="near",unsub=null,STEPS=["New","Packed","Out for delivery","Delivered"];
+try{qty=JSON.parse(ls("cart")||"{}")||{}}catch(e){qty={}}
 var wish={};try{wish=JSON.parse(ls("wish")||"{}")}catch(e){}
 var DEMO_ITEMS=[["Tomato","🍅",40,48,"kg","Vegetables"],["Onion","🧅",35,0,"kg","Vegetables"],["Potato","🥔",30,0,"kg","Vegetables"],["Cucumber","🥒",30,36,"kg","Vegetables"],["Banana","🍌",60,70,"kg","Fruits"],["Papaya","🧡",40,0,"kg","Fruits"],["Lemon","🍋",5,0,"piece","Fruits"],["Coconut","🥥",30,35,"piece","Others"]].map(function(a,i){return{id:"d"+i,name:a[0],emoji:a[1],price:a[2],mrp:a[3],unit:a[4],category:a[5]}});
 if(DEMO)items=DEMO_ITEMS;else{
@@ -214,7 +215,7 @@ if(id.indexOf("c_")===0)return '<div class="cb" style="'+bst(b)+'"><h2>'+esc(b.t
 function homeR(){var o=hord(),first=o[0]==="offers"&&(HOME.b.offers||{}).show!==false;
 $("hh").innerHTML='<div class="yh"><div class="hr1"><span class="circ" aria-hidden="true">📍</span><b id="locT">'+esc(hname()||"Kalladka")+'</b><a class="circ" href="#offers" aria-label="Offers">🔔</a></div>'+(first?blkH("offers",true):"")+'</div>';
 $("hp").innerHTML=o.filter(function(k,i){return!(first&&i===0)}).map(function(k){var h=blkH(k,false);return h?'<div class="hb">'+h+'</div>':""}).join("");locUi()}
-function all(){var c=calc();document.querySelectorAll(".cn").forEach(function(b){b.hidden=!c.n;b.textContent=c.n});
+function all(){var c=calc();ls("cart",JSON.stringify(qty));document.querySelectorAll(".cn").forEach(function(b){b.hidden=!c.n;b.textContent=c.n});
 if(view==="home")homeR();
 if(view==="all"){$("chips").innerHTML=["All"].concat(cats()).map(function(k){return '<button class="ch'+(k===cat?' on':'')+'" data-c="'+esc(k)+'">'+esc(k)+'</button>'}).join("");var qq=$("aq").value.toLowerCase(),o=function(i){return i.mrp>i.price?i.mrp/i.price:1},l=items.filter(function(i){return(cat==="All"||i.category===cat||(cat.charAt(0)==="@"&&grpOf(i.category)===cat.slice(1)))&&i.name.toLowerCase().indexOf(qq)>-1});
  if(sort==="lo")l.sort(function(a,b){return a.price-b.price});if(sort==="hi")l.sort(function(a,b){return b.price-a.price});if(sort==="off")l.sort(function(a,b){return o(b)-o(a)});put("al",l,"No products found.")}
@@ -244,25 +245,36 @@ var oMap={},oUn=[],oSel="",lvU=null,lvMap=null;
 var OST=["Order placed","Packed","Out for delivery","Delivered"],OSUB=["We received your order","Your items are packed","Your order is on the way","Delivered. Enjoy!"];
 function oWhen(o){var t=o.createdAt&&o.createdAt.toDate?o.createdAt.toDate():null;return t?t.toLocaleString("en-IN",{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"}):"Just now"}
 function oTh(x){var it=itm(x.id),im=it.image?'<img src="'+esc(it.image)+'" alt="" loading="lazy">':esc(it.emoji||x.emoji||"\uD83D\uDED2");return'<span class="oth">'+im+'</span>'}
-function oPay(o){if(o.paid)return'<span class="chip">Paid \u2713</span>';if(o.payState==="pending")return'<span class="chip w">Waiting for payment</span>';if(o.payState==="claimed")return'<span class="chip w">Payment being confirmed</span>';if(/^UPI/.test(o.payment||""))return'<span class="chip w">UPI payment being confirmed</span>';return'<span class="chip w">Pay on delivery</span>'}
-function oSt(o){return o.status==="Cancelled"?'<span class="chip x">Cancelled</span>':'<span class="chip">'+esc(o.status==="New"?"Order placed":o.status)+'</span>'}
+function oPaid(o){return o.paid||o.payState==="paid"}
+function oWait(o){return(o.payState==="pending"||o.payState==="claimed"||o.payState==="mismatch")&&!oPaid(o)}
+function oPay(o){if(oPaid(o))return'<span class="chip">Paid \u2713</span>';if(o.payState==="failed")return'<span class="chip x">Payment failed</span>';if(oWait(o))return'<span class="chip w">Confirming payment</span>';if(/^UPI/.test(o.payment||""))return'<span class="chip w">UPI payment being confirmed</span>';return'<span class="chip w">Pay on delivery</span>'}
+function oSt(o){if(o.payState==="failed")return'<span class="chip x">Payment failed</span>';if(oWait(o))return'<span class="chip w">Confirming payment</span>';return o.status==="Cancelled"?'<span class="chip x">Cancelled</span>':'<span class="chip">'+esc(o.status==="New"?"Order placed":o.status)+'</span>'}
+function hideTl(o){return o.payState==="failed"||oWait(o)}
+function oBan(o){if(o.payState==="paid"||(o.paid&&o.payState))return'<div class="msg" style="background:#e8f5e9;color:#1b5e20;padding:12px;border-radius:14px;font-weight:800;margin:8px 0">\u2705 Payment successful. Thank you!</div>';
+ if(o.payState==="failed")return'<div class="msg" style="background:#fde8e8;color:#b42318;padding:12px;border-radius:14px;margin:8px 0"><b>\u274C Payment unsuccessful.</b><br>Your order was not confirmed. If any money was deducted, your bank normally returns it in 5 to 7 days.</div><button class="add" data-reo="'+esc(o.id)+'" style="padding:14px;margin-bottom:8px">Try again</button>';
+ if(oWait(o))return'<div class="msg" style="background:#fff4d6;color:#8a5a00;padding:12px;border-radius:14px;margin:8px 0"><b>\u23F3 Confirming your payment\u2026</b><br>This updates by itself. Please do not pay again.</div>';return""}
+function kickPay(tid){if(!S.payUrl||DEMO)return;[0,4000,12000].forEach(function(t){setTimeout(function(){try{fetch(S.payUrl+"?order="+encodeURIComponent(tid)).catch(function(){})}catch(e){}},t)})}
+var pTm=null;
+function pollPay(){clearInterval(pTm);if(!S.payUrl||DEMO)return;var f=function(){if(view!=="track"){clearInterval(pTm);return}Object.keys(oMap).map(function(k){return oMap[k]}).filter(oWait).slice(0,3).forEach(function(o){try{fetch(S.payUrl+"?order="+encodeURIComponent(o.id)).catch(function(){})}catch(e){}})};f();pTm=setInterval(f,6000)}
+function oSet(id,data){var old=oMap[id];oMap[id]=Object.assign({id:id},data);if(old&&oWait(old)){if(oPaid(oMap[id]))toast("Payment successful \u2705");else if(data.payState==="failed")toast("Payment unsuccessful \u274C")}}
+function reorder(o){qty={};(o.items||[]).forEach(function(x){var it=itm(x.id);if(!it.id)return;qty[x.id]=meas(it)?Math.round(x.qty*1000):x.qty});ls("cart",JSON.stringify(qty));go("cart")}
 function ordR(){var w=$("ordw");if(!w||view!=="track")return;
  var l=Object.keys(oMap).map(function(k){return oMap[k]}).sort(function(a,b){return(b.createdAt&&b.createdAt.seconds?b.createdAt.seconds:9e9)-(a.createdAt&&a.createdAt.seconds?a.createdAt.seconds:9e9)}).slice(0,15);
  if(oSel&&oMap[oSel]){var o=oMap[oSel],i=STEPS.indexOf(o.status),dn=o.status==="Delivered";
-  w.innerHTML='<button class="ch" data-ob style="margin:0 0 6px">\u2190 All orders</button><div class="bx"><div class="rw"><b style="font-size:18px">Order #'+esc(o.id)+'</b>'+oSt(o)+'</div><div class="mu">'+esc(oWhen(o))+'</div>'
-  +(o.status==="Cancelled"?'<p class="msg">This order was cancelled.</p>':'<ul class="tl2">'+OST.map(function(s,k){return'<li class="'+(k<=i?'on':'')+'"><span class="dot">'+(k<=i?'\u2713':'')+'</span><div><b>'+s+'</b><small>'+(k===i?OSUB[k]:k<i?"Done":"")+'</small></div></li>'}).join("")+'</ul>')+'</div>'
+  w.innerHTML='<button class="ch" data-ob style="margin:0 0 6px">\u2190 All orders</button>'+oBan(o)+'<div class="bx"><div class="rw"><b style="font-size:18px">Order #'+esc(o.id)+'</b>'+oSt(o)+'</div><div class="mu">'+esc(oWhen(o))+'</div>'
+  +(hideTl(o)?'':o.status==="Cancelled"?'<p class="msg">This order was cancelled.</p>':'<ul class="tl2">'+OST.map(function(s,k){return'<li class="'+(k<=i?'on':'')+'"><span class="dot">'+(k<=i?'\u2713':'')+'</span><div><b>'+s+'</b><small>'+(k===i?OSUB[k]:k<i?"Done":"")+'</small></div></li>'}).join("")+'</ul>')+'</div>'
   +(o.status==="Out for delivery"?'<button class="add" data-live="'+esc(o.id)+'" style="padding:15px;font-size:17px">\uD83D\uDCCD Track live location</button>':'')
   +'<div class="bx"><h3>Products</h3>'+(o.items||[]).map(function(x){return'<div class="pl">'+oTh(x)+'<div><b>'+esc(x.name)+'</b><br><span class="mu">'+ll(x)+'</span></div><b>\u20B9'+esc(la(x))+'</b></div>'}).join("")+'</div>'
   +'<div class="bx"><div class="rw"><span>Subtotal</span><span>\u20B9'+esc(o.subtotal)+'</span></div>'+(o.discount?'<div class="rw"><span>Coupon '+esc(o.coupon||"")+'</span><b style="color:var(--pri)">\u2212\u20B9'+esc(o.discount)+'</b></div>':'')+'<div class="rw"><span>Delivery</span><span>'+(o.delivery?'\u20B9'+esc(o.delivery):'FREE')+'</span></div><div class="rw tt"><span>Total</span><span>\u20B9'+esc(o.total)+'</span></div><div style="margin-top:8px">'+oPay(o)+'</div></div>'
   +'<div class="bx"><h3>Delivery address</h3><p style="margin:0">'+esc(o.name||"")+'<br>'+esc(o.address||"")+'</p></div>'
   +'<a class="add" style="display:block;text-align:center;padding:13px;background:#fff;color:var(--ink);border:2px solid var(--ink);text-decoration:none" href="tel:+'+esc(String(C("phone")).replace(/\D/g,""))+'">\uD83D\uDCDE Call the shop</a>';return}
  oSel="";
- w.innerHTML=l.length?l.map(function(o){var its=o.items||[];return'<div class="oc" data-od="'+esc(o.id)+'"><div class="rw"><b>'+esc(oWhen(o))+'</b>'+oSt(o)+'</div><div class="th">'+its.slice(0,5).map(oTh).join("")+(its.length>5?'<span class="oth">+'+(its.length-5)+'</span>':'')+'</div><div class="rw"><span class="mu">'+its.length+(its.length===1?' item':' items')+' \u00B7 '+oPay(o)+'</span><b>\u20B9'+esc(o.total)+'</b></div></div>'}).join(""):'<div class="bx center"><div style="font-size:48px">\uD83D\uDED2</div><b>No orders yet</b><p class="mu">Your orders will appear here and update by themselves.</p><button class="add" data-go="home" style="padding:13px">Start shopping</button></div>'}
+ w.innerHTML=l.length?l.map(function(o){var its=o.items||[];return'<div class="oc" data-od="'+esc(o.id)+'"><div class="rw"><b>'+esc(oWhen(o))+'</b>'+oSt(o)+'</div><div class="th">'+its.slice(0,5).map(oTh).join("")+(its.length>5?'<span class="oth">+'+(its.length-5)+'</span>':'')+'</div><div class="rw"><span class="mu">'+its.length+(its.length===1?' item':' items')+' \u00B7 '+oPay(o)+'</span><b>\u20B9'+esc(o.total)+'</b></div></div>'}).join(""):'<div class="bx center"><div style="font-size:48px">\uD83D\uDED2</div><b>No orders yet</b><p class="mu">Your orders will appear here and update by themselves.</p><button class="add" data-go="home" style="padding:13px">Start shopping</button></div>';w.insertAdjacentHTML("beforeend",dbgBox())}
 function track(){oUn.forEach(function(f){f()});oUn=[];if(DEMO){ordR();return}
  var ids=[];try{ids=JSON.parse(ls("ords")||"[]")}catch(e){}
- ids.slice(0,10).forEach(function(id){oUn.push(db.doc("orders/"+id).onSnapshot(function(d){if(d.exists)oMap[id]=Object.assign({id:id},d.data());else delete oMap[id];ordR()},function(){}))});
- if(user)oUn.push(db.collection("orders").where("uid","==",user.uid).onSnapshot(function(q){q.docs.forEach(function(d){oMap[d.id]=Object.assign({id:d.id},d.data())});ordR()},function(){}));
- ordR()}
+ ids.slice(0,10).forEach(function(id){oUn.push(db.doc("orders/"+id).onSnapshot(function(d){if(d.exists)oSet(id,d.data());else delete oMap[id];ordR()},function(){}))});
+ if(user)oUn.push(db.collection("orders").where("uid","==",user.uid).onSnapshot(function(q){q.docs.forEach(function(d){oSet(d.id,d.data())});ordR()},function(){}));
+ ordR();pollPay()}
 function hav(a,b,c,d){var r=Math.PI/180,x=Math.sin((c-a)*r/2),y=Math.sin((d-b)*r/2),h=x*x+Math.cos(a*r)*Math.cos(c*r)*y*y;return 12742*Math.asin(Math.sqrt(h))}
 function liveX(){if(lvU){lvU();lvU=null}if(lvMap){try{lvMap.remove()}catch(e){}lvMap=null}$("lvm").hidden=true;$("lvm").innerHTML=""}
 function liveO(id){var o=oMap[id];if(!o)return;var el=$("lvm");el.hidden=false;
@@ -276,10 +288,11 @@ function liveO(id){var o=oMap[id];if(!o)return;var el=$("lvm");el.hidden=false;
   if(!v||v.lat==null){i.innerHTML='<b>Your delivery partner\u2019s location will appear here once the order is on the way.</b><p class="mu" style="margin:4px 0 0">'+esc(o.address||"")+'</p>';return}
   if(rm)rm.setLatLng([v.lat,v.lng]);else rm=L.marker([v.lat,v.lng],{icon:L.divIcon({html:"\uD83D\uDEF5",className:"mk",iconSize:[34,34]})}).addTo(lvMap);
   if(hasH){var km=hav(v.lat,v.lng,o.lat,o.lng);lvMap.fitBounds([[v.lat,v.lng],[o.lat,o.lng]],{padding:[50,50],maxZoom:16});i.innerHTML='<div class="rw"><b>Arriving in about '+Math.max(1,Math.round(km/20*60))+' min</b><span class="mu">'+km.toFixed(1)+' km away</span></div><p class="mu" style="margin:4px 0 8px">'+esc(o.address||"")+'</p><a class="add" style="display:block;text-align:center;padding:12px;text-decoration:none" href="tel:+'+esc(String(C("phone")).replace(/\D/g,""))+'">\uD83D\uDCDE Call the shop</a>'}else{lvMap.setView([v.lat,v.lng],15);i.innerHTML='<b>Your order is on the way</b>'}},function(){})}
-document.addEventListener("click",function(e){var t=e.target.closest("[data-od],[data-ob],[data-live],[data-lvx]");if(!t)return;
+document.addEventListener("click",function(e){var t=e.target.closest("[data-od],[data-ob],[data-live],[data-lvx],[data-reo]");if(!t)return;
  if(t.dataset.od!==undefined){oSel=t.dataset.od;ordR();window.scrollTo(0,0)}
  else if(t.hasAttribute("data-ob")){oSel="";ordR();window.scrollTo(0,0)}
  else if(t.dataset.live!==undefined)liveO(t.dataset.live);
+ else if(t.dataset.reo!==undefined){var ro=oMap[t.dataset.reo];if(ro)reorder(ro)}
  else if(t.hasAttribute("data-lvx"))liveX()});
 function mine(){}
 function orderDoc(c,tid,pay,pid,ps){var d={trackId:tid,items:c.l,subtotal:c.sub,discount:c.disc,coupon:c.disc&&coupon?coupon.code:"",delivery:c.d,total:c.t,zone:dist!=null?dist.toFixed(1)+" km":(c.far?"3-5 km":"Within 3 km"),lat:loc?loc.lat:null,lng:loc?loc.lng:null,payment:pay,paymentId:pid||"",paid:false,name:(ls("nm")||"").slice(0,80),phone:(ls("ph")||"").slice(0,20),address:((ls("ad")||"")+" "+(ls("pc")||"")).slice(0,300),status:"New",uid:user?user.uid:null,email:user&&user.email?user.email:"",createdAt:firebase.firestore.FieldValue.serverTimestamp()};if(ps)d.payState=ps;return d}
@@ -289,21 +302,23 @@ function finish(c,pay,pid,paidNow){var cd=c.disc;
  $("dI").textContent=paidNow?"\u2705":"\uD83C\uDF89";$("dH").textContent=paidNow?"Payment successful!":"Order placed successfully!";
  $("dP").textContent=paidNow?"Thank you! Your order is confirmed and we are packing it.":/^UPI/.test(pay)?"We will check your UPI payment and confirm shortly.":"We will call you to confirm.";
  $("dS").innerHTML='<div class="rw"><span>Payment</span><span>'+esc(pay)+'</span></div>'+(pid?'<div class="rw"><span>'+(paidNow?'Payment ID':'Transaction ID')+'</span><span>'+esc(pid)+'</span></div>':'')+(cd?'<div class="rw"><span>Coupon saved</span><b>\u20B9'+cd+'</b></div>':'')+'<div class="rw"><span>Total</span><b>\u20B9'+c.t+'</b></div>';
- ls("pend","");qty={};coupon=null;$("cp").value="";$("cpm").textContent="";$("cpb").textContent="Apply";$("ctab").disabled=false;go("done")}
+ dbg("success screen shown");ls("seen",ls("last")||"");ls("pend","");qty={};coupon=null;$("cp").value="";$("cpm").textContent="";$("cpb").textContent="Apply";$("ctab").disabled=false;go("done")}
+function dbg(m){try{var a=JSON.parse(ls("dbg")||"[]");a.push(new Date().toLocaleTimeString("en-IN")+" "+m);ls("dbg",JSON.stringify(a.slice(-40)))}catch(e){}}
+function dbgBox(){var a=[];try{a=JSON.parse(ls("dbg")||"[]")}catch(e){}return'<details class="bx"><summary class="mu">Payment problem? Show log</summary><pre style="white-space:pre-wrap;font-size:12px;margin:8px 0 0">'+esc(a.join("\n")||"No log yet")+'</pre></details>'}
 function eCode(e){return(e&&e.code)||"network"}
 function mkOrder(pay,pid){var c=calc(),tid=newId();$("ctab").disabled=true;
- saveOrder(c,tid,pay,pid,"").then(function(){remember(tid);finish(c,pay,pid,false)}).catch(function(e){var m=e&&e.code==="permission-denied"?"Could not place the order (permission). Please tell the shop owner.":"Could not place the order ("+eCode(e)+"). Check your internet and try again.";var x=$("pyM");if(x)x.textContent=m;$("ctab").disabled=false})}
+ saveOrder(c,tid,pay,pid,"").then(function(){dbg("order saved "+pay);remember(tid);finish(c,pay,pid,false)}).catch(function(e){dbg("save FAILED "+eCode(e));var m=e&&e.code==="permission-denied"?"Could not place the order (permission). Please tell the shop owner.":"Could not place the order ("+eCode(e)+"). Check your internet and try again.";var x=$("pyM");if(x)x.textContent=m;$("ctab").disabled=false})}
 function payNow(){var c=calc();$("pyM").textContent="";
 if(zone==="out"){$("pyM").textContent="Sorry, we deliver only within "+(S.maxKm||5)+" km of our shop.";return}
 if(S.storeOpen===false){$("pyM").textContent=S.closedMsg||"We are closed right now. Please try later.";return}
 if(typeof Razorpay==="undefined"||!S.razorpayKey){$("pyM").textContent="Online payment could not load. Check your internet, or choose Cash on delivery.";return}
-var tid=newId();$("ctab").disabled=true;$("pyM").textContent="Opening payment\u2026";
-saveOrder(c,tid,"Razorpay (online)","","pending").then(function(){remember(tid);ls("pend",tid);
+var tid=newId();$("ctab").disabled=true;$("pyM").textContent="Opening payment\u2026";dbg("pay start "+tid+" Rs"+c.t);
+saveOrder(c,tid,"Razorpay (online)","","pending").then(function(){dbg("order saved, waiting for payment");remember(tid);ls("pend",tid);
  var rz=new Razorpay({key:S.razorpayKey,amount:Math.round(c.t*100),currency:"INR",name:"Freshora",description:"Order "+tid,prefill:{name:ls("nm")||"",contact:ls("ph")||"",email:user&&user.email?user.email:""},notes:{trackingId:tid},theme:{color:"#ffc800"},
-  handler:function(r){var pid=r.razorpay_payment_id;(DEMO?Promise.resolve():db.doc("orders/"+tid).update({payment:"Razorpay (online)",paymentId:pid,payState:"claimed"})).catch(function(){}).then(function(){finish(c,"Razorpay (online)",pid,true)})},
-  modal:{ondismiss:function(){$("ctab").disabled=false;$("pyM").textContent="Payment not completed. Your cart is safe, tap Pay to try again."}}});
- rz.on("payment.failed",function(r){$("pyM").textContent="Payment failed: "+((r.error&&r.error.description)||"please try again.");$("ctab").disabled=false});$("pyM").textContent="";rz.open()
-}).catch(function(e){$("pyM").textContent=e&&e.code==="permission-denied"?"Could not start the payment (permission). Please tell the shop owner.":"Could not start the payment ("+eCode(e)+"). Try again, or choose Cash on delivery.";$("ctab").disabled=false})}
+  handler:function(r){var pid=r.razorpay_payment_id;dbg("razorpay success "+pid);(DEMO?Promise.resolve():db.doc("orders/"+tid).update({payment:"Razorpay (online)",paymentId:pid,payState:"claimed"})).then(function(){dbg("order marked paid-claimed")},function(e){dbg("order update FAILED "+eCode(e))}).then(function(){kickPay(tid);finish(c,"Razorpay (online)",pid,true)})},
+  modal:{ondismiss:function(){dbg("payment window closed");ls("seen",ls("last")||"");ls("pend","");$("ctab").disabled=false;$("pyM").textContent="Payment not completed. Your cart is safe, tap Pay to try again."}}});
+ rz.on("payment.failed",function(r){dbg("payment failed "+((r.error&&r.error.description)||""));$("pyM").textContent="Payment failed: "+((r.error&&r.error.description)||"please try again.");$("ctab").disabled=false});$("pyM").textContent="";rz.open()
+}).catch(function(e){dbg("save FAILED "+eCode(e));$("pyM").textContent=e&&e.code==="permission-denied"?"Could not start the payment (permission). Please tell the shop owner.":"Could not start the payment ("+eCode(e)+"). Try again, or choose Cash on delivery.";$("ctab").disabled=false})}
 $("ctab").onclick=function(){var c=calc();
 if(view==="cart"){go("checkout");return}
 if(step===1){if(zone==="out"){$("ckM").textContent="Sorry, we deliver only within "+(S.maxKm||5)+" km of our shop.";return}if($("nm").value.trim().length<2||$("ph").value.replace(/\D/g,"").length<10||!$("ad").value.trim()){$("ckM").textContent="Enter your name, a 10-digit phone number and your address.";return}ls("nm",$("nm").value.trim());ls("ph",$("ph").value.replace(/\D/g,""));ls("ad",$("ad").value.trim());ls("pc",$("pc").value.trim());step=2;pane();return}
@@ -330,7 +345,9 @@ var k=$("cp").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"");if(!k){$("cpm"
 
 var pmSet=false,user=null,unsub2=null;if(!DEMO&&firebase.auth)firebase.auth().getRedirectResult().catch(function(e){if(view==="profile")say("am",ferr(e))});
 if(!DEMO&&firebase.auth)firebase.auth().onAuthStateChanged(function(u){user=u;locUi();if(view==="profile")authUi();if(view==="track")track()});
-if(!DEMO&&ls("pend")){var pt=ls("pend");ls("pend","");db.doc("orders/"+pt).get().then(function(d){if(d.exists){go("track");toast("Order received. We are confirming your payment.")}}).catch(function(){})}
+(function(){var lt=ls("last");dbg("page loaded "+(location.hash||"#")+" last="+(lt||"-"));if(DEMO||!lt)return;
+db.doc("orders/"+lt).get().then(function(d){if(!d.exists){dbg("last order not found");return}var o=d.data(),t=o.createdAt&&o.createdAt.toDate?o.createdAt.toDate().getTime():0,fresh=Date.now()-t<30*60*1000;dbg("last order "+(o.payState||"no-payState")+" fresh="+fresh);
+if(fresh&&(o.payState==="pending"||o.payState==="claimed")&&ls("seen")!==lt){ls("seen",lt);ls("pend","");qty={};ls("cart","{}");go("track");toast("Order received. We are confirming your payment.")}}).catch(function(e){dbg("check failed "+eCode(e))})})();
 function ferr(e){var c=(e&&e.code)||"",t;
 if(/wrong-password|invalid-credential|user-not-found/.test(c))t="Wrong email or password.";
 else if(/email-already/.test(c))t="This email already has an account. Tap Sign in.";

@@ -1,17 +1,36 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Freshora Rider</title>
 <style>body{font:16px system-ui;margin:0;padding:14px;background:#fff8d6;color:#1c1b17}.c{background:#fff;border-radius:14px;padding:12px;margin:10px 0;line-height:1.6}button,input{font:inherit;padding:10px 14px;border-radius:10px;border:1px solid #ccc;margin:3px 0}button{background:#ffc800;font-weight:800;border:0}</style></head><body>
 <h2>Freshora Rider</h2><div id="lg"><input id="em" type="email" placeholder="Email"><br><input id="pw" type="password" placeholder="Password"><br><button id="in">Login</button> <span id="er"></span></div>
-<div id="ap" hidden><button id="out">Logout</button><div id="ls"></div></div>
+<div id="ap" hidden><button id="out">Logout</button> <label style="display:inline-block;background:#fff;border:1px solid #ccc;border-radius:10px;padding:10px 14px;margin:3px 0">🔔 Choose sound<input type="file" id="bellf" accept="audio/*" hidden></label> <button id="bellt" style="background:#fff;border:1px solid #ccc">Test</button> <button id="bellr" style="background:#fff;border:1px solid #ccc">Default</button><div id="bellm" style="font-size:13px;color:#555"></div><div id="ls"></div></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="firebase-config.js"></script>
 <script>
 var $=function(i){return document.getElementById(i)},E=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return "&#"+c.charCodeAt(0)+";"})},W=null,u=null;
 $("in").onclick=function(){firebase.auth().signInWithEmailAndPassword($("em").value,$("pw").value).catch(function(){$("er").textContent="Wrong email or password"})};
 $("out").onclick=function(){firebase.auth().signOut()};
 firebase.auth().onAuthStateChanged(function(x){$("lg").hidden=!!x;$("ap").hidden=!x;if(u){u();u=null}if(!x)return;
-u=db.collection("orders").where("status","in",["New","Packed","Out for delivery"]).onSnapshot(function(q){$("ls").innerHTML=q.docs.map(function(d){var o=d.data(),id=d.id;if(o.payState==="pending")return "";return '<div class="c"><b>'+id+'</b> · '+E(o.status)+'<br>'+E(o.name)+' · <a href="tel:'+E(o.phone)+'">'+E(o.phone)+'</a><br>'+E(o.address)+'<br>'+(o.lat?'<a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+o.lat+','+o.lng+'">Open in Google Maps</a><br>':'')+E(o.payment)+' · ₹'+E(o.total)+(o.paid?' · PAID':'')+'<br>'+["Packed","Out for delivery","Delivered"].map(function(s){return '<button data-i="'+id+'" data-s="'+s+'">'+s+'</button> '}).join("")+(o.paid?'':'<button data-i="'+id+'" data-p="1">Mark paid</button>')+'</div>'}).join("")||"No active orders"},function(){})});
+u=db.collection("orders").where("status","in",["New","Packed","Out for delivery"]).onSnapshot(function(q){var vis=q.docs.filter(function(d){var p=d.data().payState;return p!=="pending"&&p!=="failed"}).map(function(d){return d.id});if(window.__seen){if(vis.some(function(i){return window.__seen.indexOf(i)<0}))window.frRing()}window.__seen=vis;$("ls").innerHTML=q.docs.map(function(d){var o=d.data(),id=d.id;if(o.payState==="pending"||o.payState==="failed")return "";return '<div class="c"><b>'+id+'</b> · '+E(o.status)+'<br>'+E(o.name)+' · <a href="tel:'+E(o.phone)+'">'+E(o.phone)+'</a><br>'+E(o.address)+'<br>'+(o.lat?'<a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+o.lat+','+o.lng+'">Open in Google Maps</a><br>':'')+E(o.payment)+' · ₹'+E(o.total)+(o.paid?' · PAID':'')+'<br>'+["Packed","Out for delivery","Delivered"].map(function(s){return '<button data-i="'+id+'" data-s="'+s+'">'+s+'</button> '}).join("")+(o.paid?'':'<button data-i="'+id+'" data-p="1">Mark paid</button>')+'</div>'}).join("")||"No active orders"},function(){})});
 document.addEventListener("click",function(e){var t=e.target,i=t.dataset.i;if(!i)return;
 if(t.dataset.p){db.doc("orders/"+i).update({paid:true});return}
 var s=t.dataset.s;db.doc("orders/"+i).update({status:s});
 if(s==="Out for delivery"){if(W!==null)navigator.geolocation.clearWatch(W);W=navigator.geolocation.watchPosition(function(p){db.doc("live/"+i).set({lat:p.coords.latitude,lng:p.coords.longitude,t:firebase.firestore.FieldValue.serverTimestamp()})},function(){alert("Please allow location access")},{enableHighAccuracy:true})}
 if(s==="Delivered"&&W!==null){navigator.geolocation.clearWatch(W);W=null;db.doc("live/"+i).delete()}});
+(function(){var K="fr_bell",AC=null,wl=null;
+function cu(){try{return localStorage.getItem(K)||""}catch(e){return""}}
+function ctx(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();return AC}catch(e){return null}}
+function synth(){var a=ctx();if(!a)return;[0,.7,1.4].forEach(function(t){[880,1320,1760].forEach(function(f,i){var o=a.createOscillator(),g=a.createGain(),s=a.currentTime+t;o.type="sine";o.frequency.value=f;g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(.35/(i+1),s+.01);g.gain.exponentialRampToValueAtTime(.001,s+1.2);o.connect(g);g.connect(a.destination);o.start(s);o.stop(s+1.3)})})}
+window.frRing=function(){var u=cu();if(!u){synth();return}try{var n=0,au=new Audio(u);au.onended=function(){if(++n<2)au.play().catch(function(){})};au.play().catch(synth)}catch(e){synth()}};
+window.frBellSet=function(file,done){done=done||function(){};if(!file){try{localStorage.removeItem(K)}catch(e){}done("Default bell is on.");return}
+ if(file.size>1500000){done("File is too big. Use a sound under 1.5 MB.");return}
+ var r=new FileReader();r.onload=function(){try{localStorage.setItem(K,String(r.result));done("Your sound is saved: "+file.name)}catch(e){done("Could not save this file. Try a smaller one.")}};r.onerror=function(){done("Could not read this file.")};r.readAsDataURL(file)};
+window.frBellInfo=function(){return cu()?"Using your own sound.":"Using the default bell."};
+function lock(){try{if(navigator.wakeLock)navigator.wakeLock.request("screen").then(function(l){wl=l}).catch(function(){})}catch(e){}}
+document.addEventListener("click",function(){ctx();lock()},{once:true});
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&navigator.wakeLock&&wl)lock()});
+})();
+
+(function(){var m=function(t){document.getElementById("bellm").textContent=t},b=document.getElementById("bellf");
+ m(frBellInfo()+" Keep this page open to hear new orders.");
+ b.onchange=function(){if(b.files[0])frBellSet(b.files[0],m)};
+ document.getElementById("bellt").onclick=frRing;
+ document.getElementById("bellr").onclick=function(){frBellSet(null,m)}})();
 </script></body></html>
