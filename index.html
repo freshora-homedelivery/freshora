@@ -112,7 +112,7 @@ body{font-family:"Nunito","Segoe UI",system-ui,sans-serif;padding-top:0}#top,#dr
 <div class="bx" id="cpw"><div class="cpn"><input class="in" id="cp" placeholder="Coupon code" autocapitalize="characters" aria-label="Coupon code"><button id="cpb">Apply</button></div><div class="mu" id="cpm"></div></div><div id="cs"></div>
 <div class="mu center" id="tr" style="display:flex;justify-content:space-around;margin:14px 0"><span>🔒<br>Secure Payments</span><span>🚚<br>Delivery Included</span><span>💬<br>WhatsApp Support</span></div><h2 style="font-size:22px;margin:16px 0 10px" id="alh">You may also like</h2><div class="grid" id="lk"></div></section>
 <section data-v="checkout" hidden><div class="ph"><button class="bk" data-back>←</button><h1>Checkout</h1></div><div class="sp" id="sp"></div><div id="pane"></div></section>
-<section data-v="done" hidden class="center"><div id="dI" style="font-size:64px;margin-top:20px">🎉</div><h1 id="dH">Order placed successfully!</h1><p class="mu" id="dP">We will call you to confirm.</p><div class="bx" style="text-align:left"><div id="dS"></div></div><button class="add" style="padding:16px;font-size:17px" data-go="track">View my order</button><button class="add" style="margin-top:10px;background:#fff;color:var(--ink);border:2px solid var(--ink);padding:14px" data-go="home">Continue shopping</button></section>
+<section data-v="done" hidden class="center"><div id="dI" style="font-size:64px;margin-top:20px">🎉</div><h1 id="dH">Order placed successfully!</h1><p class="mu" id="dP">We will call you to confirm.</p><div class="bx" style="text-align:left"><div id="dS"></div></div><button class="add" id="dR" hidden data-reo="" style="padding:16px;font-size:17px;margin-bottom:10px">Try again</button><button class="add" style="padding:16px;font-size:17px" data-go="track">View my order</button><button class="add" style="margin-top:10px;background:#fff;color:var(--ink);border:2px solid var(--ink);padding:14px" data-go="home">Continue shopping</button></section>
 <section data-v="track" hidden><div class="ph"><button class="bk" data-back>←</button><h1>My Orders</h1></div><div id="ordw"></div></section>
 <section data-v="product" hidden><div id="pdv"></div></section>
 <section data-v="policy" hidden><div class="ph"><button class="bk" data-back>←</button><h1 id="polT"></h1></div><div class="bx" id="pol"></div></section>
@@ -138,6 +138,9 @@ body{font-family:"Nunito","Segoe UI",system-ui,sans-serif;padding-top:0}#top,#dr
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script src="firebase-config.js"></script>
 <script>
+(function(){try{[firebase.firestore.Query,firebase.firestore.DocumentReference].forEach(function(C){var o=C.prototype.onSnapshot;C.prototype.onSnapshot=function(){var a=[].slice.call(arguments);if(typeof a[0]==="function"&&typeof a[1]!=="function"){a[1]=function(e){try{window.dbg&&window.dbg("listen error "+(e&&e.code))}catch(x){}}}return o.apply(this,a)}})}catch(e){}})();
+</script>
+<script>
 if(typeof esc==="undefined"||typeof DEFAULTS==="undefined"||!DEFAULTS){window.esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};window.DEFAULTS={freeAbove:200,nearFee:20,farFee:40};window.UPI_ID="yourname@upi"}
 var DEMO=(typeof db==="undefined")||FIREBASE_CONFIG.apiKey==="PASTE_HERE";
 var $=function(i){return document.getElementById(i)},ls=function(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}return null};
@@ -146,7 +149,7 @@ try{qty=JSON.parse(ls("cart")||"{}")||{}}catch(e){qty={}}
 var wish={};try{wish=JSON.parse(ls("wish")||"{}")}catch(e){}
 var DEMO_ITEMS=[["Tomato","🍅",40,48,"kg","Vegetables"],["Onion","🧅",35,0,"kg","Vegetables"],["Potato","🥔",30,0,"kg","Vegetables"],["Cucumber","🥒",30,36,"kg","Vegetables"],["Banana","🍌",60,70,"kg","Fruits"],["Papaya","🧡",40,0,"kg","Fruits"],["Lemon","🍋",5,0,"piece","Fruits"],["Coconut","🥥",30,35,"piece","Others"]].map(function(a,i){return{id:"d"+i,name:a[0],emoji:a[1],price:a[2],mrp:a[3],unit:a[4],category:a[5]}});
 if(DEMO)items=DEMO_ITEMS;else{
-db.doc("settings/main").onSnapshot(function(d){S=Object.assign({},DEFAULTS,d.data()||{});theme();all();if(!asked){asked=true;detect()}});
+db.doc("settings/main").onSnapshot(function(d){S=Object.assign({},DEFAULTS,d.data()||{});if(dist!=null)zone=dist<=(S.freeKm||3)?"near":dist<=(S.maxKm||5)?"far":"out";theme();all();if(!asked){asked=true;detect()}});
 db.collection("items").orderBy("name").onSnapshot(function(q){items=q.docs.map(function(d){return Object.assign({id:d.id},d.data())}).filter(function(i){return i.inStock!==false});all();if(view==="track")ordR()});
 db.collection("categories").orderBy("order").onSnapshot(function(q){catDocs=q.docs.map(function(d){return d.data()});all()});
 db.collection("banners").orderBy("order","desc").onSnapshot(function(q){banners=q.docs.map(function(d){return d.data()});all()});
@@ -253,7 +256,19 @@ function hideTl(o){return o.payState==="failed"||oWait(o)}
 function oBan(o){if(o.payState==="paid"||(o.paid&&o.payState))return'<div class="msg" style="background:#e8f5e9;color:#1b5e20;padding:12px;border-radius:14px;font-weight:800;margin:8px 0">\u2705 Payment successful. Thank you!</div>';
  if(o.payState==="failed")return'<div class="msg" style="background:#fde8e8;color:#b42318;padding:12px;border-radius:14px;margin:8px 0"><b>\u274C Payment unsuccessful.</b><br>Your order was not confirmed. If any money was deducted, your bank normally returns it in 5 to 7 days.</div><button class="add" data-reo="'+esc(o.id)+'" style="padding:14px;margin-bottom:8px">Try again</button>';
  if(oWait(o))return'<div class="msg" style="background:#fff4d6;color:#8a5a00;padding:12px;border-radius:14px;margin:8px 0"><b>\u23F3 Confirming your payment\u2026</b><br>This updates by itself. Please do not pay again.</div>';return""}
-function kickPay(tid){if(!S.payUrl||DEMO)return;[0,4000,12000].forEach(function(t){setTimeout(function(){try{fetch(S.payUrl+"?order="+encodeURIComponent(tid)).catch(function(){})}catch(e){}},t)})}
+function chkPay(id){if(!S.payUrl||DEMO)return;try{fetch(S.payUrl+"?order="+encodeURIComponent(id)).catch(function(){})}catch(e){}}
+function kickNotify(id){if(!S.payUrl||DEMO||!id)return;try{fetch(S.payUrl+"?notify="+encodeURIComponent(id)).catch(function(){})}catch(e){}}
+var pU=null,pT=null;
+function payScreen(id){if(pU){pU();pU=null}clearInterval(pT);go("done");
+ var upd=function(o){oMap[id]=Object.assign({id:id},o);var ok=oPaid(o),bad=o.payState==="failed";
+  $("dI").textContent=ok?"\u2705":bad?"\u274C":"\u23F3";
+  $("dH").textContent=ok?"Payment successful!":bad?"Payment unsuccessful":S.payUrl?"Confirming your payment\u2026":"Order received";
+  $("dP").textContent=ok?"Thank you! Your order is confirmed and we are packing it.":bad?"Your order was not confirmed. If any money was deducted, your bank normally returns it in 5 to 7 days.":S.payUrl?"Please wait a few seconds. Please do not pay again.":"We will confirm your payment shortly.";
+  $("dS").innerHTML='<div class="rw"><span>Total</span><b>\u20B9'+esc(o.total)+'</b></div>'+(ok&&o.paymentId?'<div class="rw"><span>Payment ID</span><span>'+esc(o.paymentId)+'</span></div>':'');
+  var r=$("dR");if(r){r.hidden=!bad;r.dataset.reo=id}if(ok||bad)clearInterval(pT)};
+ pU=db.doc("orders/"+id).onSnapshot(function(d){if(d.exists)upd(d.data())},function(){});
+ chkPay(id);pT=setInterval(function(){if(view!=="done"){clearInterval(pT);return}chkPay(id)},5000)}
+function kickPay(tid){if(!S.payUrl||DEMO)return;[0,4000,12000].forEach(function(t){setTimeout(function(){chkPay(tid)},t)})}
 var pTm=null;
 function pollPay(){clearInterval(pTm);if(!S.payUrl||DEMO)return;var f=function(){if(view!=="track"){clearInterval(pTm);return}Object.keys(oMap).map(function(k){return oMap[k]}).filter(oWait).slice(0,3).forEach(function(o){try{fetch(S.payUrl+"?order="+encodeURIComponent(o.id)).catch(function(){})}catch(e){}})};f();pTm=setInterval(f,6000)}
 function oSet(id,data){var old=oMap[id];oMap[id]=Object.assign({id:id},data);if(old&&oWait(old)){if(oPaid(oMap[id]))toast("Payment successful \u2705");else if(data.payState==="failed")toast("Payment unsuccessful \u274C")}}
@@ -298,7 +313,7 @@ function mine(){}
 function orderDoc(c,tid,pay,pid,ps){var d={trackId:tid,items:c.l,subtotal:c.sub,discount:c.disc,coupon:c.disc&&coupon?coupon.code:"",delivery:c.d,total:c.t,zone:dist!=null?dist.toFixed(1)+" km":(c.far?"3-5 km":"Within 3 km"),lat:loc?loc.lat:null,lng:loc?loc.lng:null,payment:pay,paymentId:pid||"",paid:false,name:(ls("nm")||"").slice(0,80),phone:(ls("ph")||"").slice(0,20),address:((ls("ad")||"")+" "+(ls("pc")||"")).slice(0,300),status:"New",uid:user?user.uid:null,email:user&&user.email?user.email:"",createdAt:firebase.firestore.FieldValue.serverTimestamp()};if(ps)d.payState=ps;return d}
 function saveOrder(c,tid,pay,pid,ps){return DEMO?Promise.resolve():db.collection("orders").doc(tid).set(orderDoc(c,tid,pay,pid,ps))}
 function remember(tid){ls("last",tid);var r=[];try{r=JSON.parse(ls("ords")||"[]")}catch(e){}if(r.indexOf(tid)<0)r.unshift(tid);ls("ords",JSON.stringify(r.slice(0,10)))}
-function finish(c,pay,pid,paidNow){var cd=c.disc;
+function finish(c,pay,pid,paidNow){var cd=c.disc;if(pU){pU();pU=null}clearInterval(pT);var rb=$("dR");if(rb)rb.hidden=true;if(!paidNow)kickNotify(ls("last"));
  $("dI").textContent=paidNow?"\u2705":"\uD83C\uDF89";$("dH").textContent=paidNow?"Payment successful!":"Order placed successfully!";
  $("dP").textContent=paidNow?"Thank you! Your order is confirmed and we are packing it.":/^UPI/.test(pay)?"We will check your UPI payment and confirm shortly.":"We will call you to confirm.";
  $("dS").innerHTML='<div class="rw"><span>Payment</span><span>'+esc(pay)+'</span></div>'+(pid?'<div class="rw"><span>'+(paidNow?'Payment ID':'Transaction ID')+'</span><span>'+esc(pid)+'</span></div>':'')+(cd?'<div class="rw"><span>Coupon saved</span><b>\u20B9'+cd+'</b></div>':'')+'<div class="rw"><span>Total</span><b>\u20B9'+c.t+'</b></div>';
@@ -347,7 +362,7 @@ var pmSet=false,user=null,unsub2=null;if(!DEMO&&firebase.auth)firebase.auth().ge
 if(!DEMO&&firebase.auth)firebase.auth().onAuthStateChanged(function(u){user=u;locUi();if(view==="profile")authUi();if(view==="track")track()});
 (function(){var lt=ls("last");dbg("page loaded "+(location.hash||"#")+" last="+(lt||"-"));if(DEMO||!lt)return;
 db.doc("orders/"+lt).get().then(function(d){if(!d.exists){dbg("last order not found");return}var o=d.data(),t=o.createdAt&&o.createdAt.toDate?o.createdAt.toDate().getTime():0,fresh=Date.now()-t<30*60*1000;dbg("last order "+(o.payState||"no-payState")+" fresh="+fresh);
-if(fresh&&(o.payState==="pending"||o.payState==="claimed")&&ls("seen")!==lt){ls("seen",lt);ls("pend","");qty={};ls("cart","{}");go("track");toast("Order received. We are confirming your payment.")}}).catch(function(e){dbg("check failed "+eCode(e))})})();
+if(fresh&&o.payState&&ls("seen")!==lt){ls("seen",lt);ls("pend","");qty={};ls("cart","{}");payScreen(lt)}}).catch(function(e){dbg("check failed "+eCode(e))})})();
 function ferr(e){var c=(e&&e.code)||"",t;
 if(/wrong-password|invalid-credential|user-not-found/.test(c))t="Wrong email or password.";
 else if(/email-already/.test(c))t="This email already has an account. Tap Sign in.";
