@@ -148,6 +148,8 @@ body{padding-bottom:110px}
 .lgn{background:var(--pri);color:#1c1b17;margin-top:12px;box-shadow:0 8px 22px rgba(255,200,0,.4)}
 .lor{display:flex;align-items:center;gap:12px;margin:20px 0;color:#6a7a5a;font-weight:800}.lor:before,.lor:after{content:"";flex:1;height:1px;background:rgba(0,0,0,.12)}
 .lft{text-align:center;color:#6a7a5a;font-size:13px;font-weight:700;margin:14px 0 0}
+.bn{scrollbar-width:none;scroll-behavior:auto}.bn::-webkit-scrollbar{display:none}
+.bdt{display:flex;justify-content:center;gap:6px;margin-top:10px}.bdt i{width:7px;height:7px;border-radius:7px;background:rgba(0,0,0,.2);transition:all .3s}.bdt i.on{width:22px;background:var(--pri)}
 </style><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 </head><body>
 <div id="lg" class="lg2" hidden><div class="lgc">
@@ -266,11 +268,11 @@ function catPic(k){var d=catDocs.filter(function(x){return x.name===k})[0]||{},f
 var offs=[];
 function offCard(o){var bg=o.bg?' style="background:'+esc(o.bg)+'"':'',l=o.link||"offers",at=l==="offers"?' href="#offers"':(l==="all"?' href="#all" data-c="All"':' href="#all" data-c="'+esc(l)+'"');return '<a class="oc'+(o.image?' hi':'')+'"'+at+bg+'>'+(o.s1?'<small>'+esc(o.s1)+'</small>':'')+'<b>'+esc(o.s2||"")+'</b>'+(o.s3?'<span>'+esc(o.s3)+'</span>':'')+(o.image?'<img src="'+esc(o.image)+'" alt="">':'<i aria-hidden="true">'+esc(o.emoji||"")+'</i>')+'</a>'}
 function bnCard(x){if(x.image)return '<div class="bi pimg" data-c="All"><img src="'+esc(x.image)+'" alt="'+esc(x.title||"Poster")+'">'+(x.overlay&&x.title?'<div class="po2"><h2>'+esc(x.title)+'</h2><p>'+esc(x.subtitle||"")+'</p><button class="add" style="width:auto;padding:8px 16px" data-c="All">'+esc(x.button||"Shop Now")+' →</button></div>':'')+'</div>';return '<div class="bi" style="background:'+esc(x.bg||"")+';background-size:cover;background-position:center"><div><h2>'+esc(x.title)+'</h2><p>'+esc(x.subtitle||"")+'</p><button data-c="All">'+esc(x.button||"Shop Now")+' →</button></div><div class="art" aria-hidden="true">'+esc(x.emoji||"")+'</div></div>'}
-function blkH(id,hdr){var b=HOME.b[id]||{};if(b.show===false)return"";var cs=cats(),h="";
+var bnI=0;function blkH(id,hdr){var b=HOME.b[id]||{};if(b.show===false)return"";var cs=cats(),h="";
 if(id==="offers"){h='<h2 class="tt2">'+esc(b.title||"Top offers for you")+'</h2><div class="of">'+(offs.length?offs.map(offCard).join(""):cps.length?cps.map(function(k){return '<a class="oc" href="#offers"><small>Get</small><b>'+(k.type==="percent"?esc(k.value)+'% OFF':'₹'+esc(k.value)+' OFF')+'</b><span>Code '+esc(k.id)+'</span><i aria-hidden="true">🏷️</i></a>'}).join(""):'<a class="oc" href="#offers"><small>Get</small><b>Free delivery</b><span>Above ₹'+S.freeAbove+'</span><i aria-hidden="true">🛵</i></a><a class="oc" href="#all"><small>Order by 7 PM</small><b>Next morning</b><span>7–9 AM delivery</span><i aria-hidden="true">🥬</i></a>')+'</div>';return hdr?h:'<div class="yb" style="'+bst(b)+'">'+h+'</div>'}
 if(id==="cats"){var cl=cs.slice(0,7),moreIc='<svg viewBox="0 0 24 24" width="34" height="34"><rect x="3" y="3" width="8" height="8" rx="3" fill="#7ac943"/><rect x="13" y="3" width="8" height="8" rx="3" fill="#7ac943"/><rect x="3" y="13" width="8" height="8" rx="3" fill="#7ac943"/><rect x="13" y="13" width="8" height="8" rx="3" fill="#7ac943"/></svg>';
 return '<div class="rh"><h2 class="tt2" style="margin:0">'+esc(b.title||"Shop by Category")+'</h2><a href="#all" data-c="All">See all <i class="ar">→</i></a></div><div class="cgrid">'+cl.map(function(k){return '<button class="cgi" data-c="'+esc(k)+'"><span>'+catPic(k)+'</span>'+esc(k)+'</button>'}).join("")+'<button class="cgi" data-c="All"><span>'+moreIc+'</span>More</button></div>'}
-if(id==="banners"){var bn=banners.filter(function(x){return x.active!==false});return '<h2 class="tt2">'+esc(b.title||"Today's Feature")+'</h2><div class="bn">'+(bn.length?bn.map(bnCard).join(""):'<div class="bi" style="background:linear-gradient(120deg,#1b8a3a,#0e5a24)"><div><h2>Farm Fresh<br>at Your Home</h2><p>Order by 7 PM, delivered next morning</p><button data-c="All">Shop Now →</button></div><div class="art" aria-hidden="true">🧺</div></div>')+'</div>'}
+if(id==="banners"){var bn=banners.filter(function(x){return x.active!==false});return '<h2 class="tt2">'+esc(b.title||"Today's Feature")+'</h2><div class="bn" id="bn">'+(bn.length?bn.map(bnCard).join(""):'<div class="bi" style="background:linear-gradient(120deg,#1b8a3a,#0e5a24)"><div><h2>Farm Fresh<br>at Your Home</h2><p>Order by 7 PM, delivered next morning</p><button data-c="All">Shop Now →</button></div><div class="art" aria-hidden="true">🧺</div></div>')+'</div>'+(bn.length>1?'<div class="bdt" id="bdt">'+bn.map(function(x,k){return '<i'+(k===bnI?' class="on"':'')+'></i>'}).join("")+'</div>':"")}
 if(id==="pop"){var g={},go2=[],gc={};cs.forEach(function(k){var gk=grpOf(k);if(!g[gk]){g[gk]=[];gc[gk]=[];go2.push(gk)}gc[gk].push(k);items.filter(function(i){return i.category===k}).forEach(function(i){g[gk].push(i)})});
 return go2.map(function(gk){var l=g[gk].slice(0,10);return l.length?'<div class="rh"><h2>'+esc(gk)+'</h2><a href="#all" data-c="'+esc(gc[gk].length===1?gc[gk][0]:"@"+gk)+'">See All <i class="ar">›</i></a></div><div class="hs">'+l.map(card).join("")+'</div>':""}).join("")||'<p class="mu">Products are being added. Please check back soon.</p>'}
 if(id==="help")return '<div class="nf" style="'+bst(b)+'"><h2>'+esc(b.title||"Couldn't find what you are looking for?")+'</h2>'+(b.text?'<p>'+esc(b.text)+'</p>':'')+'<button class="add ex" data-c="All">'+esc(b.button||"Explore now")+'</button></div>';
@@ -278,7 +280,7 @@ if(id.indexOf("c_")===0)return '<div class="cb" style="'+bst(b)+'"><h2>'+esc(b.t
 function homeR(){var o=hord(),first=o[0]==="offers"&&(HOME.b.offers||{}).show!==false;
 $("hh").innerHTML='<div class="yh"><div class="hr1"><a class="av" href="#profile" aria-label="Profile">'+(user&&user.photoURL?'<img src="'+esc(user.photoURL)+'" alt="">':esc((uname()||"F").charAt(0).toUpperCase()))+'</a><div class="hg"><b id="locT">'+esc(hname()||"Hello there 👋")+'</b><small>📍 '+(dist!=null?"Delivering to you · "+dist.toFixed(1)+" km":"Kalladka, Karnataka")+'</small></div><a class="circ gl" href="#offers" aria-label="Offers">🔔</a></div><div class="sbar gl"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="hs" placeholder="Search fresh vegetables, fruits…" aria-label="Search"><button type="button" id="mic" aria-label="Voice search"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button type="button" id="flt" aria-label="Filters"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button></div>'+(first?'<div style="margin-top:18px">'+blkH("offers",true)+'</div>':"")+'</div>';
 if(!ready){$("hp").innerHTML='<div class="skl"><div class="sk1"></div><div class="skg"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>';locUi();return}
-$("hp").innerHTML=o.filter(function(k,i){return!(first&&i===0)}).map(function(k){var h=blkH(k,false);return h?'<div class="hb">'+h+'</div>':""}).join("");locUi()}
+$("hp").innerHTML=o.filter(function(k,i){return!(first&&i===0)}).map(function(k){var h=blkH(k,false);return h?'<div class="hb">'+h+'</div>':""}).join("");if(window.bnRestore)bnRestore();locUi()}
 function all(){var c=calc();ls("cart",JSON.stringify(qty));document.querySelectorAll(".cn").forEach(function(b){b.hidden=!c.n;b.textContent=c.n});
 if(view==="home")homeR();
 if(view==="all"){$("chips").innerHTML=["All"].concat(cats()).map(function(k){return '<button class="ch'+(k===cat?' on':'')+'" data-c="'+esc(k)+'">'+esc(k)+'</button>'}).join("");var qq=$("aq").value.toLowerCase(),o=function(i){return i.mrp>i.price?i.mrp/i.price:1},l=items.filter(function(i){return(cat==="All"||i.category===cat||(cat.charAt(0)==="@"&&grpOf(i.category)===cat.slice(1)))&&i.name.toLowerCase().indexOf(qq)>-1});
@@ -489,6 +491,17 @@ var A0=AU();if(A0){
  A0.onAuthStateChanged(function(u){if(u&&!L.hidden)hide();else if(u)ls("welcome","1")})}
 })();
 
+
+(function(){var tm=null,bt=0;
+function el(){return document.getElementById("bn")}
+function dots(){var d=document.getElementById("bdt");if(!d)return;[].forEach.call(d.children,function(x,k){x.className=k===bnI?"on":""})}
+function go(i,smooth){var e=el();if(!e||e.children.length<2)return;bnI=i;e.scrollTo({left:i*(e.children[0].offsetWidth+10),behavior:smooth?"smooth":"auto"});dots()}
+window.bnRestore=function(){var e=el();if(e&&bnI>0&&bnI<e.children.length)go(bnI,false);else dots()};
+var bnPause=0;function tick(){if(Date.now()<bnPause)return;if(typeof view!=="undefined"&&view!=="home")return;var e=el();if(!e||e.children.length<2||document.hidden)return;go((bnI+1)%e.children.length,true)}
+setInterval(tick,5000);
+document.addEventListener("scroll",function(ev){if(ev.target.id!=="bn")return;var e=ev.target;clearTimeout(bt);bt=setTimeout(function(){var w=e.children[0]?e.children[0].offsetWidth+10:1;bnI=Math.round(e.scrollLeft/w);dots()},120)},true);
+document.addEventListener("touchstart",function(ev){if(ev.target.closest&&ev.target.closest("#bn"))bnPause=Date.now()+8000},{passive:true});
+})();
 try{history.scrollRestoration="manual"}catch(e){}var h0=location.hash.slice(1);if(h0&&h0!=="home"&&!/^(p-|policy-)/.test(h0)){try{history.replaceState(null,"",location.pathname+location.search)}catch(e){location.hash=""}}
 window.onhashchange=show;if(DEMO)$("ann").textContent="Demo preview",$("ann").hidden=false;show();
 </script></body></html>
