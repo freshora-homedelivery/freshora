@@ -1,19 +1,126 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Freshora Rider</title>
-<style>body{font:16px system-ui;margin:0;padding:14px;background:#fff8d6;color:#1c1b17}.c{background:#fff;border-radius:14px;padding:12px;margin:10px 0;line-height:1.6}button,input{font:inherit;padding:10px 14px;border-radius:10px;border:1px solid #ccc;margin:3px 0}button{background:#ffc800;font-weight:800;border:0}</style></head><body>
-<h2>Freshora Rider</h2><div id="lg"><input id="em" type="email" placeholder="Email"><br><input id="pw" type="password" placeholder="Password"><br><button id="in">Login</button> <span id="er"></span></div>
-<div id="ap" hidden><button id="out">Logout</button> <label style="display:inline-block;background:#fff;border:1px solid #ccc;border-radius:10px;padding:10px 14px;margin:3px 0">🔔 Choose sound<input type="file" id="bellf" accept="audio/*" hidden></label> <button id="bellt" style="background:#fff;border:1px solid #ccc">Test</button> <button id="bellr" style="background:#fff;border:1px solid #ccc">Default</button><div id="bellm" style="font-size:13px;color:#555"></div><div id="ls"></div></div>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#ffc800"><title>Freshora Rider</title>
+<style>
+:root{--pri:#ffc800;--ink:#1c1b17;--mu:#6c6a5f;--bg:#fff8d6;--card:rgba(255,255,255,.72);--ln:rgba(255,255,255,.9);--g:#1b8a3a;--r:#d93025;--sh:0 8px 24px rgba(60,50,0,.1)}
+@media(prefers-color-scheme:dark){:root{--ink:#f4f1e6;--mu:#a9a690;--bg:#17150b;--card:rgba(40,37,22,.72);--ln:rgba(255,255,255,.1);--sh:0 8px 24px rgba(0,0,0,.4)}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.4 "Nunito",system-ui,-apple-system,sans-serif;color:var(--ink);background:radial-gradient(700px 420px at 0 0,#ffe27a,transparent 60%),radial-gradient(700px 500px at 100% 100%,#c9f5a8,transparent 60%),var(--bg);background-attachment:fixed;min-height:100vh;padding-bottom:96px}
+button,input{font:inherit;color:inherit}
+.top{padding:calc(14px + env(safe-area-inset-top,0)) 16px 18px;background:linear-gradient(160deg,#ffd633,#ffe98a);border-radius:0 0 28px 28px;color:#1c1b17;display:flex;align-items:center;gap:12px}
+.av{width:46px;height:46px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:22px;flex:none}
+.top h1{margin:0;font-size:19px;line-height:1.15}.top small{font-weight:700;opacity:.75}
+.duty{margin-left:auto;border:0;border-radius:20px;padding:9px 14px;font-weight:900;font-size:13px;background:#fff;display:flex;align-items:center;gap:7px;color:#1c1b17}
+.duty i{width:10px;height:10px;border-radius:50%;background:#aaa}.duty.on i{background:#1fbf4b;box-shadow:0 0 0 4px rgba(31,191,75,.25)}
+main{padding:14px 16px}
+.g{background:var(--card);-webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5);border:1px solid var(--ln);border-radius:22px;box-shadow:var(--sh);padding:14px;margin:0 0 12px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.id{font-weight:900;font-size:15px}.mu{color:var(--mu);font-size:13.5px}
+.chip{display:inline-block;border-radius:20px;padding:3px 11px;font-size:12px;font-weight:900;background:#eee;color:#333}
+.s-New{background:#e3f0ff;color:#0b63c5}.s-Packed{background:#fff0c2;color:#8a5a00}.s-Out{background:#d9f5df;color:#14742f}.s-Delivered{background:#d9f5df;color:#14742f}
+.nm{font-size:20px;font-weight:900;margin:10px 0 2px}.ad{margin:0 0 8px;font-size:15px}
+.cash{background:#fff3cf;color:#6a4a00;border-radius:14px;padding:10px 12px;font-weight:900;margin:8px 0;display:flex;justify-content:space-between;align-items:center}
+.paidb{background:#d9f5df;color:#14742f;border-radius:14px;padding:8px 12px;font-weight:900;margin:8px 0}
+.acts{display:flex;gap:8px;margin-top:10px}.acts>*{flex:1}
+.btn{border:0;border-radius:16px;padding:14px;font-weight:900;text-align:center;text-decoration:none;display:block;background:rgba(0,0,0,.07);color:var(--ink);font-size:15px}
+.btn.p{background:var(--pri);color:#1c1b17;box-shadow:0 6px 16px rgba(255,200,0,.45)}.btn.d{opacity:.5}
+.btn.big{font-size:17px;padding:16px;width:100%}
+.stat{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.stat .g{margin:0;text-align:center}.stat b{display:block;font-size:24px}.stat span{font-size:12.5px;color:var(--mu);font-weight:700}
+.net{border-radius:22px;padding:16px;text-align:center;font-weight:900;margin-bottom:12px;font-size:15px}.net b{display:block;font-size:30px}.net.give{background:#ffe1dc;color:#a3190c}.net.get{background:#d9f5df;color:#14742f}.net.zero{background:var(--card)}
+.it{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid rgba(128,128,128,.18)}.it:first-child{border-top:0}
+.empty{text-align:center;padding:50px 20px;color:var(--mu);font-weight:700}.empty div{font-size:54px}
+.tabs{position:fixed;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0));display:flex;padding:7px;border-radius:26px;background:var(--card);-webkit-backdrop-filter:blur(22px) saturate(1.8);backdrop-filter:blur(22px) saturate(1.8);border:1px solid var(--ln);box-shadow:0 12px 32px rgba(0,0,0,.18);z-index:5}
+.tabs button{flex:1;border:0;background:none;padding:7px 0;border-radius:20px;font-weight:800;font-size:12px;color:var(--mu);display:flex;flex-direction:column;align-items:center;gap:1px}.tabs button span{font-size:22px}.tabs button.on{background:rgba(255,200,0,.4);color:var(--ink)}
+.badge{background:var(--r);color:#fff;border-radius:10px;font-size:11px;padding:0 6px;margin-left:3px}
+.lg{max-width:420px;margin:0 auto;padding:calc(60px + env(safe-area-inset-top,0)) 22px 30px}.lg h1{font-size:28px;margin:12px 0 4px;text-align:center}.lg .logo{width:84px;height:84px;margin:0 auto;border-radius:26px;background:var(--card);display:grid;place-items:center;font-size:44px;box-shadow:var(--sh)}
+.in{width:100%;border-radius:16px;border:1px solid var(--ln);background:var(--card);padding:15px;margin:6px 0;outline:0}
+.er{color:var(--r);font-weight:800;min-height:22px;text-align:center}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}.mo[hidden]{display:none}
+.mo>div{width:100%;max-width:480px;background:var(--bg);border-radius:28px 28px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom,0))}
+.mo h3{margin:0 0 4px;font-size:20px}.code{font-size:30px;text-align:center;letter-spacing:10px;font-weight:900}
+h2.sec{font-size:17px;margin:18px 2px 8px}
+.toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);background:#1c1b17;color:#fff;padding:11px 18px;border-radius:20px;font-weight:800;z-index:30;font-size:14px}
+</style></head><body>
+<div id="lg" class="lg"><div class="logo">🛵</div><h1>Freshora Rider</h1><p class="mu" style="text-align:center;margin:0 0 18px">Log in with the email and password your shop gave you.</p><input class="in" id="em" type="email" placeholder="Email" autocomplete="username"><input class="in" id="pw" type="password" placeholder="Password" autocomplete="current-password"><div class="er" id="er"></div><button class="btn p big" id="in">Log in</button></div>
+
+<div id="ap" hidden>
+<div class="top"><div class="av">🛵</div><div><h1 id="hn">Rider</h1><small id="hs">Ready for deliveries</small></div><button class="duty" id="duty"><i></i><span>Off duty</span></button></div>
+<main id="mn"></main>
+<nav class="tabs"><button data-t="o" class="on"><span>📦</span>Orders<b class="badge" id="ob" hidden></b></button><button data-t="w"><span>💰</span>Wallet</button><button data-t="m"><span>⚙️</span>More</button></nav>
+</div>
+<div class="mo" id="mo" hidden><div id="mb"></div></div>
+<div class="toast" id="ts" hidden></div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="firebase-config.js"></script>
 <script>
-var $=function(i){return document.getElementById(i)},E=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return "&#"+c.charCodeAt(0)+";"})},W=null,u=null;
-$("in").onclick=function(){firebase.auth().signInWithEmailAndPassword($("em").value,$("pw").value).catch(function(){$("er").textContent="Wrong email or password"})};
-$("out").onclick=function(){firebase.auth().signOut()};
-firebase.auth().onAuthStateChanged(function(x){$("lg").hidden=!!x;$("ap").hidden=!x;if(u){u();u=null}if(!x)return;
-u=db.collection("orders").where("status","in",["New","Packed","Out for delivery"]).onSnapshot(function(q){var vis=q.docs.filter(function(d){var p=d.data().payState;return p!=="pending"&&p!=="failed"}).map(function(d){return d.id});if(window.__seen){if(vis.some(function(i){return window.__seen.indexOf(i)<0}))window.frRing()}window.__seen=vis;$("ls").innerHTML=q.docs.map(function(d){var o=d.data(),id=d.id;if(o.payState==="pending"||o.payState==="failed")return "";return '<div class="c"><b>'+id+'</b> · '+E(o.status)+'<br>'+E(o.name)+' · <a href="tel:'+E(o.phone)+'">'+E(o.phone)+'</a><br>'+E(o.address)+'<br>'+(o.lat?'<a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+o.lat+','+o.lng+'">Open in Google Maps</a><br>':'')+E(o.payment)+' · ₹'+E(o.total)+(o.paid?' · PAID':'')+'<br>'+["Packed","Out for delivery","Delivered"].map(function(s){return '<button data-i="'+id+'" data-s="'+s+'">'+s+'</button> '}).join("")+(o.paid?'':'<button data-i="'+id+'" data-p="1">Mark paid</button>')+'</div>'}).join("")||"No active orders"},function(){})});
-document.addEventListener("click",function(e){var t=e.target,i=t.dataset.i;if(!i)return;
-if(t.dataset.p){db.doc("orders/"+i).update({paid:true});return}
-var s=t.dataset.s;db.doc("orders/"+i).update({status:s});
-if(s==="Out for delivery"){if(W!==null)navigator.geolocation.clearWatch(W);W=navigator.geolocation.watchPosition(function(p){db.doc("live/"+i).set({lat:p.coords.latitude,lng:p.coords.longitude,t:firebase.firestore.FieldValue.serverTimestamp()})},function(){alert("Please allow location access")},{enableHighAccuracy:true})}
-if(s==="Delivered"&&W!==null){navigator.geolocation.clearWatch(W);W=null;db.doc("live/"+i).delete()}});
+var $=function(i){return document.getElementById(i)},E=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return "&#"+c.charCodeAt(0)+";"})},
+ U=null,ME=null,S={},O=[],tab="o",W=null,LAST=null,CUR=[],UN=[],FS=firebase.firestore.FieldValue;
+function toast(m){var t=$("ts");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){t.hidden=true},2600)}
+function ts(o,f){var v=o[f];return v&&v.seconds?v.seconds*1000:0}
+function fmt(ms){return ms?new Date(ms).toLocaleString([],{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):""}
+function hav(a,b,c,d){var r=Math.PI/180,x=Math.sin((c-a)*r/2),y=Math.sin((d-b)*r/2),h=x*x+Math.cos(a*r)*Math.cos(c*r)*y*y;return 12742*Math.asin(Math.sqrt(h))}
+function owes(o){return !o.paid&&/cash|cod/i.test(o.payment||"")?Number(o.total)||0:0}
+function earnFor(o){var b=Number(S.riderPay)||0,k=Number(S.riderPerKm)||0,d=0;if(k&&S.lat&&S.lng&&o.lat!=null&&o.lng!=null)d=hav(Number(S.lat),Number(S.lng),o.lat,o.lng);return Math.round(b+k*d)}
+function vis(o){return o.payState!=="pending"&&o.payState!=="failed"}
+function active(){return O.filter(function(o){return vis(o)&&["New","Packed","Out for delivery"].indexOf(o.status)>-1}).sort(function(a,b){return ts(a,"createdAt")-ts(b,"createdAt")})}
+function done(){return O.filter(function(o){return o.status==="Delivered"}).sort(function(a,b){return(ts(b,"deliveredAt")||ts(b,"updatedAt"))-(ts(a,"deliveredAt")||ts(a,"updatedAt"))})}
+
+/* login */
+$("in").onclick=function(){$("er").textContent="";firebase.auth().signInWithEmailAndPassword($("em").value.trim(),$("pw").value).catch(function(){$("er").textContent="Wrong email or password"})};
+$("pw").addEventListener("keydown",function(e){if(e.key==="Enter")$("in").click()});
+function stop(){UN.forEach(function(f){f()});UN=[];if(W!==null){navigator.geolocation.clearWatch(W);W=null}}
+firebase.auth().onAuthStateChanged(function(x){stop();U=x;ME=null;O=[];$("lg").hidden=!!x;$("ap").hidden=!x;if(!x)return;
+ UN.push(db.doc("settings/main").onSnapshot(function(d){S=d.data()||{};render()},function(){}));
+ UN.push(db.doc("riders/"+x.uid).onSnapshot(function(d){ME=d.exists?d.data():false;$("hn").textContent=ME&&ME.name?ME.name:"Rider";hdr();render()},function(){ME=false;render()}));
+ UN.push(db.collection("orders").where("riderId","==",x.uid).limit(300).onSnapshot(function(q){O=q.docs.map(function(d){return Object.assign({id:d.id},d.data())});
+  var ids=active().map(function(o){return o.id});if(window.__seen){if(ids.some(function(i){return window.__seen.indexOf(i)<0})){window.frRing();toast("New order assigned to you")}}window.__seen=ids;watch();render()},function(){}))});
+function hdr(){var on=!!(ME&&ME.onDuty);$("duty").className="duty"+(on?" on":"");$("duty").lastChild.textContent=on?"On duty":"Off duty";$("hs").textContent=on?"You will get new orders":"Turn on duty to get orders"}
+$("duty").onclick=function(){if(!ME||!U)return;db.doc("riders/"+U.uid).update({onDuty:!ME.onDuty}).catch(function(){toast("Could not change")})};
+document.querySelector(".tabs").onclick=function(e){var b=e.target.closest("button");if(!b)return;tab=b.dataset.t;[].forEach.call(this.children,function(x){x.classList.toggle("on",x===b)});render();window.scrollTo(0,0)};
+
+/* live location for every order that is out for delivery */
+function watch(){CUR=O.filter(function(o){return o.status==="Out for delivery"}).map(function(o){return o.id});
+ if(CUR.length&&W===null&&navigator.geolocation){W=navigator.geolocation.watchPosition(function(p){LAST={lat:p.coords.latitude,lng:p.coords.longitude};push()},function(){toast("Please allow location access")},{enableHighAccuracy:true,maximumAge:5000})}
+ else if(!CUR.length&&W!==null){navigator.geolocation.clearWatch(W);W=null}
+ push()}
+function push(){if(!LAST)return;CUR.forEach(function(id){db.doc("live/"+id).set({lat:LAST.lat,lng:LAST.lng,t:FS.serverTimestamp(),riderName:ME&&ME.name||""}).catch(function(){})})}
+
+/* views */
+function chip(s){return '<span class="chip s-'+(s==="Out for delivery"?"Out":s)+'">'+E(s)+'</span>'}
+function card(o){var c=owes(o),it=(o.items||[]).map(function(x){return E(x.name)+' × '+E(x.label||(x.qty+" "+x.unit))}).join(", ");
+ var go=o.status==="Packed"?'<button class="btn p big" data-a="go" data-i="'+E(o.id)+'">🛵 Start delivery</button>':o.status==="Out for delivery"?'<button class="btn p big" data-a="dl" data-i="'+E(o.id)+'">✅ Mark delivered</button>':'<button class="btn big d" disabled>⏳ Shop is packing</button>';
+ return '<div class="g"><div class="row"><span class="id">#'+E(o.id)+'</span>'+chip(o.status)+'</div><div class="mu">'+E(fmt(ts(o,"createdAt")))+' · '+E(o.zone||"")+'</div>'
+ +'<div class="nm">'+E(o.name)+'</div><p class="ad">📍 '+E(o.address)+'</p><div class="mu">'+E(it)+'</div>'
+ +(c?'<div class="cash"><span>💵 Collect cash</span><span style="font-size:22px">₹'+E(c)+'</span></div>':'<div class="paidb">✅ '+(o.paid?'Paid online':E(o.payment||"Paid"))+' · nothing to collect</div>')
+ +'<div class="acts"><a class="btn" href="tel:'+E(o.phone)+'">📞 Call</a>'+(o.lat!=null?'<a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+o.lat+','+o.lng+'">🧭 Navigate</a>':'')+'</div><div class="acts">'+go+'</div></div>'}
+function viewO(){var a=active();$("ob").hidden=!a.length;$("ob").textContent=a.length;
+ if(ME===false)return '<div class="empty"><div>🔒</div>Your rider account is not set up yet.<br>Please ask the shop owner.</div>';
+ if(ME&&ME.active===false)return '<div class="empty"><div>⛔</div>Your account is paused.<br>Please contact the shop.</div>';
+ return a.length?a.map(card).join(""):'<div class="empty"><div>🛵</div>No orders right now.<br>New orders will ring here.</div>'}
+function viewW(){var d=done(),held=0,eu=0,td=0,wk=0,now=Date.now(),sod=new Date().setHours(0,0,0,0);
+ d.forEach(function(o){var e=Number(o.earn)||0,t=ts(o,"deliveredAt")||ts(o,"updatedAt");if(!o.cashRecv)held+=Number(o.cash)||0;if(!o.earnPaid)eu+=e;if(t>=sod)td+=e;if(t>=now-7*864e5)wk+=e});
+ var net=eu-held,nc=net<0?"give":net>0?"get":"zero",nt=net<0?"You hand over to the shop":net>0?"The shop pays you":"All settled";
+ return '<div class="net '+nc+'">'+nt+'<b>₹'+Math.abs(net)+'</b></div>'
+ +'<div class="stat"><div class="g"><b>₹'+held+'</b><span>Cash in your hand</span></div><div class="g"><b>₹'+eu+'</b><span>Earned, not paid yet</span></div><div class="g"><b>₹'+td+'</b><span>Earned today</span></div><div class="g"><b>₹'+wk+'</b><span>Last 7 days</span></div></div>'
+ +'<h2 class="sec">Deliveries ('+d.length+')</h2><div class="g" style="padding:4px 14px">'+(d.slice(0,40).map(function(o){return '<div class="it"><div><b>#'+E(o.id)+'</b> '+(o.earnPaid?'<span class="chip s-Out">paid</span>':'')+'<div class="mu">'+E(fmt(ts(o,"deliveredAt")||ts(o,"updatedAt")))+(o.cash?' · cash ₹'+E(o.cash)+(o.cashRecv?' ✓':''):'')+'</div></div><b>₹'+E(o.earn||0)+'</b></div>'}).join("")||'<div class="empty">No deliveries yet.</div>')+'</div>'}
+function viewM(){return '<div class="g"><b>'+E(ME&&ME.name||"")+'</b><div class="mu">'+E(ME&&ME.phone||"")+' · '+E(U&&U.email||"")+'</div></div>'
+ +'<div class="g"><b>🔔 New order sound</b><div class="acts"><label class="btn" style="margin:0">Choose sound<input type="file" id="bellf" accept="audio/*" hidden></label><button class="btn" id="bellt">Test</button><button class="btn" id="bellr">Default</button></div><div class="mu" id="bellm" style="margin-top:8px"></div></div>'
+ +'<div class="g"><b>Pay rate</b><div class="mu">₹'+E(S.riderPay||0)+' per delivery'+(Number(S.riderPerKm)?' + ₹'+E(S.riderPerKm)+' per km':'')+'</div></div>'
+ +'<button class="btn big" id="out">Log out</button>'}
+function render(){if($("ap").hidden)return;$("mn").innerHTML=tab==="o"?viewO():tab==="w"?viewW():viewM();if(tab!=="o"){var a=active();$("ob").hidden=!a.length;$("ob").textContent=a.length}
+ if(tab==="m"){$("bellm").textContent=frBellInfo()+" Keep this page open to hear new orders.";$("out").onclick=function(){firebase.auth().signOut()};$("bellf").onchange=function(){if(this.files[0])frBellSet(this.files[0],function(t){$("bellm").textContent=t})};$("bellt").onclick=frRing;$("bellr").onclick=function(){frBellSet(null,function(t){$("bellm").textContent=t})}}}
+
+/* actions */
+function modal(h){$("mb").innerHTML=h;$("mo").hidden=false}function closeM(){$("mo").hidden=true}
+$("mo").onclick=function(e){if(e.target===this)closeM()};
+document.addEventListener("click",function(e){var t=e.target.closest("[data-a]");if(!t)return;var a=t.dataset.a,id=t.dataset.i,o=O.filter(function(x){return x.id===id})[0];
+ if(a==="go"&&o)db.doc("orders/"+id).update({status:"Out for delivery",updatedAt:FS.serverTimestamp(),pickedAt:FS.serverTimestamp()}).then(function(){toast("On the way ✓")}).catch(function(){toast("Could not update")});
+ if(a==="dl"&&o){var c=owes(o);modal('<h3>Deliver order #'+E(id)+'</h3><p class="mu">'+E(o.name)+'</p>'+(o.dcode?'<label class="mu">Ask the customer for their 4-digit code</label><input class="in code" id="dc" inputmode="numeric" maxlength="4" placeholder="••••">':'')+(c?'<label class="mu">Cash collected (₹)</label><input class="in" id="dcash" type="number" inputmode="numeric" value="'+c+'">':'')+'<div class="er" id="de"></div><div class="acts"><button class="btn" data-a="cx">Cancel</button><button class="btn p" data-a="dd" data-i="'+E(id)+'">Confirm delivered</button></div>')}
+ if(a==="cx")closeM();
+ if(a==="dd"&&o){var c2=owes(o),code=$("dc")?$("dc").value.trim():"";if(o.dcode&&code!==String(o.dcode)){$("de").textContent="Wrong code. Ask the customer again.";return}
+  var cash=c2?Math.max(0,Number($("dcash").value)||0):0;if(c2&&cash<c2&&!confirm("You entered less than ₹"+c2+". Continue?"))return;
+  var u={status:"Delivered",updatedAt:FS.serverTimestamp(),deliveredAt:FS.serverTimestamp(),earn:earnFor(o),cash:cash,cashRecv:false,earnPaid:false};if(c2&&cash>0)u.paid=true;
+  db.doc("orders/"+id).update(u).then(function(){db.doc("live/"+id).delete().catch(function(){});closeM();toast("Delivered ✓ You earned ₹"+u.earn)}).catch(function(){$("de").textContent="Could not save. Check internet and try again."})}});
+
+/* sound */
 (function(){var K="fr_bell",AC=null,wl=null;
 function cu(){try{return localStorage.getItem(K)||""}catch(e){return""}}
 function ctx(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();return AC}catch(e){return null}}
@@ -27,10 +134,4 @@ function lock(){try{if(navigator.wakeLock)navigator.wakeLock.request("screen").t
 document.addEventListener("click",function(){ctx();lock()},{once:true});
 document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&navigator.wakeLock&&wl)lock()});
 })();
-
-(function(){var m=function(t){document.getElementById("bellm").textContent=t},b=document.getElementById("bellf");
- m(frBellInfo()+" Keep this page open to hear new orders.");
- b.onchange=function(){if(b.files[0])frBellSet(b.files[0],m)};
- document.getElementById("bellt").onclick=frRing;
- document.getElementById("bellr").onclick=function(){frBellSet(null,m)}})();
 </script></body></html>
