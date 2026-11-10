@@ -114,13 +114,13 @@ function render(){if($("ap").hidden)return;$("mn").innerHTML=tab==="o"?viewO():t
 function modal(h){$("mb").innerHTML=h;$("mo").hidden=false}function closeM(){$("mo").hidden=true}
 $("mo").onclick=function(e){if(e.target===this)closeM()};
 document.addEventListener("click",function(e){var t=e.target.closest("[data-a]");if(!t)return;var a=t.dataset.a,id=t.dataset.i,o=O.filter(function(x){return x.id===id})[0];
- if(a==="go"&&o)rdb.doc("orders/"+id).update({status:"Out for delivery",updatedAt:FS.serverTimestamp(),pickedAt:FS.serverTimestamp()}).then(function(){toast("On the way ✓")}).catch(function(){toast("Could not update")});
+ if(a==="go"&&o)rdb.doc("orders/"+id).update({status:"Out for delivery",updatedAt:FS.serverTimestamp(),pickedAt:FS.serverTimestamp()}).then(function(){toast("On the way ✓")}).catch(function(e){toast("Could not update ("+(e&&e.code||"error")+")")});
  if(a==="dl"&&o){var c=owes(o);modal('<h3>Deliver order #'+E(id)+'</h3><p class="mu">'+E(o.name)+'</p>'+(o.dcode?'<label class="mu">Ask the customer for their 4-digit code</label><input class="in code" id="dc" inputmode="numeric" maxlength="4" placeholder="••••">':'')+(c?'<label class="mu">Cash collected (₹)</label><input class="in" id="dcash" type="number" inputmode="numeric" value="'+c+'">':'')+'<div class="er" id="de"></div><div class="acts"><button class="btn" data-a="cx">Cancel</button><button class="btn p" data-a="dd" data-i="'+E(id)+'">Confirm delivered</button></div>')}
  if(a==="cx")closeM();
  if(a==="dd"&&o){var c2=owes(o),code=$("dc")?$("dc").value.trim():"";if(o.dcode&&code!==String(o.dcode)){$("de").textContent="Wrong code. Ask the customer again.";return}
   var cash=c2?Math.max(0,Number($("dcash").value)||0):0;if(c2&&cash<c2&&!confirm("You entered less than ₹"+c2+". Continue?"))return;
-  var u={status:"Delivered",updatedAt:FS.serverTimestamp(),deliveredAt:FS.serverTimestamp(),earn:earnFor(o),cash:cash};if(c2&&cash>0)u.paid=true;
-  rdb.doc("orders/"+id).update(u).then(function(){rdb.doc("live/"+id).delete().catch(function(){});closeM();toast("Delivered ✓ You earned ₹"+u.earn)}).catch(function(){$("de").textContent="Could not save. Check internet and try again."})}});
+  var u={status:"Delivered",updatedAt:FS.serverTimestamp(),deliveredAt:FS.serverTimestamp(),earn:(isFinite(earnFor(o))?earnFor(o):0),cash:(isFinite(cash)?cash:0)};if(c2&&cash>0)u.paid=true;
+  rdb.doc("orders/"+id).update(u).then(function(){rdb.doc("live/"+id).delete().catch(function(){});closeM();toast("Delivered ✓ You earned ₹"+u.earn)}).catch(function(e){var c=e&&e.code||"error";$("de").textContent=c==="permission-denied"?"Not allowed (permission-denied). Ask the shop to check that this order is assigned to you and the rules are published.":c==="unavailable"?"No internet. Try again.":"Could not save ("+c+"). "+(e&&e.message||"").slice(0,120)})}});
 
 /* sound */
 (function(){var K="fr_bell",AC=null,wl=null;
