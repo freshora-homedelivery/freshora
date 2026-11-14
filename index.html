@@ -151,6 +151,20 @@ body{padding-bottom:110px}
 .bn{scrollbar-width:none;scroll-behavior:auto}.bn::-webkit-scrollbar{display:none}
 .bdt{display:flex;justify-content:center;gap:6px;margin-top:10px}.bdt i{width:7px;height:7px;border-radius:7px;background:rgba(0,0,0,.2);transition:all .3s}.bdt i.on{width:22px;background:var(--pri)}
 .rdb .dcd{margin-top:12px;border-radius:16px;background:rgba(255,200,0,.28);text-align:center;padding:12px}.rdb .dcd span{display:block;font-weight:800;font-size:13px}.rdb .dcd b{display:block;font-size:34px;letter-spacing:10px;margin:2px 0}.rdb .dcd small{color:#6a5a1a;font-weight:700}
+
+/* wallet, offer, gallery */
+.wpill{border-radius:20px;padding:10px 13px;font-weight:900;font-size:13px;text-decoration:none;color:#1c1b17;background:rgba(255,255,255,.7);white-space:nowrap;flex:none}
+.wh{background:linear-gradient(180deg,#ffd633,#ffe98a 75%,rgba(255,233,138,0));margin:0 -16px 6px;padding:8px 16px 28px;text-align:center}.wh small{display:block;font-weight:900;font-size:22px}.wh h2{margin:0;font-size:46px;letter-spacing:9px;line-height:1.05}
+.wbal{text-align:center}.wbal small{font-weight:800;color:var(--mu)}.wbal h2{margin:2px 0 4px;font-size:44px}
+.wfs{display:grid;gap:10px;margin:12px 0}.wf{display:flex;gap:14px;align-items:center;background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.8);border-radius:20px;padding:14px}.wf>span{font-size:30px;width:52px;height:52px;border-radius:16px;background:#fff;display:grid;place-items:center;flex:none}.wf small{display:block;color:var(--mu);font-weight:700;margin-top:2px}
+.wbn{font-weight:800;color:#14742f;margin:6px 0;min-height:20px}.chips{display:flex;flex-wrap:wrap;gap:8px}.chips .chip{border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.7);border-radius:20px;padding:9px 16px;font-weight:900}.chips .chip.on{background:#1c1b17;color:#fff}
+.wtx{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid rgba(128,128,128,.18)}.wtx:first-of-type{border-top:0}.wtx>div{flex:1}.wtx small{display:block;color:var(--mu)}.wti{width:38px;height:38px;border-radius:12px;background:#fff;display:grid;place-items:center}.wp{color:#14742f}.wm{color:#a3190c}
+.pbn{background:rgba(255,243,205,.75);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.85);border-radius:18px;padding:12px 14px;margin:10px 0}.pbn b,.pbn small{display:block}.pbn small{color:var(--mu);font-weight:700;margin-top:3px}.pbn.ok{background:rgba(217,245,223,.8)}
+.pbr{height:8px;border-radius:8px;background:rgba(0,0,0,.1);margin:8px 0;overflow:hidden}.pbr i{display:block;height:100%;background:#1fbf4b;border-radius:8px;transition:width .4s}
+.po.dis{opacity:.65}.wlk{margin-left:auto;font-weight:900;text-decoration:underline;color:#0b63c5;white-space:nowrap}
+.wmo{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}.wmo[hidden]{display:none}.wmo>div{width:100%;max-width:480px;background:#fff8d6;border-radius:26px 26px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom,0))}
+.galw{width:100%}.gal{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;width:100%}.gal::-webkit-scrollbar{display:none}.gs{flex:0 0 100%;scroll-snap-align:center;position:relative;display:grid;place-items:center}.gs img{width:100%;max-height:320px;object-fit:contain;border-radius:16px}.gl{position:absolute;left:8px;bottom:6px;background:rgba(28,27,23,.75);color:#fff;border-radius:12px;padding:3px 10px;font-size:12px;font-weight:800}
+.gth{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}.gth button{border:2px solid transparent;background:rgba(255,255,255,.7);border-radius:14px;padding:3px;width:62px;text-align:center}.gth button.on{border-color:#1c1b17}.gth img{width:100%;height:46px;object-fit:cover;border-radius:10px;display:block}.gth small{display:block;font-size:10px;font-weight:800;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 </head><body>
 <div id="lg" class="lg2" hidden><div class="lgc">
@@ -179,11 +193,12 @@ body{padding-bottom:110px}
 <section data-v="track" hidden><div class="ph"><button class="bk" data-back>←</button><h1>My Orders</h1></div><div id="ordw"></div></section>
 <section data-v="product" hidden><div id="pdv"></div></section>
 <section data-v="policy" hidden><div class="ph"><button class="bk" data-back>←</button><h1 id="polT"></h1></div><div class="bx" id="pol"></div></section>
+<section data-v="wallet" hidden><div class="ph"><button class="bk" data-back>←</button><h1>Wallet</h1></div><div id="wv"></div></section>
 <section data-v="profile" hidden><div class="ph"><button class="bk" data-back>←</button><h1>Profile</h1></div>
 <div id="au"></div><div class="bx"><h3>Delivery details</h3><input class="in" id="pn" placeholder="Full name" autocomplete="name"><input class="in" id="pp" placeholder="10-digit mobile number" type="tel" autocomplete="tel"><textarea class="in" id="pa" rows="2" placeholder="House no, street, area, city"></textarea><div class="msg" id="pm"></div><button class="add" id="psv" style="padding:14px">Save details</button></div>
-<div class="bx" style="padding:0;overflow:hidden"><a class="ml" href="#track">📦 My Orders</a><a class="ml" href="#track">🚚 Track an Order</a><a class="ml" href="#offers">🏷️ Offers &amp; Coupons</a><a class="ml" id="hl" href="#profile">🎧 Help &amp; Support</a><a class="ml" href="#policy-contact">📞 Contact Us</a><a class="ml" href="#policy-terms">📄 Terms &amp; Conditions</a><a class="ml" href="#policy-privacy">🛡️ Privacy Policy</a><a class="ml" href="#policy-payment">💳 Payment Policy</a><a class="ml" href="#policy-shipping">🚚 Shipping &amp; Delivery</a><a class="ml" href="#policy-refund">↩️ Refund &amp; Cancellation</a></div></section>
+<div class="bx" style="padding:0;overflow:hidden"><a class="ml" href="#wallet">👛 Freshora Wallet</a><a class="ml" href="#track">📦 My Orders</a><a class="ml" href="#track">🚚 Track an Order</a><a class="ml" href="#offers">🏷️ Offers &amp; Coupons</a><a class="ml" id="hl" href="#profile">🎧 Help &amp; Support</a><a class="ml" href="#policy-contact">📞 Contact Us</a><a class="ml" href="#policy-terms">📄 Terms &amp; Conditions</a><a class="ml" href="#policy-privacy">🛡️ Privacy Policy</a><a class="ml" href="#policy-payment">💳 Payment Policy</a><a class="ml" href="#policy-shipping">🚚 Shipping &amp; Delivery</a><a class="ml" href="#policy-refund">↩️ Refund &amp; Cancellation</a></div></section>
 </main>
-<div class="dr" id="dr" hidden><div><div class="lg" style="margin:0 0 14px">Freshora</div><a href="#home" data-go="home">Home <b>›</b></a><a href="#all" data-c="All">All Products <b>›</b></a><a href="#offers">Offers &amp; Deals <b>›</b></a><a href="#track">My Orders <b>›</b></a><a href="#track">Track Order <b>›</b></a><a href="#wish">Wishlist <b>›</b></a><a href="#profile">Profile <b>›</b></a></div></div>
+<div class="dr" id="dr" hidden><div><div class="lg" style="margin:0 0 14px">Freshora</div><a href="#home" data-go="home">Home <b>›</b></a><a href="#all" data-c="All">All Products <b>›</b></a><a href="#offers">Offers &amp; Deals <b>›</b></a><a href="#wallet">Wallet <b>›</b></a><a href="#track">My Orders <b>›</b></a><a href="#track">Track Order <b>›</b></a><a href="#wish">Wishlist <b>›</b></a><a href="#profile">Profile <b>›</b></a></div></div>
 <footer class="ft" id="ft"><div><a href="#policy-terms">Terms &amp; Conditions</a><a href="#policy-privacy">Privacy Policy</a><a href="#policy-payment">Payment Policy</a><a href="#policy-shipping">Shipping &amp; Delivery</a><a href="#policy-refund">Refund &amp; Cancellation</a><a href="#policy-contact">Contact Us</a></div><div style="margin-top:8px">© 2026 Freshora · Kalladka</div></footer>
 <div class="wsh" id="wm" hidden><div id="wb"></div></div>
 <div class="pbar" id="pbar" hidden></div><div class="tst" id="tst" hidden></div>
@@ -246,7 +261,7 @@ var curP="",dq=0;
 function toast(m){var t=$("tst");t.textContent=m;t.hidden=false;clearTimeout(window.__tt);window.__tt=setTimeout(function(){t.hidden=true},1800)}
 function prod(id){var it=itm(id);if(!it.id){go("home");return}curP=id;dq=qty[id]||stepOf(it);var o=offp(it),hl=(it.hl||[]).filter(Boolean),info=(it.info||[]).filter(Boolean);
 var rows=[["Category",it.category],["Sold by","per "+it.unit],["Pack",it.pack],["Delivery","Next morning, 7–9 AM"]].concat(info.map(function(l){var i=l.indexOf(":");return i>0?[l.slice(0,i).trim(),l.slice(i+1).trim()]:["",l]})).filter(function(r){return r[1]});
-$("pdv").innerHTML='<div class="pgi"><div class="pt"><button class="bk2" data-back aria-label="Back">←</button><a class="bk2" href="#all" data-c="All" aria-label="Search">🔍</a></div>'+(it.image?'<img src="'+esc(it.image)+'" alt="'+esc(it.name)+'">':'<span class="em">'+esc(it.emoji||"🥬")+'</span>')+'</div><div class="pbody"><div class="cp"><span class="chip3">🕒 Next morning</span><span class="chip3 blue">'+esc(it.pack||("per "+it.unit))+'</span></div><h1>'+esc(it.name)+'</h1><div class="pp"><b>₹'+esc(it.price)+'</b>'+(o?' <s>MRP ₹'+esc(it.mrp)+'</s> <span class="off" style="position:static;padding:2px 8px">'+o+'% OFF</span>':'')+' <span class="mu">/ '+esc(it.unit)+'</span></div><h3>About this product</h3><p>'+esc(it.desc||("Fresh "+it.name+" from local shops in Kalladka, picked fresh and delivered to your door."))+'</p>'+(hl.length?'<h3>Why you’ll love it</h3><ul class="hl">'+hl.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>':'')+'<h3>Product details</h3><table class="dt">'+rows.map(function(r){return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td></tr>'}).join("")+'</table></div>';pbar()}
+$("pdv").innerHTML='<div class="pgi"><div class="pt"><button class="bk2" data-back aria-label="Back">←</button><a class="bk2" href="#all" data-c="All" aria-label="Search">🔍</a></div>'+(window.galH?galH(it):(it.image?'<img src="'+esc(it.image)+'" alt="'+esc(it.name)+'">':'<span class="em">'+esc(it.emoji||"🥬")+'</span>'))+'</div><div class="pbody"><div class="cp"><span class="chip3">🕒 Next morning</span><span class="chip3 blue">'+esc(it.pack||("per "+it.unit))+'</span></div><h1>'+esc(it.name)+'</h1><div class="pp"><b>₹'+esc(it.price)+'</b>'+(o?' <s>MRP ₹'+esc(it.mrp)+'</s> <span class="off" style="position:static;padding:2px 8px">'+o+'% OFF</span>':'')+' <span class="mu">/ '+esc(it.unit)+'</span></div><h3>About this product</h3><p>'+esc(it.desc||("Fresh "+it.name+" from local shops in Kalladka, picked fresh and delivered to your door."))+'</p>'+(hl.length?'<h3>Why you’ll love it</h3><ul class="hl">'+hl.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>':'')+'<h3>Product details</h3><table class="dt">'+rows.map(function(r){return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td></tr>'}).join("")+'</table></div>';if(window.galInit)galInit();pbar()}
 function pbar(){var it=itm(curP);if(!it.id)return;var m=meas(it);$("pbar").innerHTML='<div class="pst"><button data-pm aria-label="Less">−</button>'+(m?'<button class="wl" data-pw>'+fq(it,dq)+'</button>':'<output>'+(dq<10?"0":"")+dq+'</output>')+'<button class="pp2" data-pp aria-label="More">+</button></div><button class="dark" data-pa>'+(qty[curP]?"Update cart":"Add to cart")+' · ₹'+amt(it,dq)+'</button>'}
 function openW(id,mode){var it=itm(id),q=mode==="dq"?dq:(qty[id]||0),u=MEAS[it.unit]||["",""],opts=[100,250,500,750,1000,1500,2000,3000,5000].filter(function(v){return v>=Math.min(100,stepOf(it))});if(opts.indexOf(stepOf(it))<0&&stepOf(it)>1)opts.push(stepOf(it));opts.sort(function(a,b){return a-b});
 $("wb").innerHTML='<h3>'+esc(it.name)+'</h3><p class="mu" style="margin:0 0 10px">₹'+esc(it.price)+' per '+esc(it.unit)+'</p><div class="chips">'+opts.map(function(v){return '<button class="ch'+(q===v?' on':'')+'" data-wq="'+v+'">'+fq(it,v)+'</button>'}).join("")+'</div><b>Or type an amount</b><div class="grid"><input class="in" id="wk" type="number" min="0" inputmode="numeric" placeholder="'+u[1]+'" value="'+(q?Math.floor(q/1000):"")+'" aria-label="'+u[1]+'"><input class="in" id="wg" type="number" min="0" max="999" inputmode="numeric" placeholder="'+u[0]+'" value="'+(q?q%1000:"")+'" aria-label="'+u[0]+'"></div><div class="rw" style="margin:6px 0"><span id="wmsg" class="msg"></span><b id="wp"></b></div><div class="grid"><button class="add" id="wrm" style="background:#fff;border:2px solid var(--ink);padding:13px">Remove</button><button class="add" id="wok" style="padding:13px">Add to cart</button></div>';
@@ -258,8 +273,9 @@ function card(it){var q=qty[it.id]||0,o=offp(it),m=meas(it);return '<div class="
 function put(el,l,msg){$(el).innerHTML=l.map(card).join("")||'<p class="mu">'+(msg||"Nothing here yet.")+'</p>'}
 function calc(){var sub=0,n=0,l=[];items.forEach(function(it){var q=qty[it.id]||0;if(q){var a=amt(it,q);sub+=a;n+=meas(it)?1:q;l.push({id:it.id,name:it.name,emoji:it.emoji||"",unit:it.unit,qty:meas(it)?q/1000:q,label:fq(it,q),amt:a,price:it.price,mrp:it.mrp||0})}});
 var far=zone==="far",d=!n?0:far?S.farFee:(sub>=S.freeAbove?0:S.nearFee),disc=0;if(coupon&&n&&sub>=(coupon.minOrder||0)){disc=coupon.type==="percent"?Math.round(sub*coupon.value/100):coupon.value;if(coupon.maxDiscount)disc=Math.min(disc,coupon.maxDiscount);disc=Math.min(disc,sub)}
-return{sub:sub,n:n,l:l,d:d,disc:disc,t:sub-disc+d,far:far}}
-function pd(c){return '<div class="bx"><h3>Price Details</h3><div class="rw"><span>Subtotal ('+c.n+(c.n===1?' item':' items')+')</span><span>₹'+c.sub+'</span></div>'+(c.disc?'<div class="rw"><span>Coupon '+esc(coupon.code)+'</span><b style="color:#1b9c4d">−₹'+c.disc+'</b></div>':'')+'<div class="rw"><span>Delivery</span><span>'+(c.d?'₹'+c.d:'<b style="color:#1b9c4d">Free</b>')+'</span></div><div class="rw tt"><span>Total</span><span>₹'+c.t+'</span></div>'+(!c.far&&c.n&&c.sub<S.freeAbove?'<p class="msg">Add ₹'+(S.freeAbove-c.sub)+' more for free delivery.</p>':'')+'</div>'}
+var po=0;if(n&&typeof promoElig==="function"&&promoElig(sub))po=promoOffer(sub);
+return{sub:sub,n:n,l:l,d:d,disc:disc,promo:po,t:sub-disc-po+d,far:far}}
+function pd(c){return '<div class="bx"><h3>Price Details</h3><div class="rw"><span>Subtotal ('+c.n+(c.n===1?' item':' items')+')</span><span>₹'+c.sub+'</span></div>'+(c.disc?'<div class="rw"><span>Coupon '+esc(coupon.code)+'</span><b style="color:#1b9c4d">−₹'+c.disc+'</b></div>':'')+(c.promo?'<div class="rw"><span>First-order offer</span><b style="color:#1b9c4d">−₹'+c.promo+'</b></div>':'')+'<div class="rw"><span>Delivery</span><span>'+(c.d?'₹'+c.d:'<b style="color:#1b9c4d">Free</b>')+'</span></div><div class="rw tt"><span>Total</span><span>₹'+c.t+'</span></div>'+(!c.far&&c.n&&c.sub<S.freeAbove?'<p class="msg">Add ₹'+(S.freeAbove-c.sub)+' more for free delivery.</p>':'')+'</div>'}
 var HOME={order:[],b:{},theme:{}},BKS=["offers","cats","banners","pop","help"];
 function themeH(){var t=HOME.theme||{},r=document.documentElement.style;["bg","ink","pri"].forEach(function(k){if(t[k])r.setProperty("--"+k,t[k]);else r.removeProperty("--"+k)});if(t.pri)r.setProperty("--acc",t.pri);else r.removeProperty("--acc")}
 function hord(){var o=(HOME.order||[]).filter(function(k){return k.indexOf("c_")===0?HOME.b[k]:BKS.indexOf(k)>-1});BKS.forEach(function(k){if(o.indexOf(k)<0)o.push(k)});return o}
@@ -279,7 +295,7 @@ return go2.map(function(gk){var l=g[gk].slice(0,10);return l.length?'<div class=
 if(id==="help")return '<div class="nf" style="'+bst(b)+'"><h2>'+esc(b.title||"Couldn't find what you are looking for?")+'</h2>'+(b.text?'<p>'+esc(b.text)+'</p>':'')+'<button class="add ex" data-c="All">'+esc(b.button||"Explore now")+'</button></div>';
 if(id.indexOf("c_")===0)return '<div class="cb" style="'+bst(b)+'"><h2>'+esc(b.title||"")+'</h2>'+(b.text?'<p>'+esc(b.text)+'</p>':'')+(b.button?'<button class="add ex" data-c="All">'+esc(b.button)+'</button>':'')+'</div>';return""}
 function homeR(){var o=hord(),first=o[0]==="offers"&&(HOME.b.offers||{}).show!==false;
-$("hh").innerHTML='<div class="yh"><div class="hr1"><a class="av" href="#profile" aria-label="Profile">'+(user&&user.photoURL?'<img src="'+esc(user.photoURL)+'" alt="">':esc((uname()||"F").charAt(0).toUpperCase()))+'</a><div class="hg"><b id="locT">'+esc(hname()||"Hello there 👋")+'</b><small>📍 '+(dist!=null?"Delivering to you · "+dist.toFixed(1)+" km":"Kalladka, Karnataka")+'</small></div><a class="circ gl" href="#offers" aria-label="Offers">🔔</a></div><div class="sbar gl"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="hs" placeholder="Search fresh vegetables, fruits…" aria-label="Search"><button type="button" id="mic" aria-label="Voice search"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button type="button" id="flt" aria-label="Filters"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button></div>'+(first?'<div style="margin-top:18px">'+blkH("offers",true)+'</div>':"")+'</div>';
+$("hh").innerHTML='<div class="yh"><div class="hr1"><a class="av" href="#profile" aria-label="Profile">'+(user&&user.photoURL?'<img src="'+esc(user.photoURL)+'" alt="">':esc((uname()||"F").charAt(0).toUpperCase()))+'</a><div class="hg"><b id="locT">'+esc(hname()||"Hello there 👋")+'</b><small>📍 '+(dist!=null?"Delivering to you · "+dist.toFixed(1)+" km":"Kalladka, Karnataka")+'</small></div>'+(window.wPill?wPill():"")+'<a class="circ gl" href="#offers" aria-label="Offers">🔔</a></div><div class="sbar gl"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="hs" placeholder="Search fresh vegetables, fruits…" aria-label="Search"><button type="button" id="mic" aria-label="Voice search"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button type="button" id="flt" aria-label="Filters"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button></div>'+(first?'<div style="margin-top:18px">'+blkH("offers",true)+'</div>':"")+'</div>';
 if(!ready){$("hp").innerHTML='<div class="skl"><div class="sk1"></div><div class="skg"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>';locUi();return}
 $("hp").innerHTML=o.filter(function(k,i){return!(first&&i===0)}).map(function(k){var h=blkH(k,false);return h?'<div class="hb">'+h+'</div>':""}).join("");if(window.bnRestore)bnRestore();locUi()}
 function all(){var c=calc();ls("cart",JSON.stringify(qty));document.querySelectorAll(".cn").forEach(function(b){b.hidden=!c.n;b.textContent=c.n});
@@ -289,22 +305,22 @@ if(view==="all"){$("chips").innerHTML=["All"].concat(cats()).map(function(k){ret
 if(view==="offers"){$("cps").innerHTML=cps.map(function(k){return '<div class="cc2"><div><b>'+esc(k.id)+'</b><br><span class="mu">'+(k.type==="percent"?esc(k.value)+'% off':'₹'+esc(k.value)+' off')+' · min order ₹'+esc(k.minOrder||0)+'</span></div><button data-cp="'+esc(k.id)+'">Use</button></div>'}).join("");put("of",items.filter(function(i){return offp(i)>0}),"No product offers right now.")}
 if(view==="wish")put("wl",items.filter(function(i){return wish[i.id]}),"Tap ♡ on a product to save it here.");
 if(view==="cart"){$("cl").innerHTML=c.n?c.l.map(function(x){var it=items.filter(function(i){return i.id===x.id})[0],o=offp(it);return '<div class="bx ci"><div class="pi">'+img(it)+'</div><div><button class="dl" data-d="'+x.id+'" aria-label="Remove">🗑</button><b>'+esc(x.name)+'</b> <span class="mu">· ₹'+la(x)+'</span><div><b style="font-size:19px">₹'+x.price+'</b> '+(o?'<s class="mu">₹'+x.mrp+'</s> <span class="off" style="position:static;padding:2px 6px">'+o+'% OFF</span>':'')+' <span class="mu">/ '+esc(x.unit)+'</span></div><div class="st" style="width:170px;margin-top:8px"><button data-m="'+x.id+'">−</button><button class="wl" data-wt="'+x.id+'">'+esc(x.label)+'</button><button data-a="'+x.id+'">+</button></div></div></div>'}).join(""):'<div class="bx center">Your cart is empty.<br><button class="add" style="margin-top:12px" data-c="All">Shop now</button></div>';
- $("cpw").hidden=!c.n;$("cs").innerHTML=c.n?pd(c):"";$("tr").hidden=!c.n;$("alh").hidden=!c.n;put("lk",c.n?items.filter(function(i){return!qty[i.id]}).slice(0,6):[]);if(coupon&&c.sub<(coupon.minOrder||0))$("cpm").textContent="Add ₹"+(coupon.minOrder-c.sub)+" more to use "+coupon.code+"."}
+ $("cpw").hidden=!c.n;$("cs").innerHTML=c.n?(window.promoBar?promoBar(c):"")+pd(c):"";$("tr").hidden=!c.n;$("alh").hidden=!c.n;put("lk",c.n?(window.lkItems?lkItems(c):items.filter(function(i){return!qty[i.id]}).slice(0,6)):[]);if(coupon&&c.sub<(coupon.minOrder||0))$("cpm").textContent="Add ₹"+(coupon.minOrder-c.sub)+" more to use "+coupon.code+"."}
 if(view==="checkout")document.querySelectorAll(".pdx").forEach(function(e){e.innerHTML=pd(c)});
 if(view==="profile"&&!$("pn").value&&!$("pp").value){$("pn").value=ls("nm")||"";$("pp").value=ls("ph")||"";$("pa").value=ls("ad")||""}
 cta(c)}
-function cta(c){c=c||calc();if(view==="product"&&curP)pbar();var t="",on=false;if(view==="cart"&&c.n){on=true;t="Proceed to Checkout · ₹"+c.t}if(view==="checkout"){on=true;t=step===1?"Proceed to Payment →":step===2?(pm==="Razorpay"?"Pay ₹"+c.t+" with Razorpay →":"Review Order →"):"Place Order · ₹"+c.t}$("cta").hidden=!on;$("ctab").textContent=t}
+function cta(c){c=c||calc();if(view==="product"&&curP)pbar();var t="",on=false;if(view==="cart"&&c.n){on=true;t="Proceed to Checkout · ₹"+c.t}if(view==="checkout"){on=true;t=step===1?"Proceed to Payment →":step===2?(pm==="Wallet"?"Pay ₹"+c.t+" from Wallet →":pm==="Razorpay"?"Pay ₹"+c.t+" with Razorpay →":"Review Order →"):"Place Order · ₹"+c.t}$("cta").hidden=!on;$("ctab").textContent=t}
 var utr="";
 function upiLink(c){return"upi://pay?pa="+encodeURIComponent(S.upiId||"")+"&pn="+encodeURIComponent(S.upiName||"Freshora")+"&am="+c.t+"&cu=INR&tn="+encodeURIComponent("Freshora order")}
 function upiBox(c){var id=S.upiId||"";return'<div class="bx" id="upib"><h3>Pay \u20B9'+c.t+' with UPI</h3>'+(id?'<a class="add" href="'+esc(upiLink(c))+'" style="display:block;text-align:center;padding:13px;text-decoration:none">Pay \u20B9'+c.t+' in your UPI app</a><p class="mu center" style="margin:10px 0 4px">or scan this QR with any UPI app</p>':'<p class="mu">Scan this QR with any UPI app and pay exactly \u20B9'+c.t+'.</p>')+'<div id="uqr" style="display:grid;place-items:center;margin:8px 0"></div>'+(id?'<div class="rw"><span>UPI ID: <b>'+esc(id)+'</b></span><button class="ch" type="button" data-upi="'+esc(id)+'" onclick="navigator.clipboard&&navigator.clipboard.writeText(this.dataset.upi);this.textContent=\'Copied\'">Copy</button></div>':'')+'<p class="mu" style="margin:8px 0 4px">After paying, enter the UPI transaction ID / UTR (shown in your payment app):</p><input class="in" id="utr" placeholder="Transaction ID / UTR number" value="'+esc(utr)+'"><p class="mu">We confirm your payment manually, then pack your order.</p></div>'}
 function upiQr(c){var b=$("uqr");if(!b)return;if(S.upiQr){b.innerHTML='<img src="'+esc(S.upiQr)+'" alt="UPI QR" style="width:210px;max-width:100%;border-radius:12px;background:#fff">';return}if(S.upiId&&typeof QRCode!=="undefined"){try{new QRCode(b,{text:upiLink(c),width:200,height:200})}catch(e){}}}
 function pane(k){var c=calc();$("sp").innerHTML=["Delivery","Payment","Confirm"].map(function(s,i){return '<div class="'+(i<step?'on':'')+'"><i>'+(i+1)+'</i>'+s+'</div>'}).join("");var h="";
 if(step===1)h='<div class="bx"><h3>Delivery Address</h3><input class="in" id="nm" placeholder="Full name" autocomplete="name" value="'+esc(ls("nm")||"")+'"><input class="in" id="ph" placeholder="10-digit mobile number" type="tel" autocomplete="tel" value="'+esc(ls("ph")||"")+'"><textarea class="in" id="ad" rows="3" placeholder="House no, street, area, landmark">'+esc(ls("ad")||"")+'</textarea><input class="in" id="pc" placeholder="Pincode" inputmode="numeric" value="'+esc(ls("pc")||"574222")+'"><div id="lb"></div><div class="msg" id="ckM"></div></div><div class="bx"><h3>Order Items ('+c.n+')</h3>'+c.l.map(function(x){return '<div class="rw"><span>'+esc(x.name)+' × '+ll(x)+'</span><b>₹'+la(x)+'</b></div>'}).join("")+'</div><div class="pdx"></div>';
-if(step===2){if(!S.razorpayKey&&pm==="Razorpay")pm="Cash on delivery";if(pm==="UPI"&&!(S.upiId||S.upiQr))pm="Cash on delivery";if(S.razorpayKey&&!pmSet)pm="Razorpay";h='<div class="bx"><h3>Payment Method</h3>'+(S.razorpayKey?'<label class="po"><input type="radio" name="pm" value="Razorpay"'+(pm==="Razorpay"?' checked':'')+'><span>💳 Pay online<small>UPI, cards, netbanking and wallets via Razorpay</small></span></label>':'')+''+((S.upiId||S.upiQr)?'<label class="po"><input type="radio" name="pm" value="UPI"'+(pm==="UPI"?' checked':'')+'><span>\uD83D\uDCF2 UPI (GPay, PhonePe, Paytm)<small>Pay to our UPI, then enter the transaction ID</small></span></label>':'')+'<label class="po"><input type="radio" name="pm" value="Cash on delivery"'+(pm==="Cash on delivery"?' checked':'')+'><span>💵 Cash on delivery<small>Pay when your order arrives</small></span></label><div class="msg" id="pyM"></div></div>'+(pm==="UPI"?upiBox(c):"")}
+if(step===2){if(pm==="Wallet"&&!(window.walletCan&&walletCan(c)))pm="Cash on delivery";if(!S.razorpayKey&&pm==="Razorpay")pm="Cash on delivery";if(pm==="UPI"&&!(S.upiId||S.upiQr))pm="Cash on delivery";if(S.razorpayKey&&!pmSet)pm="Razorpay";h='<div class="bx"><h3>Payment Method</h3>'+(window.walletPo?walletPo(c):"")+(S.razorpayKey?'<label class="po"><input type="radio" name="pm" value="Razorpay"'+(pm==="Razorpay"?' checked':'')+'><span>💳 Pay online<small>UPI, cards, netbanking and wallets via Razorpay</small></span></label>':'')+''+((S.upiId||S.upiQr)?'<label class="po"><input type="radio" name="pm" value="UPI"'+(pm==="UPI"?' checked':'')+'><span>\uD83D\uDCF2 UPI (GPay, PhonePe, Paytm)<small>Pay to our UPI, then enter the transaction ID</small></span></label>':'')+'<label class="po"><input type="radio" name="pm" value="Cash on delivery"'+(pm==="Cash on delivery"?' checked':'')+'><span>💵 Cash on delivery<small>Pay when your order arrives</small></span></label><div class="msg" id="pyM"></div></div>'+(pm==="UPI"?upiBox(c):"")}
 if(step===3)h='<div class="bx"><h3>Deliver to</h3><b>'+esc(ls("nm"))+' · '+esc(ls("ph"))+'</b><br><span class="mu">'+esc(ls("ad"))+(ls("pc")?', '+esc(ls("pc")):'')+' · '+(dist!=null?dist.toFixed(1)+" km away":(c.far?"3 to 5 km":"Within 3 km"))+'</span></div><div class="bx"><h3>Items</h3>'+c.l.map(function(x){return '<div class="rw"><span>'+esc(x.name)+' × '+ll(x)+'</span><b>₹'+la(x)+'</b></div>'}).join("")+'</div><div class="bx"><h3>Payment</h3>'+esc(pm)+(pm==="UPI"?" \u00B7 Txn ID "+esc(utr):"")+'</div><div class="pdx"></div><div class="msg" id="pyM"></div><p class="mu center">By placing your order you agree to our <a href="#policy-terms"><u>Terms</u></a>, <a href="#policy-refund"><u>Refund policy</u></a> and <a href="#policy-privacy"><u>Privacy Policy</u></a>.</p>';
 $("pane").innerHTML=h;locUi();all();if(step===2&&pm==="UPI")upiQr(c);if(!k)window.scrollTo(0,0)}
 function go(v){location.hash=v}
-function show(){var v=location.hash.slice(1)||"home",pk=null;if(v.indexOf("policy-")===0){pk=v.slice(7);v="policy"}if(v.indexOf("p-")===0){pk=v.slice(2);v="product"}if(!document.querySelector('[data-v="'+v+'"]'))v="home";if((v==="checkout")&&!calc().n)v="cart";if(v!==view&&v==="checkout")step=1;view=v;
+function show(){var v=location.hash.slice(1)||"home",pk=null;if(v.indexOf("policy-")===0){pk=v.slice(7);v="policy"}if(v.indexOf("p-")===0){pk=v.slice(2);v="product"}if(!document.querySelector('[data-v="'+v+'"]'))v="home";if((v==="checkout")&&!calc().n)v="cart";if(v!==view&&v==="checkout")step=1;view=v;if(v==="wallet"&&window.walletUi)setTimeout(walletUi,0);
 document.querySelectorAll("[data-v]").forEach(function(s){s.hidden=s.dataset.v!==v});document.querySelectorAll("[data-n]").forEach(function(a){a.classList.toggle("on",a.dataset.n===v)});
 $("top").hidden=v==="cart"||v==="checkout"||v==="done"||v==="product";$("nav").hidden=v==="cart"||v==="checkout"||v==="done"||v==="product";$("dr").hidden=true;$("fab").hidden=v==="cart"||v==="checkout"||v==="done"||v==="product";$("ft").hidden=v==="cart"||v==="checkout"||v==="done"||v==="product";
 if(v==="checkout")pane();else all();if(v==="track")track();if(v==="policy")pol(pk);if(v==="product")prod(pk);$("pbar").hidden=v!=="product";if(v==="profile")authUi();window.scrollTo(0,0)}
@@ -375,7 +391,17 @@ document.addEventListener("click",function(e){var t=e.target.closest("[data-od],
  else if(t.hasAttribute("data-lvx"))liveX()});
 function mine(){}
 function orderDoc(c,tid,pay,pid,ps){var d={trackId:tid,items:c.l,subtotal:c.sub,discount:c.disc,coupon:c.disc&&coupon?coupon.code:"",delivery:c.d,total:c.t,zone:dist!=null?dist.toFixed(1)+" km":(c.far?"3-5 km":"Within 3 km"),lat:loc?loc.lat:null,lng:loc?loc.lng:null,payment:pay,paymentId:pid||"",paid:false,name:(ls("nm")||"").slice(0,80),phone:(ls("ph")||"").slice(0,20),address:((ls("ad")||"")+" "+(ls("pc")||"")).slice(0,300),status:"New",dcode:String(1000+Math.floor(Math.random()*9000)),uid:user?user.uid:null,email:user&&user.email?user.email:"",createdAt:firebase.firestore.FieldValue.serverTimestamp()};if(ps)d.payState=ps;return d}
-function saveOrder(c,tid,pay,pid,ps){return DEMO?Promise.resolve():db.collection("orders").doc(tid).set(orderDoc(c,tid,pay,pid,ps))}
+function saveOrder(c,tid,pay,pid,ps){if(DEMO)return Promise.resolve();
+ var od=orderDoc(c,tid,pay,pid,ps),w=pay==="Freshora Wallet",pr=c.promo>0;
+ if(!w&&!pr)return db.collection("orders").doc(tid).set(od);
+ if(!user)return Promise.reject({code:"auth"});
+ var uid=user.uid,FV=firebase.firestore.FieldValue,oref=db.doc("orders/"+tid),wref=db.doc("wallets/"+uid),pu=db.doc("promoUsed/"+uid),pc=db.doc("promo/counter");
+ if(pr)od.promoOff=c.promo;
+ return db.runTransaction(function(t){return Promise.all([w?t.get(wref):null,pr?t.get(pc):null]).then(function(r){
+  if(w){var d=r[0]&&r[0].exists?r[0].data():{cash:0,bonus:0},tot=Math.round(c.t),b0=Math.round(d.bonus||0),c0=Math.round(d.cash||0),bon=Math.min(b0,tot),cash=tot-bon;if(cash>c0||tot<=0)throw{code:"wallet-low"};
+   od.paid=true;od.walletUsed=tot;od.walletBonus=bon;od.walletCash=cash;t.update(wref,{cash:c0-cash,bonus:b0-bon,lastOrder:tid,updatedAt:FV.serverTimestamp()})}
+  if(pr){var u=r[1]&&r[1].exists?Math.round(r[1].data().used||0):0;if(u>=PR().limit)throw{code:"promo-full"};t.update(pc,{used:u+1});t.set(pu,{orderId:tid,at:FV.serverTimestamp()})}
+  t.set(oref,od)})})}
 function remember(tid){ls("last",tid);var r=[];try{r=JSON.parse(ls("ords")||"[]")}catch(e){}if(r.indexOf(tid)<0)r.unshift(tid);ls("ords",JSON.stringify(r.slice(0,10)))}
 function finish(c,pay,pid,paidNow){var cd=c.disc;if(pU){pU();pU=null}clearInterval(pT);var rb=$("dR");if(rb)rb.hidden=true;if(!paidNow)kickNotify(ls("last"));
  $("dI").textContent=paidNow?"\u2705":"\uD83C\uDF89";$("dH").textContent=paidNow?"Payment successful!":"Order placed successfully!";
@@ -401,7 +427,7 @@ saveOrder(c,tid,"Razorpay (online)","","pending").then(function(){dbg("order sav
 $("ctab").onclick=function(){var c=calc();
 if(view==="cart"){go("checkout");return}
 if(step===1){if(zone==="out"){$("ckM").textContent="Sorry, we deliver only within "+(S.maxKm||5)+" km of our shop.";return}if($("nm").value.trim().length<2||$("ph").value.replace(/\D/g,"").length<10||!$("ad").value.trim()){$("ckM").textContent="Enter your name, a 10-digit phone number and your address.";return}ls("nm",$("nm").value.trim());ls("ph",$("ph").value.replace(/\D/g,""));ls("ad",$("ad").value.trim());ls("pc",$("pc").value.trim());step=2;pane();return}
-if(step===2){if(pm==="Razorpay"){payNow();return}if(pm==="UPI"&&utr.replace(/\s/g,"").length<8){$("pyM").textContent="After paying, enter the UPI transaction ID (UTR) so we can confirm your payment.";return}step=3;pane();return}
+if(step===2){if(pm==="Wallet"){payWallet();return}if(pm==="Razorpay"){payNow();return}if(pm==="UPI"&&utr.replace(/\s/g,"").length<8){$("pyM").textContent="After paying, enter the UPI transaction ID (UTR) so we can confirm your payment.";return}step=3;pane();return}
 if(zone==="out"){$("pyM").textContent="Sorry, we deliver only within "+(S.maxKm||5)+" km of our shop.";return}if(S.storeOpen===false){$("pyM").textContent=S.closedMsg||"We are closed right now. Please try later.";return}$("ctab").disabled=true;
 mkOrder(pm==="UPI"?"UPI (manual)":"Cash on delivery",pm==="UPI"?utr:"")};
 document.addEventListener("click",function(e){var t=e.target.closest("[data-a],[data-m],[data-d],[data-w],[data-c],[data-go],[data-back],[data-t],[data-cp],[data-loc],[data-au],[data-wt],[data-pv],[data-pm],[data-pp],[data-pw],[data-pa],#menu,#dr,.sp div");if(!t)return;var d=t.dataset;
@@ -505,4 +531,126 @@ document.addEventListener("touchstart",function(ev){if(ev.target.closest&&ev.tar
 })();
 try{history.scrollRestoration="manual"}catch(e){}var h0=location.hash.slice(1);if(h0&&h0!=="home"&&!/^(p-|policy-)/.test(h0)){try{history.replaceState(null,"",location.pathname+location.search)}catch(e){location.hash=""}}
 window.onhashchange=show;if(DEMO)$("ann").textContent="Demo preview",$("ann").hidden=false;show();
-</script></body></html>
+</script><script>
+/* ===== Freshora Wallet, first-order offer and product photo gallery ===== */
+(function(){
+var FV=(typeof firebase!=="undefined"&&firebase.firestore)?firebase.firestore.FieldValue:null;
+var WL=null,WTX=[],WTP=[],WRF=[],PU=false,PUk=false,PC=0,WU=[],wAmt=300,wMsg="",wBusy=false;
+function er(){}
+function R(n){return Math.round(Number(n)||0)}
+function byT(a,b){return((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.createdAt.seconds)||0)}
+window.wbal=function(){return WL?R(WL.cash)+R(WL.bonus):0};
+window.PR=function(){return{on:S.promoOn===true,min:R(S.promoMin)||300,pct:Number(S.promoPct)||10,limit:R(S.promoLimit)||100,cap:R(S.promoCap)}};
+function WS(){var ch=String(S.walletChips||"300,500,1000,2000").split(",").map(R).filter(function(x){return x>0}).slice(0,6);return{on:S.walletOn!==false,min:R(S.walletMin)||100,bonus:(S.walletBonus==null||S.walletBonus==="")?50:R(S.walletBonus),bmin:R(S.walletBonusMin)||300,chips:ch.length?ch:[300,500,1000,2000]}}
+window.promoElig=function(sub){var p=PR();return!DEMO&&p.on&&!!user&&PUk&&!PU&&PC<p.limit&&!coupon&&sub>=p.min};
+window.promoOffer=function(sub){var p=PR(),o=Math.round(sub*p.pct/100);if(p.cap)o=Math.min(o,p.cap);return Math.max(0,Math.min(o,sub))};
+function refresh(){if(typeof allS==="function")allS();if(typeof view!=="undefined"&&view==="wallet")walletUi()}
+
+/* ---------- live data ---------- */
+function sub(u){WU.forEach(function(f){f()});WU=[];WL=null;WTX=[];WTP=[];WRF=[];PU=false;PUk=false;
+ if(!u||DEMO){PUk=true;refresh();return}
+ var id=u.uid;
+ WU.push(db.doc("wallets/"+id).onSnapshot(function(d){WL=d.exists?d.data():null;refresh()},er));
+ WU.push(db.collection("walletTx").where("uid","==",id).limit(60).onSnapshot(function(q){WTX=q.docs.map(function(d){return Object.assign({id:d.id},d.data())}).sort(byT);refresh()},er));
+ WU.push(db.collection("topups").where("uid","==",id).limit(10).onSnapshot(function(q){WTP=q.docs.map(function(d){return Object.assign({id:d.id},d.data())}).sort(byT);refresh()},er));
+ WU.push(db.collection("refunds").where("uid","==",id).limit(10).onSnapshot(function(q){WRF=q.docs.map(function(d){return Object.assign({id:d.id},d.data())}).sort(byT);refresh()},er));
+ WU.push(db.doc("promoUsed/"+id).onSnapshot(function(d){PU=d.exists;PUk=true;refresh()},function(){PUk=true;refresh()}))}
+if(!DEMO){db.doc("promo/counter").onSnapshot(function(d){PC=d.exists?R(d.data().used):0;refresh()},er);
+ if(firebase.auth)firebase.auth().onAuthStateChanged(sub)}else PUk=true;
+
+/* ---------- first-order offer in the cart ---------- */
+window.promoBar=function(c){var p=PR();if(!p.on||!c.n||DEMO)return"";
+ if(!user)return'<div class="pbn"><b>🎁 Get '+p.pct+'% off your first order</b><small>Spend ₹'+p.min+' or more. Only for the first '+p.limit+' customers. <a href="#profile"><u>Log in</u></a> to claim it.</small></div>';
+ if(!PUk||PU||PC>=p.limit)return"";
+ if(coupon)return'<div class="pbn"><small>The first-order offer cannot be combined with a coupon. Remove the coupon to use it.</small></div>';
+ if(c.sub>=p.min)return'<div class="pbn ok"><b>🎉 First-order offer applied</b><small>'+p.pct+'% off, you save ₹'+c.promo+'</small></div>';
+ var need=p.min-c.sub,pc=Math.max(4,Math.min(100,Math.round(c.sub*100/p.min)));
+ return'<div class="pbn"><b>Add ₹'+need+' more to get '+p.pct+'% off</b><div class="pbr"><i style="width:'+pc+'%"></i></div><small>First order only · only the first '+p.limit+' customers · '+Math.max(0,p.limit-PC)+' spots left</small></div>'};
+window.lkItems=function(c){var p=PR(),h=$("alh"),def=items.filter(function(i){return!qty[i.id]}).slice(0,6);
+ var on=!DEMO&&p.on&&user&&PUk&&!PU&&PC<p.limit&&!coupon&&c.sub<p.min;
+ if(h)h.textContent=on?"Add these to unlock "+p.pct+"% off":"You may also like";
+ if(!on)return def;
+ var need=p.min-c.sub,cand=items.filter(function(i){return!qty[i.id]&&i.inStock!==false}).map(function(i){return{i:i,a:amt(i,stepOf(i))}}).sort(function(a,b){return a.a-b.a}),
+ fit=cand.filter(function(x){return x.a<=Math.max(need,60)});
+ return(fit.length>=3?fit:cand).slice(0,8).map(function(x){return x.i})};
+
+/* ---------- pay from wallet ---------- */
+window.walletCan=function(c){var s=WS();return s.on&&!DEMO&&!!user&&wbal()>=c.t&&c.t>0};
+window.walletPo=function(c){var s=WS();if(!s.on||DEMO)return"";
+ if(!user)return'<label class="po dis"><span>👛 Freshora Wallet<small>Log in to pay in one tap</small></span><a class="wlk" href="#profile">Log in</a></label>';
+ var b=wbal(),ok=b>=c.t;
+ return'<label class="po'+(ok?'':' dis')+'"><input type="radio" name="pm" value="Wallet"'+(pm==="Wallet"?' checked':'')+(ok?'':' disabled')+'><span>👛 Freshora Wallet · ₹'+b+'<small>'+(ok?'One tap · no OTP · money is 100% refundable':'Add ₹'+(c.t-b)+' more to pay with your wallet')+'</small></span>'+(ok?'':'<a class="wlk" href="#wallet">Add money</a>')+'</label>'};
+window.payWallet=function(){var c=calc(),m=$("pyM");m.textContent="";
+ if(zone==="out"){m.textContent="Sorry, we deliver only within "+(S.maxKm||5)+" km of our shop.";return}
+ if(S.storeOpen===false){m.textContent=S.closedMsg||"We are closed right now. Please try later.";return}
+ if(!user){m.textContent="Please log in to pay from your wallet.";return}
+ if(wbal()<c.t){m.textContent="Not enough wallet balance. Add ₹"+(c.t-wbal())+" to your wallet.";return}
+ var tid=newId();$("ctab").disabled=true;m.textContent="Paying…";
+ saveOrder(c,tid,"Freshora Wallet","","").then(function(){remember(tid);kickNotify(tid);finish(c,"Freshora Wallet","",true);$("ctab").disabled=false})
+ .catch(function(e){var cd=e&&e.code||"";m.textContent=cd==="wallet-low"?"Not enough wallet balance.":cd==="promo-full"?"The first-order offer just ended. Please go back and try again.":cd==="permission-denied"?"Could not use the wallet (permission). Please tell the shop owner.":"Could not place the order ("+(cd||"error")+"). Check your internet and try again.";$("ctab").disabled=false})};
+
+/* ---------- header pill ---------- */
+window.wPill=function(){var s=WS();if(!s.on||DEMO)return"";return'<a class="wpill gl" href="#wallet" aria-label="Wallet">👛 '+(user?'₹'+wbal():'Wallet')+'</a>'};
+
+/* ---------- wallet page ---------- */
+function mod(h){var m=$("wmod");if(!m){m=document.createElement("div");m.id="wmod";m.className="wmo";m.onclick=function(e){if(e.target===m)m.hidden=true};document.body.appendChild(m)}m.innerHTML=h?'<div>'+h+'</div>':"";m.hidden=!h}
+function feat(i,t,d){return'<div class="wf"><span>'+i+'</span><div><b>'+t+'</b><small>'+d+'</small></div></div>'}
+var TY={topup:["➕","Money added"],bonus:["🎁","Bonus"],spend:["🛍️","Order payment"],refund:["↩️","Refund to you"],order_refund:["↩️","Order refund"],adjust:["✏️","Adjustment"]};
+function when(t){return t&&t.seconds?new Date(t.seconds*1000).toLocaleString([],{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):""}
+window.walletUi=function(){var el=$("wv");if(!el)return;var s=WS();
+ if(!s.on){el.innerHTML='<div class="bx center">The wallet is not available right now.</div>';return}
+ var feats='<div class="wfs">'+feat("☝️","Single tap payments","Pay in one tap, no waiting for OTPs")+feat("✅","Zero failures","Wallet payments never fail midway")+feat("↩️","100% refundable","Money you add can be refunded anytime")+(s.bonus>0?feat("🎁","₹"+s.bonus+" bonus","Free on your first top-up of ₹"+s.bmin+" or more"):"")+'</div>';
+ var hero='<div class="wh"><small>Freshora</small><h2>WALLET</h2></div>';
+ if(DEMO||!user){el.innerHTML=hero+feats+'<div class="bx center"><b>Log in to use your wallet</b><p class="mu">A wallet needs an account so your money stays safe.</p><a class="add" href="#profile" style="display:block;padding:14px;text-align:center;text-decoration:none">Log in / Sign up</a></div>'+sup();return}
+ var cash=R(WL&&WL.cash),bon=R(WL&&WL.bonus),first=!(WL&&R(WL.topups)>0),pend=WTP.filter(function(t){return t.status==="claimed"}),rq=WRF.filter(function(r){return r.status==="pending"})[0];
+ var h=hero+'<div class="bx wbal"><small>Available balance</small><h2>₹'+(cash+bon)+'</h2><div class="mu">Your money ₹'+cash+' · Bonus ₹'+bon+'</div></div>';
+ if(pend.length)h+='<div class="pbn ok"><b>⏳ Payment received</b><small>₹'+pend.map(function(t){return R(t.amount)}).join(" + ₹")+' is being added to your wallet. This usually takes a few minutes.</small></div>';
+ h+=feats;
+ h+='<div class="bx"><h3>Add money</h3><div class="chips" style="margin:4px 0 10px">'+s.chips.map(function(v){return'<button class="chip'+(wAmt===v?' on':'')+'" data-wl="chip" data-v="'+v+'">₹'+v+'</button>'}).join("")+'</div><input class="in" id="wamt" type="number" inputmode="numeric" placeholder="Enter amount" value="'+(wAmt||"")+'"><div class="wbn" id="wbn"></div><div class="msg" id="wmsg">'+esc(wMsg)+'</div><button class="add" id="wadd" data-wl="add" style="padding:15px;font-size:17px">Add Money</button><p class="mu center" style="margin:10px 0 0">Minimum ₹'+s.min+'. Pay securely with UPI, cards or netbanking.</p></div>';
+ if(rq)h+='<div class="bx"><b>↩️ Refund requested</b><p class="mu" style="margin:6px 0 0">We are processing your refund of ₹'+R(rq.amount)+'. We will send it to '+esc(rq.upi||"you")+' soon.</p></div>';
+ h+=sup(cash>0&&!rq?cash:0);
+ h+='<div class="bx"><h3>Transactions</h3>'+(WTX.length?WTX.slice(0,30).map(function(t){var ty=TY[t.type]||["•",t.type||""],a=R(t.amount);return'<div class="wtx"><span class="wti">'+ty[0]+'</span><div><b>'+ty[1]+'</b><small>'+esc(when(t.createdAt))+(t.note?' · '+esc(t.note):'')+'</small></div><b class="'+(a>=0?'wp':'wm')+'">'+(a>=0?'+':'−')+'₹'+Math.abs(a)+'</b></div>'}).join(""):'<p class="mu">No transactions yet.</p>')+'</div>';
+ el.innerHTML=h;bn()};
+function sup(rf){return'<div class="bx wsup"><b>🛡️ Your money is 100% refundable</b><p class="mu" style="margin:6px 0 12px">Money you add to your wallet is 100% refundable, anytime. Bonus credits are for shopping only. Message or call our customer support, 24/7.</p><div class="grid"><a class="add" style="text-align:center;text-decoration:none;padding:12px" href="https://wa.me/'+esc(C("wa"))+'">💬 WhatsApp</a><a class="add" style="text-align:center;text-decoration:none;padding:12px;background:#fff;border:2px solid var(--ink)" href="tel:+'+esc(C("phone"))+'">📞 Call</a></div>'+(rf?'<button class="add" data-wl="rf" style="margin-top:10px;padding:12px;background:#fff;border:2px solid var(--ink)">Request refund of ₹'+rf+'</button>':'')+'</div>'}
+function bn(){var n=$("wbn"),s=WS();if(!n)return;var a=R(wAmt),first=!(WL&&R(WL.topups)>0);n.textContent=(s.bonus>0&&first)?(a>=s.bmin?"🎉 You will get a ₹"+s.bonus+" bonus with this top-up":"Add ₹"+s.bmin+" or more to get a ₹"+s.bonus+" first-time bonus"):""}
+function wmsg(t){wMsg=t;var m=$("wmsg");if(m)m.textContent=t}
+function topUp(){var s=WS(),a=R(wAmt);
+ if(!user){wmsg("Please log in first.");return}
+ if(a<s.min){wmsg("Minimum amount is ₹"+s.min+".");return}
+ if(a>50000){wmsg("Maximum amount is ₹50,000.");return}
+ if(typeof Razorpay==="undefined"||!S.razorpayKey){wmsg("Online payment is not available right now. Please try later.");return}
+ if(wBusy)return;wBusy=true;var b=$("wadd");if(b)b.disabled=true;wmsg("Opening payment…");
+ var tid="W"+newId(),nm=(ls("nm")||(typeof uname==="function"?uname():"")||"").slice(0,80);
+ db.doc("topups/"+tid).set({uid:user.uid,amount:a,status:"pending",name:nm,phone:(ls("ph")||"").slice(0,20),email:user.email||"",createdAt:FV.serverTimestamp()}).then(function(){
+  var rz=new Razorpay({key:S.razorpayKey,amount:a*100,currency:"INR",name:"Freshora Wallet",description:"Add money to wallet",prefill:{name:nm,contact:ls("ph")||"",email:user.email||""},notes:{topupId:tid,uid:user.uid},theme:{color:"#ffc800"},
+   handler:function(r){wBusy=false;db.doc("topups/"+tid).update({paymentId:r.razorpay_payment_id,status:"claimed"}).then(function(){wmsg("Payment received. Your wallet will be updated shortly.");if(typeof toast==="function")toast("₹"+a+" payment received ✓")},function(){wmsg("Payment received. If your wallet is not updated soon, message support with payment ID "+r.razorpay_payment_id)})},
+   modal:{ondismiss:function(){wBusy=false;var b=$("wadd");if(b)b.disabled=false;wmsg("Payment not completed. You can try again.")}}});
+  rz.on("payment.failed",function(r){wBusy=false;var b=$("wadd");if(b)b.disabled=false;wmsg("Payment failed: "+((r.error&&r.error.description)||"please try again."))});rz.open()
+ }).catch(function(e){wBusy=false;var b=$("wadd");if(b)b.disabled=false;wmsg(e&&e.code==="permission-denied"?"Could not start (permission). Please tell the shop owner.":"Could not start the payment. Try again.")})}
+function refundAsk(){var cash=R(WL&&WL.cash),bon=R(WL&&WL.bonus);if(cash<=0)return;
+ mod('<h3>Refund ₹'+cash+'</h3><p class="mu">The money you added (₹'+cash+') will be returned to you.'+(bon?' Your bonus (₹'+bon+') is for shopping only and is not refundable.':'')+'</p><input class="in" id="wrU" placeholder="UPI ID or phone number to receive the refund"><div class="msg" id="wrM"></div><div class="grid"><button class="add" data-wl="x" style="background:#fff;border:2px solid var(--ink)">Cancel</button><button class="add" data-wl="rfgo">Request refund</button></div>')}
+function refundGo(){var u=($("wrU").value||"").trim().slice(0,80),cash=R(WL&&WL.cash);if(u.length<5){$("wrM").textContent="Enter the UPI ID or phone number for your refund.";return}
+ db.collection("refunds").add({uid:user.uid,amount:cash,upi:u,status:"pending",name:(ls("nm")||"").slice(0,80),phone:(ls("ph")||"").slice(0,20),email:user.email||"",createdAt:FV.serverTimestamp()}).then(function(){mod("");if(typeof toast==="function")toast("Refund requested ✓")}).catch(function(){$("wrM").textContent="Could not send. Please try again or message support."})}
+
+/* ---------- product photo gallery ---------- */
+window.galH=function(it){var g=(it.images&&it.images.length)?it.images:(it.image?[{u:it.image,l:""}]:[]);
+ if(!g.length)return'<span class="em">'+esc(it.emoji||"🥬")+'</span>';
+ if(g.length===1)return'<img src="'+esc(g[0].u)+'" alt="'+esc(it.name)+'">';
+ return'<div class="galw"><div class="gal" id="gal">'+g.map(function(x){return'<div class="gs"><img src="'+esc(x.u)+'" alt="'+esc(it.name+" "+(x.l||""))+'">'+(x.l?'<span class="gl">'+esc(x.l)+'</span>':'')+'</div>'}).join("")+'</div><div class="gth" id="gth">'+g.map(function(x,i){return'<button type="button" class="'+(i?'':'on')+'" data-gi="'+i+'" aria-label="'+esc(x.l||"Photo "+(i+1))+'"><img src="'+esc(x.u)+'" alt=""><small>'+esc(x.l||"")+'</small></button>'}).join("")+'</div></div>'};
+function galMark(i){document.querySelectorAll("#gth button").forEach(function(b,k){b.classList.toggle("on",k===i)})}
+window.galInit=function(){var e=$("gal");if(!e)return;e.addEventListener("scroll",function(){galMark(Math.round(e.scrollLeft/Math.max(1,e.clientWidth)))},{passive:true})};
+
+/* ---------- clicks ---------- */
+document.addEventListener("click",function(e){var t=e.target.closest("[data-wl],[data-gi]");if(!t)return;
+ if(t.dataset.gi!==undefined){var g=$("gal"),i=+t.dataset.gi;if(g)g.scrollTo({left:i*g.clientWidth,behavior:"smooth"});galMark(i);return}
+ var a=t.dataset.wl;
+ if(a==="chip"){wAmt=+t.dataset.v;walletUi();return}
+ if(a==="add"){topUp();return}
+ if(a==="rf"){refundAsk();return}
+ if(a==="rfgo"){refundGo();return}
+ if(a==="x"){mod("")}});
+document.addEventListener("input",function(e){if(e.target.id==="wamt"){wAmt=R(e.target.value);bn();document.querySelectorAll("[data-wl=chip]").forEach(function(c){c.classList.toggle("on",+c.dataset.v===wAmt)})}});
+if(typeof view!=="undefined"&&view==="wallet")walletUi();
+})();
+</script>
+</body></html>
