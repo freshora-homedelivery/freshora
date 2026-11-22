@@ -783,4 +783,36 @@ function bar(){var b=document.getElementById("cbar"),c=calc(),on=view==="all"&&c
 var _a2=all;all=function(){_a2.apply(this,arguments);try{if(view==="all")paint();bar()}catch(e){window.console&&console.warn(e)}};
 })();
 </script>
+<script>(function(){
+var css=document.createElement("style");css.textContent=
+'[data-v=profile]{background:radial-gradient(120% 60% at 100% 0,#fde3d0 0,transparent 60%)}[data-v=profile] .ph h1{font-size:28px}'+
+'.pcd{background:#fff;border-radius:24px;padding:22px 16px 18px;text-align:center;box-shadow:0 8px 28px #0000000d;margin:6px 0 16px}.pav{width:84px;height:84px;border-radius:50%;margin:0 auto 10px;display:grid;place-items:center;font-size:34px;font-weight:800;color:#fff;background:linear-gradient(135deg,#ff9a3c,#f97316);box-shadow:0 0 0 4px #fff,0 6px 16px #f9731655}'+
+'.pcd h2{margin:0;font-size:19px}.pcd .pem{color:#8a8a8a;font-size:14px;margin:3px 0}.pcd .pmt{color:#a0a0a0;font-size:12.5px;margin:2px 0 14px}.pedit{border:0;border-radius:30px;background:#f97316;color:#fff;font-weight:800;font-size:14px;padding:11px 26px;box-shadow:0 8px 18px #f9731640;cursor:pointer}.pso{display:block;margin:12px auto 0;background:none;border:0;color:#8a8a8a;font-weight:700;font-size:13px;cursor:pointer}'+
+'.prl{background:#fff;border-radius:18px;margin:0 0 16px;overflow:hidden;box-shadow:0 4px 18px #0000000a}[data-v=profile] .prl .ml,.prl button.ml{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:#fff;border-bottom:1px solid #f1f1f1;padding:15px 16px;font:inherit;font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;cursor:pointer}.prl .ml:last-child{border-bottom:0}.prl .ml::after{content:"›";margin-left:auto;color:#aaa;font-size:22px;line-height:1}.prl .ml small{display:block;color:#8a8a8a;font-weight:600;font-size:12.5px;margin-top:2px;max-width:230px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.prl .mi{width:38px;height:38px;border-radius:12px;background:#fff1e6;display:grid;place-items:center;font-size:18px;flex:none}'+
+'.dsh{position:fixed;inset:0;z-index:90;background:#0006;display:flex;align-items:flex-end;justify-content:center}.dsh[hidden]{display:none}.dsh>div{background:#fff;width:100%;max-width:560px;border-radius:26px 26px 0 0;padding:18px 16px 22px;max-height:88vh;overflow:auto;animation:dup .25s ease}.dsh .dh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}.dsh .dh h3{margin:0;font-size:19px}.dsh .dx{width:36px;height:36px;border-radius:50%;border:0;background:#f3f3f3;font-size:18px}.dsh .bx{box-shadow:none;border:0;padding:0;margin:0;background:none}.dsh .bx h3{display:none}.dsh .in{background:#f7f7f7;border:1px solid #e6e6e6;margin:6px 0}@keyframes dup{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}';
+document.head.appendChild(css);
+var sh=document.createElement("div");sh.className="dsh";sh.id="dsh";sh.hidden=true;
+var form=document.getElementById("pn").closest(".bx");
+sh.innerHTML='<div><div class="dh"><h3>Delivery address</h3><button class="dx" data-dc aria-label="Close">✕</button></div><div id="dmv"></div></div>';
+document.body.appendChild(sh);document.getElementById("dmv").appendChild(form);
+sh.addEventListener("click",function(e){if(e.target===sh||e.target.closest("[data-dc]"))sh.hidden=true});
+var menu=document.querySelector('[data-v=profile] > .bx[style*="padding:0"]');
+function split(){if(!menu)return;var L=[].slice.call(menu.querySelectorAll("a.ml")),ic=function(t){var m=t.textContent.trim().match(/^(\S+)\s+(.*)$/);return m?[m[1],m[2]]:["•",t.textContent]};
+ function row(a){var p=ic(a),c=a.cloneNode(false);c.innerHTML='<span class="mi">'+p[0]+'</span><span>'+p[1]+'</span>';return c}
+ var g1=document.createElement("div"),g2=document.createElement("div");g1.className=g2.className="prl";
+ L.forEach(function(a,i){(i<4?g1:g2).appendChild(row(a))});
+ var ad=document.createElement("button");ad.className="ml";ad.id="dadr";ad.setAttribute("data-dop","1");g1.insertBefore(ad,g1.firstChild);
+ menu.parentNode.insertBefore(g1,menu);menu.parentNode.insertBefore(g2,menu);menu.remove()}
+split();
+function ls2(k){try{return localStorage.getItem(k)||""}catch(e){return""}}
+function adr(){var a=document.getElementById("dadr");if(!a)return;var t=ls2("ad");a.innerHTML='<span class="mi">📍</span><span>Delivery address<small>'+(t?t.replace(/</g,"&lt;"):"Tap to add your address")+'</small></span>'}
+function card(){var a=document.getElementById("au");if(!a||!window.user)return;var u=window.user,nm=(typeof uname==="function"&&uname())||ls2("nm")||"",ph=ls2("ph");
+ a.innerHTML='<div class="pcd"><div class="pav">'+(nm||u.email||"F").charAt(0).toUpperCase()+'</div><h2>'+(nm||"Welcome").replace(/</g,"&lt;")+'</h2><div class="pem">'+(u.email||"").replace(/</g,"&lt;")+'</div><div class="pmt">'+(ph?"+91 "+ph:"Add your phone number")+'</div><button class="pedit" data-dop="1">✏️ Edit Profile</button><button class="pso" data-au="out">Sign out</button></div>'}
+var _a=window.authUi;if(typeof _a==="function"){window.authUi=function(){_a.apply(this,arguments);card();adr()}}
+document.addEventListener("click",function(e){var t=e.target.closest("[data-dop]");if(t){sh.hidden=false}},true);
+var sv=document.getElementById("psv");if(sv)sv.addEventListener("click",function(){setTimeout(function(){adr();card();if(/Saved/.test(document.getElementById("pm").textContent))setTimeout(function(){sh.hidden=true},700)},50)});
+window.addEventListener("hashchange",function(){sh.hidden=true;setTimeout(function(){adr();card()},60)});
+adr();
+})();
+</script>
 </body></html>
