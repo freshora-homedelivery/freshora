@@ -1,0 +1,154 @@
+name: Build Android apps (Customer, Admin, Rider)
+
+# Runs when you press "Run workflow" (Actions tab) or when files in /android change.
+# The apps open your live GitHub Pages site, so normal site updates (index.html etc.)
+# appear in the apps automatically. You only rebuild when you change the app name/icon/permissions.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths:
+      - "android/**"
+      - ".github/workflows/build-apks.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - key: customer
+            app_id: com.freshora.app
+            app_name: Freshora
+            page: index.html
+            color: "#16a34a"
+          - key: admin
+            app_id: com.freshora.admin
+            app_name: Freshora Admin
+            page: admin.html
+            color: "#4338ca"
+          - key: rider
+            app_id: com.freshora.rider
+            app_name: Freshora Rider
+            page: rider.html
+            color: "#f59e0b"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Work out the live site address
+        id: site
+        run: |
+          OWNER="${GITHUB_REPOSITORY%%/*}"
+          REPO="${GITHUB_REPOSITORY##*/}"
+          if [[ "${REPO,,}" == *.github.io ]]; then BASE="https://${REPO,,}"; else BASE="https://${OWNER,,}.github.io/${REPO}"; fi
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+          echo "Live site: $BASE"
+
+      - name: Create the Capacitor project
+        env:
+          APP_ID: ${{ matrix.app_id }}
+          APP_NAME: ${{ matrix.app_name }}
+          PAGE: ${{ matrix.page }}
+          BASE: ${{ steps.site.outputs.base }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/app/www" && cd "$RUNNER_TEMP/app"
+          npm init -y >/dev/null
+          npm i @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6 @capacitor/assets@3
+          cat > www/index.html <<'HTML'
+          <!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+          <body style="font-family:sans-serif;text-align:center;padding:40px 20px"><h2>No internet</h2><p>Please check your connection.</p><button style="padding:12px 24px;font-size:16px" onclick="location.reload()">Try again</button></body>
+          HTML
+          cat > capacitor.config.json <<JSON
+          {
+            "appId": "$APP_ID",
+            "appName": "$APP_NAME",
+            "webDir": "www",
+            "server": {
+              "url": "$BASE/$PAGE",
+              "androidScheme": "https",
+              "allowNavigation": ["*.github.io","*.firebaseapp.com","*.googleapis.com","*.gstatic.com","*.razorpay.com","*.google.com","*.firebaseio.com","*.cloudfunctions.net"]
+            },
+            "android": { "appendUserAgent": "FreshoraApp" }
+          }
+          JSON
+          npx cap add android
+
+      - name: Add permissions (camera, location, microphone)
+        run: |
+          cd "$RUNNER_TEMP/app"
+          python3 - <<'PY'
+          p="android/app/src/main/AndroidManifest.xml"
+          s=open(p).read()
+          perms=["android.permission.CAMERA","android.permission.ACCESS_FINE_LOCATION","android.permission.ACCESS_COARSE_LOCATION","android.permission.RECORD_AUDIO","android.permission.MODIFY_AUDIO_SETTINGS","android.permission.POST_NOTIFICATIONS"]
+          add="".join('    <uses-permission android:name="%s" />\n'%x for x in perms if x not in s)
+          feat='    <uses-feature android:name="android.hardware.camera" android:required="false" />\n    <uses-feature android:name="android.hardware.location.gps" android:required="false" />\n'
+          i=s.index("<application")
+          s=s[:i]+add+feat+"    "+s[i:]
+          open(p,"w").write(s)
+          PY
+
+      - name: App icon and splash screen
+        env:
+          KEY: ${{ matrix.key }}
+          COLOR: ${{ matrix.color }}
+        run: |
+          cd "$RUNNER_TEMP/app"
+          mkdir -p assets
+          if [ -f "$GITHUB_WORKSPACE/android/$KEY/assets/icon.png" ]; then
+            cp "$GITHUB_WORKSPACE/android/$KEY/assets/icon.png" assets/icon.png
+            cp "$GITHUB_WORKSPACE/android/$KEY/assets/splash.png" assets/splash.png
+            npx capacitor-assets generate --android --iconBackgroundColor "$COLOR" --iconBackgroundColorDark "$COLOR" --splashBackgroundColor "$COLOR" --splashBackgroundColorDark "$COLOR" || echo "Icon generation failed, using default icon"
+          else echo "No custom icon uploaded, using default icon"; fi
+          npx cap sync android
+
+      - name: Build the APK
+        run: |
+          cd "$RUNNER_TEMP/app/android"
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Name and upload the APK
+        env:
+          KEY: ${{ matrix.key }}
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/out"
+          cp "$RUNNER_TEMP/app/android/app/build/outputs/apk/debug/app-debug.apk" "$GITHUB_WORKSPACE/out/freshora-$KEY.apk"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: freshora-${{ matrix.key }}-apk
+          path: out/freshora-${{ matrix.key }}.apk
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: apks
+          merge-multiple: true
+      - name: Publish a release with the three APKs
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apps-${{ github.run_number }}
+          name: Freshora apps #${{ github.run_number }}
+          body: |
+            Download on your phone and install:
+            - freshora-customer.apk – customer app
+            - freshora-admin.apk – admin app
+            - freshora-rider.apk – rider app
+            (Allow "Install unknown apps" for your browser the first time.)
+          files: apks/*.apk
