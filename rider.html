@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#ffc800"><title>Freshora Rider</title>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><link rel="manifest" href="manifest-rider.json"><link rel="apple-touch-icon" href="icons/r-192.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#ffc800"><title>Freshora Rider</title>
 <style>
 :root{--pri:#ffc800;--ink:#1c1b17;--mu:#6c6a5f;--bg:#fff8d6;--card:rgba(255,255,255,.72);--ln:rgba(255,255,255,.9);--g:#1b8a3a;--r:#d93025;--sh:0 8px 24px rgba(60,50,0,.1)}
 @media(prefers-color-scheme:dark){:root{--ink:#f4f1e6;--mu:#a9a690;--bg:#17150b;--card:rgba(40,37,22,.72);--ln:rgba(255,255,255,.1);--sh:0 8px 24px rgba(0,0,0,.4)}}
@@ -92,7 +92,7 @@ function card(o){var c=owes(o),it=(o.items||[]).map(function(x){return E(x.name)
  return '<div class="g"><div class="row"><span class="id">#'+E(o.id)+'</span>'+chip(o.status)+'</div><div class="mu">'+E(fmt(ts(o,"createdAt")))+' · '+E(o.zone||"")+'</div>'
  +'<div class="nm">'+E(o.name)+'</div><p class="ad">📍 '+E(o.address)+'</p><div class="mu">'+E(it)+'</div>'
  +(c?'<div class="cash"><span>💵 Collect cash</span><span style="font-size:22px">₹'+E(c)+'</span></div>':'<div class="paidb">✅ '+(o.paid?'Paid online':E(o.payment||"Paid"))+' · nothing to collect</div>')
- +'<div class="acts"><a class="btn" href="tel:'+E(o.phone)+'">📞 Call</a>'+(o.lat!=null?'<a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+o.lat+','+o.lng+'">🧭 Navigate</a>':'')+'</div><div class="acts">'+go+'</div></div>'}
+ +'<div class="acts"><a class="btn" href="tel:'+E(callNum(o))+'">📞 Call</a>'+(o.lat!=null?'<a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+o.lat+','+o.lng+'">🧭 Navigate</a>':'')+'</div><div class="acts">'+go+'</div></div>'}
 function viewO(){var a=active();$("ob").hidden=!a.length;$("ob").textContent=a.length;
  if(ME===false)return '<div class="empty"><div>🔒</div>Your rider account is not set up yet.<br>Please ask the shop owner.</div>';
  if(ME&&ME.active===false)return '<div class="empty"><div>⛔</div>Your account is paused.<br>Please contact the shop.</div>';
@@ -136,4 +136,7 @@ function lock(){try{if(navigator.wakeLock)navigator.wakeLock.request("screen").t
 document.addEventListener("click",function(){ctx();lock()},{once:true});
 document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&navigator.wakeLock&&wl)lock()});
 })();
-</script></body></html>
+</script><script>try{if(/FreshoraApp/.test(navigator.userAgent))document.documentElement.classList.add("inapp");if("serviceWorker" in navigator&&location.protocol==="https:")window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){}
+function callNum(o){var m=(typeof S!=="undefined"&&S&&S.maskOn&&S.maskNum)?String(S.maskNum).replace(/\D/g,""):"";return m?"+"+m:o.phone}
+</script>
+</body></html>
