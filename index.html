@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/c-192.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#fcf9f3">
 <title>Freshora – fresh vegetables at your door</title>
 <style>
@@ -194,7 +194,7 @@ body.onall .fab2{display:none}
 .wtx{padding:12px 0}.wti{width:44px;height:44px;border-radius:14px;background:#fff1c2;font-size:20px}.wtx .wti{background:#fff1c2}.wtx:has(.wp) .wti{background:#dcf7e3}.wtx b{font-weight:800}.wtx>b{font-size:15px}
 #wadd{background:linear-gradient(90deg,#e11d74,#f43f5e);color:#fff;border-radius:16px;box-shadow:0 8px 18px #e11d7433}.chips .chip.on{background:#e11d74;color:#fff;border-color:#e11d74}
 .sim{margin:0 -4px 12px}.sim .sh{font-weight:800;font-size:15px;color:var(--mu);margin:2px 4px 10px}.sim .sr{display:flex;gap:10px;overflow-x:auto;padding:2px 4px 6px;scrollbar-width:none}.sim .sr::-webkit-scrollbar{display:none}.sim .st2{flex:none;width:68px;border:0;background:none;padding:0;cursor:pointer;text-align:center;font:inherit}.sim .st2 img,.sim .st2 .e{display:grid;place-items:center;width:68px;height:68px;object-fit:contain;background:#fff;border:2px solid #e8e8ee;border-radius:12px;padding:3px;box-sizing:border-box;font-size:28px}.sim .st2.on img,.sim .st2.on .e{border-color:#8b2a9c;box-shadow:0 2px 10px #8b2a9c33}.sim .st2 small{display:block;margin-top:4px;font-size:11px;font-weight:700;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sim .st2.on small{color:var(--ink)}.sim .oos{opacity:.45}
-.sim .st2{width:78px}.sim .st2 img,.sim .st2 .e{width:78px;height:78px}.sim .st2 small{white-space:normal;line-height:1.2;min-height:2.4em;font-size:12px;color:var(--ink)}.sim .st2 em{display:block;font-style:normal;font-weight:800;font-size:12px;color:var(--mu)}.sim .st2.on em{color:#8b2a9c}</style><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+.sim .st2{width:78px}.sim .st2 img,.sim .st2 .e{width:78px;height:78px}.sim .st2 small{white-space:normal;line-height:1.2;min-height:2.4em;font-size:12px;color:var(--ink)}.sim .st2 em{display:block;font-style:normal;font-weight:800;font-size:12px;color:var(--mu)}.sim .st2.on em{color:#8b2a9c}html.inapp [data-au=google]{display:none!important}</style><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 </head><body>
 <div id="lg" class="lg2" hidden><div class="lgc">
 <button class="lskip" id="lskip" type="button">Skip</button>
@@ -746,7 +746,7 @@ var _ph=chanUi;chanUi=window.chanUi=function(){_ph();[].forEach.call(document.qu
 <script>
 (function(){
 var _card=card;card=function(it){if(!(it._vn>1))return _card(it);var h=_card(Object.assign({},it,{name:it.gname||it.name})),pr=it._vmin===it._vmax?"₹"+it._vmin:"from ₹"+it._vmin;h=h.replace(/<b class="off">[^<]*<\/b>/,"").replace(/<b>₹[^<]*<\/b><\/div>/,"<b>"+pr+"</b></div>").replace(/<s>₹[^<]*<\/s> · /,"").replace(/per [^<]*(<span|<\/div>)/,function(m,t){return it._vn+" options"+t});var i=h.search(/<div class="st">|<button class="add"/);if(i>0)h=h.slice(0,i)+'<button class="add" data-pv="'+it.id+'">CHOOSE</button></div>';return h};
-var _prod=prod;prod=function(id){_prod(id);var it=itm(id);if(!it.group)return;var sib=items.filter(function(i){return i.group===it.group});if(sib.length<2)return;var h=document.querySelector("#pdv h1");if(!h)return;h.textContent=it.gname||it.name;
+var _prod=prod;prod=function(id){var i0=itm(id);if(i0&&i0.group&&i0.images&&i0.images.length>1){var oth={};items.forEach(function(s){if(s.group===i0.group&&s.id!==i0.id&&s.vimg)oth[s.vimg]=1});var fl=i0.images.filter(function(g){return!oth[g.u]});if(fl.length&&fl.length<i0.images.length)i0.images=fl}_prod(id);var it=itm(id);if(!it.group)return;var sib=items.filter(function(i){return i.group===it.group});if(sib.length<2)return;var h=document.querySelector("#pdv h1");if(!h)return;h.textContent=it.gname||it.name;
  var l1=[],seen={};sib.forEach(function(i){var k=i.vlabel||"";if(!seen[k]){seen[k]=1;l1.push(k)}});
  function pick(a,b){var c=sib.filter(function(i){return(i.vlabel||"")===a&&(b===undefined||(i.vlabel2||"")===b)});if(!c.length)c=sib.filter(function(i){return(i.vlabel||"")===a});return c.filter(function(i){return i.inStock!==false})[0]||c[0]}
  var cur2=it.vlabel2||"",has2=sib.some(function(i){return i.vlabel2}),html="";
@@ -817,6 +817,29 @@ document.addEventListener("click",function(e){var t=e.target.closest("[data-dop]
 var sv=document.getElementById("psv");if(sv)sv.addEventListener("click",function(){setTimeout(function(){adr();card();if(/Saved/.test(document.getElementById("pm").textContent))setTimeout(function(){sh.hidden=true},700)},50)});
 window.addEventListener("hashchange",function(){sh.hidden=true;setTimeout(function(){adr();card()},60)});
 adr();
+})();
+</script>
+<script>try{if(/FreshoraApp/.test(navigator.userAgent))document.documentElement.classList.add("inapp");if("serviceWorker" in navigator&&location.protocol==="https:")window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}catch(e){}</script>
+<script>
+/* Catalogue: category rail on the left, only that category's products on the right */
+(function(){
+var css=document.createElement("style");css.textContent='.cw{display:flex;gap:8px;align-items:flex-start;margin:0 -6px}.cw #chips{display:none}#cr{flex:0 0 76px;position:sticky;top:8px;max-height:calc(100vh - 150px);overflow-y:auto;scrollbar-width:none;background:var(--card,#fff);border-radius:14px;padding:6px 0}#cr::-webkit-scrollbar{display:none}#cr button{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;border:0;background:none;padding:9px 4px;font:inherit;font-size:11px;font-weight:700;line-height:1.2;text-align:center;color:var(--mu,#667);border-left:3px solid transparent;cursor:pointer}#cr button span{width:46px;height:46px;border-radius:50%;background:var(--tint,#eef7ee);display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden}#cr button span img{width:100%;height:100%;object-fit:cover}#cr button.on{color:var(--pri,#1b8a3a);border-left-color:var(--pri,#1b8a3a);background:var(--tint,#eef7ee)}#cr button.on span{box-shadow:0 0 0 2px var(--pri,#1b8a3a)}.cw #al{flex:1;min-width:0;gap:8px;padding-bottom:90px}';document.head.appendChild(css);
+var sec=document.querySelector('section[data-v="all"]');if(!sec)return;
+var al=document.getElementById("al"),ch=document.getElementById("chips");
+var w=document.createElement("div");w.className="cw";var cr=document.createElement("div");cr.id="cr";
+al.parentNode.insertBefore(w,al);w.appendChild(cr);w.appendChild(ch);w.appendChild(al);
+function railCats(){var have={};ci().forEach(function(i){if(i.category)have[i.category]=1});return cats().filter(function(k){return have[k]})}
+function fix(){var q=document.getElementById("aq").value.trim(),rc=railCats();
+ if(cat&&cat.charAt(0)==="@"){var g=cat.slice(1);cat=rc.filter(function(k){return grpOf(k)===g})[0]||"All"}
+ if(!q&&(cat==="All"||rc.indexOf(cat)<0)&&rc.length)cat=rc[0];
+ return{q:q,rc:rc}}
+function paintRail(rc,q){cr.innerHTML=rc.map(function(k){return '<button type="button" data-rc="'+esc(k)+'" class="'+(!q&&k===cat?'on':'')+'"><span>'+catPic(k)+'</span>'+esc(k)+'</button>'}).join("");var on=cr.querySelector(".on");if(on&&on.scrollIntoView)try{cr.scrollTop=Math.max(0,on.offsetTop-cr.clientHeight/2+30)}catch(e){}
+ var h=sec.querySelector("h1");if(h)h.textContent=(typeof chan!=="undefined"&&chan==="mall")?"Lifestyle":"All Products"}
+var _a=all;all=function(){var r=null,keep=null;if(view==="all"){var q0=document.getElementById("aq").value.trim();r=fix();if(r.q){keep=cat;cat="All"}}
+ _a.apply(this,arguments);
+ if(view==="all"&&r){if(keep!==null)cat=keep;paintRail(r.rc,r.q)}};
+var aq=document.getElementById("aq");if(aq)aq.oninput=function(){all()};
+cr.addEventListener("click",function(e){var b=e.target.closest("[data-rc]");if(!b)return;cat=b.getAttribute("data-rc");var q=document.getElementById("aq");if(q)q.value="";all();window.scrollTo(0,0)});
 })();
 </script>
 </body></html>
