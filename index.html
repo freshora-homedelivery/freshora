@@ -329,10 +329,10 @@ if(id.indexOf("c_")===0)return '<div class="cb" style="'+bst(b)+'"><h2>'+esc(b.t
 function homeR(){var o=hord(),first=o[0]==="offers"&&(HOME.b.offers||{}).show!==false;
 $("hh").innerHTML='<div class="yh"><div class="hr1"><a class="av" href="#profile" aria-label="Profile">'+(user&&user.photoURL?'<img src="'+esc(user.photoURL)+'" alt="">':esc((uname()||"F").charAt(0).toUpperCase()))+'</a><div class="hg"><b id="locT">'+esc(hname()||"Hello there 👋")+'</b><small>📍 '+(dist!=null?"Delivering to you · "+dist.toFixed(1)+" km":"Kalladka, Karnataka")+'</small></div>'+(window.wPill?wPill():"")+'<a class="circ gl" href="#offers" aria-label="Offers">🔔</a></div><div class="sbar gl"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="hs" placeholder="Search fresh vegetables, fruits…" aria-label="Search"><button type="button" id="mic" aria-label="Voice search"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button type="button" id="flt" aria-label="Filters"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button></div>'+(first?'<div style="margin-top:18px">'+blkH("offers",true)+'</div>':"")+'</div>';
 if(!ready){$("hp").innerHTML='<div class="skl"><div class="sk1"></div><div class="skg"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>';locUi();return}
-$("hp").innerHTML=(window.adRow?adRow():"")+o.filter(function(k,i){return!(first&&i===0)}).map(function(k){var h=blkH(k,false);return h?'<div class="hb">'+h+'</div>':""}).join("");if(window.bnRestore)bnRestore();locUi()}
+$("hp").innerHTML=(window.adRow?adRow():"")+(window.brRow?brRow():"")+o.filter(function(k,i){return!(first&&i===0)}).map(function(k){var h=blkH(k,false);return h?'<div class="hb">'+h+'</div>':""}).join("");if(window.bnRestore)bnRestore();locUi()}
 function all(){var c=calc();ls("cart",JSON.stringify(qty));document.querySelectorAll(".cn").forEach(function(b){b.hidden=!c.n;b.textContent=c.n});
 if(view==="home")homeR();
-if(view==="all"){$("chips").innerHTML=["All"].concat(cats()).map(function(k){return '<button class="ch'+(k===cat?' on':'')+'" data-c="'+esc(k)+'">'+esc(k)+'</button>'}).join("");var qq=$("aq").value.toLowerCase(),o=function(i){return i.mrp>i.price?i.mrp/i.price:1},l=ci().filter(function(i){return(cat==="All"||i.category===cat||(cat.charAt(0)==="@"&&grpOf(i.category)===cat.slice(1)))&&i.name.toLowerCase().indexOf(qq)>-1});
+if(view==="all"){$("chips").innerHTML=["All"].concat(cats()).map(function(k){return '<button class="ch'+(k===cat?' on':'')+'" data-c="'+esc(k)+'">'+esc(k)+'</button>'}).join("");var qq=$("aq").value.toLowerCase(),o=function(i){return i.mrp>i.price?i.mrp/i.price:1},l=ci().filter(function(i){return(!window.BRAND||i.brand===window.BRAND)&&(cat==="All"||i.category===cat||(cat.charAt(0)==="@"&&grpOf(i.category)===cat.slice(1)))&&i.name.toLowerCase().indexOf(qq)>-1});
  if(sort==="lo")l.sort(function(a,b){return a.price-b.price});if(sort==="hi")l.sort(function(a,b){return b.price-a.price});if(sort==="off")l.sort(function(a,b){return o(b)-o(a)});if(sort==="pop"&&window.adFirst)l=adFirst(l);put("al",l,"No products found.")}
 if(view==="offers"){$("cps").innerHTML=cps.map(function(k){return '<div class="cc2"><div><b>'+esc(k.id)+'</b><br><span class="mu">'+(k.type==="percent"?esc(k.value)+'% off':'₹'+esc(k.value)+' off')+' · min order ₹'+esc(k.minOrder||0)+'</span></div><button data-cp="'+esc(k.id)+'">Use</button></div>'}).join("");put("of",ci().filter(function(i){return offp(i)>0}),"No product offers right now.")}
 if(view==="wish")put("wl",items.filter(function(i){return wish[i.id]}),"Tap ♡ on a product to save it here.");
@@ -763,7 +763,7 @@ var FL={price:"",rating:"",o1:"",o2:""};
 function lc(x){return String(x==null?"":x).trim().toLowerCase()}
 function colp(base){var gs={},out=[];base.forEach(function(i){i._vn=0;if(i.group){var g=gs[i.group];if(!g){g=gs[i.group]=[];out.push(g)}g.push(i)}else out.push(i)});return out.map(function(x){if(!Array.isArray(x))return x;var ins=x.filter(function(i){return i.inStock!==false}),pool=ins.length?ins:x,rep=pool.slice().sort(function(a,b){return a.price-b.price})[0],pr=x.map(function(i){return Number(i.price)||0});rep._vn=x.length;rep._vmin=Math.min.apply(0,pr);rep._vmax=Math.max.apply(0,pr);return rep})}
 var PR=[["","Price"],["0-100","Under ₹100"],["100-500","₹100 – ₹500"],["500-1000","₹500 – ₹1000"],["1000-5000","₹1000 – ₹5000"],["5000-999999","Above ₹5000"]];
-function baseList(skipOpt){var qq=document.getElementById("aq").value.toLowerCase();return items.filter(function(i){return chOf(i)===chan&&(cat==="All"||i.category===cat||(cat.charAt(0)==="@"&&grpOf(i.category)===cat.slice(1)))&&String(i.name).toLowerCase().indexOf(qq)>-1})}
+function baseList(skipOpt){var qq=document.getElementById("aq").value.toLowerCase();return items.filter(function(i){return chOf(i)===chan&&(!window.BRAND||i.brand===window.BRAND)&&(cat==="All"||i.category===cat||(cat.charAt(0)==="@"&&grpOf(i.category)===cat.slice(1)))&&String(i.name).toLowerCase().indexOf(qq)>-1})}
 function filt(l){return l.filter(function(i){if(FL.price){var r=FL.price.split("-");if(!(i.price>=+r[0]&&i.price<=+r[1]))return false}
  if(FL.rating){var a=window.rvAvg&&rvAvg(i.id);if(!a||a.a<+FL.rating)return false}
  if(FL.o1&&lc(i.vlabel)!==lc(FL.o1))return false;if(FL.o2&&lc(i.vlabel2)!==lc(FL.o2))return false;return true})}
@@ -828,18 +828,47 @@ var sec=document.querySelector('section[data-v="all"]');if(!sec)return;
 var al=document.getElementById("al"),ch=document.getElementById("chips");
 var w=document.createElement("div");w.className="cw";var cr=document.createElement("div");cr.id="cr";
 al.parentNode.insertBefore(w,al);w.appendChild(cr);w.appendChild(ch);w.appendChild(al);
-function railCats(){var have={};ci().forEach(function(i){if(i.category)have[i.category]=1});return cats().filter(function(k){return have[k]})}
+function railCats(){var have={};ci().forEach(function(i){if(i.category&&(!window.BRAND||i.brand===window.BRAND))have[i.category]=1});return cats().filter(function(k){return have[k]})}
 function fix(){var q=document.getElementById("aq").value.trim(),rc=railCats();
  if(cat&&cat.charAt(0)==="@"){var g=cat.slice(1);cat=rc.filter(function(k){return grpOf(k)===g})[0]||"All"}
- if(!q&&(cat==="All"||rc.indexOf(cat)<0)&&rc.length)cat=rc[0];
+ if(window.BRAND){if(cat!=="All"&&rc.indexOf(cat)<0)cat="All"}else if(!q&&(cat==="All"||rc.indexOf(cat)<0)&&rc.length)cat=rc[0];
  return{q:q,rc:rc}}
-function paintRail(rc,q){cr.innerHTML=rc.map(function(k){return '<button type="button" data-rc="'+esc(k)+'" class="'+(!q&&k===cat?'on':'')+'"><span>'+catPic(k)+'</span>'+esc(k)+'</button>'}).join("");var on=cr.querySelector(".on");if(on&&on.scrollIntoView)try{cr.scrollTop=Math.max(0,on.offsetTop-cr.clientHeight/2+30)}catch(e){}
- var h=sec.querySelector("h1");if(h)h.textContent=(typeof chan!=="undefined"&&chan==="mall")?"Lifestyle":"All Products"}
-var _a=all;all=function(){var r=null,keep=null;if(view==="all"){var q0=document.getElementById("aq").value.trim();r=fix();if(r.q){keep=cat;cat="All"}}
+function paintRail(rc,q){cr.innerHTML=(window.BRAND?'<button type="button" data-rc="All" class="'+(cat==="All"&&!q?'on':'')+'"><span>✨</span>All</button>':'')+rc.map(function(k){return '<button type="button" data-rc="'+esc(k)+'" class="'+(!q&&k===cat?'on':'')+'"><span>'+catPic(k)+'</span>'+esc(k)+'</button>'}).join("");var on=cr.querySelector(".on");if(on&&on.scrollIntoView)try{cr.scrollTop=Math.max(0,on.offsetTop-cr.clientHeight/2+30)}catch(e){}
+ var h=sec.querySelector("h1");if(h)h.textContent=window.BRAND?window.BRAND:(typeof chan!=="undefined"&&chan==="mall")?"Lifestyle":"All Products"}
+var _a=all;all=function(){var r=null,keep=null;if(view!=="all")window.BRAND="";if(view==="all"){var q0=document.getElementById("aq").value.trim();r=fix();if(r.q){keep=cat;cat="All"}}
  _a.apply(this,arguments);
  if(view==="all"&&r){if(keep!==null)cat=keep;paintRail(r.rc,r.q)}};
 var aq=document.getElementById("aq");if(aq)aq.oninput=function(){all()};
+document.addEventListener("click",function(e){if(e.target.closest("[data-c],[data-go],[data-back]"))window.BRAND=""},true);
 cr.addEventListener("click",function(e){var b=e.target.closest("[data-rc]");if(!b)return;cat=b.getAttribute("data-rc");var q=document.getElementById("aq");if(q)q.value="";all();window.scrollTo(0,0)});
+})();
+</script>
+<script>
+/* Shop by brand row on the home page */
+(function(){
+var css=document.createElement("style");css.textContent='.brr{margin:6px 0 14px}.brr .bs{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}.brr .bs::-webkit-scrollbar{display:none}.brr button{flex:none;width:68px;border:0;background:none;padding:0;font:inherit;font-size:11px;font-weight:700;text-align:center;color:inherit;cursor:pointer}.brr button i{display:block;width:64px;height:64px;border-radius:50%;background:#fff;border:1px solid var(--ln,#e5e5e5);overflow:hidden;margin:0 auto 5px;box-shadow:0 2px 8px #0001}.brr button img{width:100%;height:100%;object-fit:cover;display:block}.brr button span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}';document.head.appendChild(css);
+window.brRow=function(){var l=(S&&S.brands)||[];if(!Array.isArray(l)||!l.length)return"";var have={};ci().forEach(function(i){if(i.brand)have[i.brand]=1});
+ l=l.filter(function(b){return b&&b.logo&&have[b.name]});if(!l.length)return"";
+ return '<div class="hb brr"><div class="rh"><h2>Shop by brand</h2></div><div class="bs">'+l.map(function(b){return '<button type="button" data-br="'+esc(b.name)+'"><i><img src="'+esc(b.logo)+'" alt=""></i><span>'+esc(b.name)+'</span></button>'}).join("")+'</div></div>'};
+document.addEventListener("click",function(e){var b=e.target.closest("[data-br]");if(!b)return;e.preventDefault();window.BRAND=b.getAttribute("data-br");cat="All";var q=document.getElementById("aq");if(q)q.value="";if(view==="all")all();else go("all")});
+})();
+</script>
+<script>
+/* "Get the app" prompt for people using the website in a browser (Android) */
+(function(){
+try{
+var ua=navigator.userAgent||"";
+if(/FreshoraApp/.test(ua)||!/Android/i.test(ua))return;
+if(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)return;
+var URL_="https://github.com/freshora-homedelivery/freshora/releases/latest/download/freshora-customer.apk";
+function g(k){try{return localStorage.getItem(k)}catch(e){return null}}function sv(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+var now=Date.now(),DAY=864e5;
+var css=document.createElement("style");css.textContent='#dlb{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border-bottom:1px solid #0001;box-shadow:0 2px 10px #0001}#dlb img{width:38px;height:38px;border-radius:10px;flex:none}#dlb div{flex:1;min-width:0;line-height:1.25}#dlb b{display:block;font-size:14px}#dlb small{display:block;font-size:11.5px;color:#667}#dlb a{flex:none;background:#1b8a3a;color:#fff;font-weight:800;font-size:13px;text-decoration:none;padding:9px 14px;border-radius:10px}#dlb button{flex:none;border:0;background:none;font-size:22px;line-height:1;color:#667;padding:2px 4px}#dls{position:fixed;inset:0;z-index:300;background:#0007;display:flex;align-items:flex-end}#dls>div{width:100%;background:#fff;border-radius:22px 22px 0 0;padding:22px 20px 26px;text-align:center;animation:dlu .25s ease-out}@keyframes dlu{from{transform:translateY(60px);opacity:0}}#dls img{width:72px;height:72px;border-radius:18px;margin-top:-58px;box-shadow:0 6px 18px #0003;background:#fff}#dls h3{margin:12px 0 4px;font-size:20px}#dls p{margin:0 0 16px;color:#667;font-size:14px}#dls a{display:block;background:#1b8a3a;color:#fff;font-weight:800;text-decoration:none;padding:14px;border-radius:14px;font-size:16px}#dls button{margin-top:12px;border:0;background:none;color:#1b8a3a;font-weight:800;font-size:15px;padding:8px}';document.head.appendChild(css);
+function bar(){if(document.getElementById("dlb")||(+g("dlbx")||0)>now-3*DAY)return;var d=document.createElement("div");d.id="dlb";d.innerHTML='<img src="icons/c-192.png" alt=""><div><b>Get the Freshora app</b><small>Faster ordering · order alerts</small></div><a href="'+URL_+'" rel="noopener">Install</a><button type="button" aria-label="Close">×</button>';d.querySelector("button").onclick=function(){sv("dlbx",String(Date.now()));d.remove()};document.body.insertBefore(d,document.body.firstChild)}
+function sheet(){if((+g("dlsx")||0)>now-7*DAY||document.getElementById("dls"))return;var d=document.createElement("div");d.id="dls";d.innerHTML='<div><img src="icons/c-192.png" alt=""><h3>Get the Freshora app</h3><p>Faster ordering, live order tracking and delivery alerts.</p><a href="'+URL_+'" rel="noopener">Download the app now</a><button type="button">Continue on web</button></div>';function cl(){sv("dlsx",String(Date.now()));d.remove()}d.querySelector("button").onclick=cl;d.addEventListener("click",function(e){if(e.target===d)cl()});d.querySelector("a").addEventListener("click",function(){sv("dlsx",String(Date.now()))});document.body.appendChild(d)}
+function start(){bar();setTimeout(sheet,7000)}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();
+}catch(e){}
 })();
 </script>
 </body></html>
